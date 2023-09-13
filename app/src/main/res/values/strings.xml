@@ -6,6 +6,6 @@
     <string name="login_button">Login</string>
     <string name="signup_button">Sign-Up</string>
     <string name="or">or</string>
-    <string name="selfhosting">Self hosted settings</string>
+    <string name="self_hosting">Self hosted settings</string>
     <string name="forgot_password">Forgot password?</string>
 </resources>
