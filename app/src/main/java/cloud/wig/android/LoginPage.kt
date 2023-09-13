@@ -21,12 +21,13 @@ class LoginPage : AppCompatActivity() {
         val view = binding.root
         setContentView(view) // Open login_page view
 
+        // TODO backend functionality
         binding.loginPageLoginButton.setOnClickListener {
-            // TODO check username and password
             val username = binding.loginPageUsername.text.toString()
             val password = binding.loginPagePassword.text.toString()
 
             if(username == "stitchy" && password == "Test123" || username == "solo" && password == "Test123"){
+                // TODO have redirect to main page
                 binding.invalidUserPassword.visibility = View.INVISIBLE
             } else{
                 binding.invalidUserPassword.visibility = View.VISIBLE

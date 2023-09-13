@@ -99,6 +99,7 @@
         android:layout_height="wrap_content"
         android:text="@string/invalid_user_password"
         android:textColor="@android:color/holo_red_dark"
+        android:padding="5dp"
         android:visibility="invisible"
         android:textSize="19sp"
         app:layout_constraintTop_toBottomOf="@id/login_page_forgot_password"
