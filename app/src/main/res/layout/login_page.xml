@@ -84,6 +84,7 @@
         app:layout_constraintTop_toBottomOf="@id/login_page_username" />
 
     <TextView
+        android:id="@+id/login_page_forgot_password"
         android:text="@string/forgot_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -91,6 +92,20 @@
         app:layout_constraintTop_toBottomOf="@id/login_page_password"
         app:layout_constraintRight_toRightOf="@id/login_page_password"
         />
+
+    <TextView
+        android:id="@+id/invalid_user_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/invalid_user_password"
+        android:textColor="@android:color/holo_red_dark"
+        android:visibility="invisible"
+        android:textSize="19sp"
+        app:layout_constraintTop_toBottomOf="@id/login_page_forgot_password"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
 
     <LinearLayout
         android:id="@+id/linear_login_page_buttons"
