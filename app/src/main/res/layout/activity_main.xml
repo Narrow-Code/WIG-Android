@@ -77,6 +77,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/login_page_username" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/forgot_password"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/login_page_password"
+        app:layout_constraintRight_toRightOf="@id/login_page_password"
+        />
+
     <Button
         android:id="@+id/login_page_button"
         android:layout_width="wrap_content"
