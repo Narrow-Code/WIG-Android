@@ -5,7 +5,6 @@ import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import cloud.wig.android.databinding.LoginPageBinding
 
 class LoginPage : AppCompatActivity() {
@@ -28,9 +27,11 @@ class LoginPage : AppCompatActivity() {
 
             if(username == "stitchy" && password == "Test123" || username == "solo" && password == "Test123"){
                 // TODO have redirect to main page
-                binding.invalidUserPassword.visibility = View.INVISIBLE
+                binding.invalidUserPassword.text = ""
+            } else if(username == "" || password == ""){
+                binding.invalidUserPassword.text = getString(R.string.empty_login_credentials)
             } else{
-                binding.invalidUserPassword.visibility = View.VISIBLE
+                binding.invalidUserPassword.text = getString(R.string.invalid_user_password)
             }
 
         }
