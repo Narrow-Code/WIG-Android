@@ -41,5 +41,11 @@ class LoginPage : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        binding.icSelfHost.setOnClickListener {
+            val intent = Intent(this, ServerSetup::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

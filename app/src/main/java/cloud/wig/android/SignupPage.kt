@@ -36,5 +36,11 @@ class SignupPage : AppCompatActivity() {
                 binding.error.text = getString(R.string.required_fields)
             }
         }
+
+        binding.icSelfHost.setOnClickListener {
+            val intent = Intent(this, ServerSetup::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }

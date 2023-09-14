@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">WIG</string>
     <string name="app_slogan">An inventory management service to remember \"What I Got\"</string>
+    <string name="self_hosting_title">Self Hosted</string>
+    <string name="self_host_description">Please follow these instructions first to connect to your WIG server"</string>
     <string name="or">or</string>
 
     <!-- Input field hints -->
@@ -8,6 +10,8 @@
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email">Email</string>
+    <string name="hostname">Hostname</string>
+    <string name="port_number">Port Number</string>
     <!-- Input field hints -->
 
     <!-- Button titles -->
@@ -15,7 +19,8 @@
     <string name="login_button">Login</string>
     <string name="signup_button">Sign-Up</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="self_hosting">Self hosted settings</string>
+    <string name="connect">Connect</string>
+    <string name="ic_exit">Exit</string>
     <!-- Button titles -->
 
     <!-- Error messages, to be replaced by errors from API -->
