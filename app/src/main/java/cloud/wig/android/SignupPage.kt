@@ -28,7 +28,13 @@ class SignupPage : AppCompatActivity() {
         }
 
         binding.signupButton.setOnClickListener {
-
+            val username = binding.username.text.toString()
+            val email = binding.email.text.toString()
+            val password = binding.password.text.toString()
+            val confirmPassword = binding.confirmPassword.text.toString()
+            if(username == "" || email == "" || password == "" || confirmPassword == "") {
+                binding.error.text = getString(R.string.required_fields)
+            }
         }
     }
 }

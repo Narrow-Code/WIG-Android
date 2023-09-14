@@ -1,15 +1,27 @@
 <resources>
     <string name="app_name">WIG</string>
     <string name="app_slogan">An inventory management service to remember \"What I Got\"</string>
+    <string name="or">or</string>
+
+    <!-- Input field hints -->
     <string name="username">Username</string>
     <string name="password">Password</string>
-    <string name="login_button">Login</string>
-    <string name="signup_button">Sign-Up</string>
-    <string name="or">or</string>
-    <string name="self_hosting">Self hosted settings</string>
-    <string name="forgot_password">Forgot password?</string>
-    <string name="invalid_user_password">Invalid Username or Password</string>
-    <string name="empty_login_credentials">Please provide valid login credentials.</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="email">Email</string>
+    <!-- Input field hints -->
+
+    <!-- Button titles -->
+    <string name="already_have_account">Already have an account</string>
+    <string name="login_button">Login</string>
+    <string name="signup_button">Sign-Up</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="self_hosting">Self hosted settings</string>
+    <!-- Button titles -->
+
+    <!-- Error messages, to be replaced by errors from API -->
+    <string name="invalid_user_password">Invalid Username or Password</string>
+    <string name="empty_login_credentials">Please provide valid login credentials.</string>
+    <string name="required_fields">Please enter all required fields</string>
+    <!-- Error messages, to be replaced by errors from API -->
+
 </resources>
