@@ -1,6 +1,7 @@
 package cloud.wig.android
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,19 +22,24 @@ class LoginPage : AppCompatActivity() {
         setContentView(view) // Open login_page view
 
         // TODO backend functionality
-        binding.loginPageLoginButton.setOnClickListener {
-            val username = binding.loginPageUsername.text.toString()
-            val password = binding.loginPagePassword.text.toString()
+        binding.loginButton.setOnClickListener {
+            val username = binding.username.text.toString()
+            val password = binding.password.text.toString()
 
             if(username == "stitchy" && password == "Test123" || username == "solo" && password == "Test123"){
                 // TODO have redirect to main page
-                binding.invalidUserPassword.text = ""
+                binding.error.text = ""
             } else if(username == "" || password == ""){
-                binding.invalidUserPassword.text = getString(R.string.empty_login_credentials)
+                binding.error.text = getString(R.string.empty_login_credentials)
             } else{
-                binding.invalidUserPassword.text = getString(R.string.invalid_user_password)
+                binding.error.text = getString(R.string.invalid_user_password)
             }
+        }
 
+        binding.signupButton.setOnClickListener {
+            val intent = Intent(this, SignupPage::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

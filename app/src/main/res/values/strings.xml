@@ -10,4 +10,6 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="invalid_user_password">Invalid Username or Password</string>
     <string name="empty_login_credentials">Please provide valid login credentials.</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="email">Email</string>
 </resources>

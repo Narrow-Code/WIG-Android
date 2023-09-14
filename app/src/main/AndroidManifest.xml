@@ -26,5 +26,9 @@
             <!-- Intent filters, etc. -->
         </activity>
 
+        <activity android:name=".SignupPage">
+            <!-- Intent filters, etc. -->
+        </activity>
+
     </application>
 </manifest>

@@ -62,10 +62,26 @@
         android:ems="13"
         android:hint="@string/username"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@id/password"
+        app:layout_constraintBottom_toTopOf="@id/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/titles" />
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textbox_background"
+        android:inputType="textEmailAddress"
+        android:autofillHints="emailAddress"
+        android:padding="5dp"
+        android:ems="13"
+        android:hint="@string/email"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toTopOf="@id/password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/username" />
 
     <EditText
         android:id="@+id/password"
@@ -78,33 +94,26 @@
         android:inputType="textPassword"
         android:minHeight="48sp"
         android:autofillHints="password"
+        app:layout_constraintBottom_toTopOf="@id/confirm_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/email" />
+
+    <EditText
+        android:id="@+id/confirm_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textbox_background"
+        android:padding="5dp"
+        android:ems="13"
+        android:hint="@string/confirm_password"
+        android:inputType="textPassword"
+        android:minHeight="48sp"
+        android:autofillHints="password"
         app:layout_constraintBottom_toTopOf="@id/linear_buttons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/username" />
-
-    <TextView
-        android:id="@+id/forgot_password"
-        android:text="@string/forgot_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="17sp"
-        app:layout_constraintTop_toBottomOf="@id/password"
-        app:layout_constraintRight_toRightOf="@id/password"
-        />
-
-    <TextView
-        android:id="@+id/error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/holo_red_dark"
-        android:padding="5dp"
-        android:textSize="19sp"
-        app:layout_constraintTop_toBottomOf="@id/forgot_password"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        />
-
+        app:layout_constraintTop_toBottomOf="@id/password" />
 
     <LinearLayout
         android:id="@+id/linear_buttons"
@@ -116,10 +125,10 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/login_button"
+            android:id="@+id/signup_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_button"
+            android:text="@string/signup_button"
             android:textSize="25sp"
             android:layout_gravity="center"
             android:layout_weight="1"/>
@@ -134,13 +143,15 @@
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/signup_button"
+            android:id="@+id/login_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/signup_button"
+            android:text="@string/login_button"
             android:textSize="25sp"
             android:layout_gravity="center"
             android:layout_weight="1"/>
+
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
