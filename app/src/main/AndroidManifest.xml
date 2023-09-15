@@ -30,9 +30,5 @@
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".ServerSetup">
-            <!-- Intent filters, etc. -->
-        </activity>
-
     </application>
 </manifest>
