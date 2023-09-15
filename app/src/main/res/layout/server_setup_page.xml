@@ -84,13 +84,23 @@
         app:layout_constraintTop_toBottomOf="@id/hostname" />
 
     <TextView
+        android:id="@+id/forgot_password"
+        android:text="@string/forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/port_number"
+        app:layout_constraintRight_toRightOf="@id/port_number"
+        />
+
+    <TextView
         android:id="@+id/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/holo_red_dark"
         android:padding="5dp"
         android:textSize="19sp"
-        app:layout_constraintTop_toBottomOf="@id/port_number"
+        app:layout_constraintTop_toBottomOf="@id/forgot_password"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
