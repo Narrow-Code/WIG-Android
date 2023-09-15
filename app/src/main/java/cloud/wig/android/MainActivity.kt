@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
             // TODO if user is logged in redirect to main paige
         } else {
             Log.d("MainActivity", "User is not logged in, starting LoginPage")
-            val intent = Intent(this, LoginPage::class.java)
+            val intent = Intent(this, Login::class.java)
             startActivity(intent)
             finish()
         }

@@ -22,15 +22,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LoginPage">
+        <activity android:name=".Login">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".SignupPage">
+        <activity android:name=".Signup">
             <!-- Intent filters, etc. -->
         </activity>
 
         <activity android:name=".ServerSetup">
+            <!-- Intent filters, etc. -->
+        </activity>
+
+        <activity android:name=".ForgotPassword">
             <!-- Intent filters, etc. -->
         </activity>
 

@@ -6,10 +6,10 @@ import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import cloud.wig.android.databinding.LoginPageBinding
+import cloud.wig.android.databinding.LoginBinding
 
-class LoginPage : AppCompatActivity() {
-    private lateinit var binding: LoginPageBinding
+class Login : AppCompatActivity() {
+    private lateinit var binding: LoginBinding
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +17,7 @@ class LoginPage : AppCompatActivity() {
         Log.d("LoginPage", "onCreate method is executing")
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // Portrait lock
 
-        binding = LoginPageBinding.inflate(layoutInflater) // set bindings to login_page layout id's
+        binding = LoginBinding.inflate(layoutInflater) // set bindings to login_page layout id's
         val view = binding.root
         setContentView(view) // Open login_page view
 
@@ -37,13 +37,19 @@ class LoginPage : AppCompatActivity() {
         }
 
         binding.signupButton.setOnClickListener {
-            val intent = Intent(this, SignupPage::class.java)
+            val intent = Intent(this, Signup::class.java)
             startActivity(intent)
             finish()
         }
 
         binding.icSelfHost.setOnClickListener {
             val intent = Intent(this, ServerSetup::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+        binding.forgotPassword.setOnClickListener {
+            val intent = Intent(this, ForgotPassword::class.java)
             startActivity(intent)
             finish()
         }
