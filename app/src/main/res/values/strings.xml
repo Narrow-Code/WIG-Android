@@ -1,10 +1,11 @@
 <resources>
     <string name="app_name">WIG</string>
     <string name="app_slogan">An inventory management service to remember \"What I Got\"</string>
+    <string name="signup_description">Please enter your credentials to start an account</string>
     <string name="self_hosting_title">Self Hosted</string>
     <string name="self_host_description">Please follow these instructions first to connect to your WIG server"</string>
     <string name="reset_password">Reset Your Password</string>
-    <string name="enter_email">Please enter email address. You will receive an email address with instructions on how to reset your passwrod.</string>
+    <string name="enter_email">Please enter email address. You will receive an email address with instructions on how to reset your password.</string>
     <string name="or">or</string>
     <string name="send">Send</string>
 
