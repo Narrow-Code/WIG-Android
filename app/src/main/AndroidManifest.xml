@@ -46,5 +46,9 @@
             <!-- Intent filters, etc. -->
         </activity>
 
+        <activity android:name=".MainScanner">
+            <!-- Intent filters, etc. -->
+        </activity>
+
     </application>
 </manifest>

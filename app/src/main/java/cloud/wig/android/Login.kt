@@ -27,8 +27,9 @@ class Login : AppCompatActivity() {
             val password = binding.password.text.toString()
 
             if(username == "stitchy" && password == "Test123" || username == "solo" && password == "Test123"){
-                // TODO have redirect to main page
-                binding.error.text = ""
+                val intent = Intent(this, MainScanner::class.java)
+                startActivity(intent)
+                finish()
             } else if(username == "" || password == ""){
                 binding.error.text = getString(R.string.empty_login_credentials)
             } else{
