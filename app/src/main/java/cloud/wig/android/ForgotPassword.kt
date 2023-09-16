@@ -14,15 +14,25 @@ class ForgotPassword : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("LoginPage", "onCreate method is executing")
+        Log.d("ForgotPassword", "onCreate method is executing")
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // Portrait lock
 
         binding = ForgotPasswordBinding.inflate(layoutInflater) // set bindings to login_page layout id's
         val view = binding.root
-        setContentView(view) // Open login_page view
+        setContentView(view)
 
         // TODO backend functionality
         binding.send.setOnClickListener {
+            Log.d("ForgotPassword", "Send button clicked")
+            val email = binding.email.text.toString()
+            if(email != "") {
+                val intent = Intent(this, ResetPassword::class.java)
+                intent.putExtra("EMAIL_KEY", email)
+                startActivity(intent)
+                finish()
+            } else {
+                binding.error.text = getString(R.string.required_fields)
+            }
         }
 
         binding.icExit.setOnClickListener {

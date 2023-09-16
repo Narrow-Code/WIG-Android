@@ -38,5 +38,9 @@
             <!-- Intent filters, etc. -->
         </activity>
 
+        <activity android:name=".ResetPassword">
+            <!-- Intent filters, etc. -->
+        </activity>
+
     </application>
 </manifest>

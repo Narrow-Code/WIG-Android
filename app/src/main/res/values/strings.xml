@@ -8,6 +8,8 @@
     <string name="enter_email">Please enter email address. You will receive an email address with instructions on how to reset your password.</string>
     <string name="or">or</string>
     <string name="send">Send</string>
+    <string name="sent_email_part1">We sent an Email to:</string>
+    <string name="sent_email_part2">Check your email and click on the change password link to continue</string>
 
     <!-- Input field hints -->
     <string name="username">Username</string>
@@ -25,6 +27,7 @@
     <string name="forgot_password">Forgot password?</string>
     <string name="connect">Connect</string>
     <string name="ic_exit">Exit</string>
+    <string name="resend_email">Resend Email</string>
     <!-- Button titles -->
 
     <!-- Error messages, to be replaced by errors from API -->
