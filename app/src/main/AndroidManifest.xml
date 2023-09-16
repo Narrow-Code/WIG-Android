@@ -42,5 +42,9 @@
             <!-- Intent filters, etc. -->
         </activity>
 
+        <activity android:name=".EmailVerification">
+            <!-- Intent filters, etc. -->
+        </activity>
+
     </application>
 </manifest>

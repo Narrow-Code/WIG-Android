@@ -10,6 +10,8 @@
     <string name="send">Send</string>
     <string name="sent_email_part1">We sent an Email to:</string>
     <string name="sent_email_part2">Check your email and click on the change password link to continue</string>
+    <string name="verify_email">Verify Your Email</string>
+    <string name="sent_email_part2_verify">Check your email and click on the confirmation link to continue</string>
 
     <!-- Input field hints -->
     <string name="username">Username</string>

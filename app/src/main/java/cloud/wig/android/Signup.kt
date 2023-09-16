@@ -36,7 +36,10 @@ class Signup : AppCompatActivity() {
                 binding.error.text = getString(R.string.required_fields)
             }
             else {
-                // TODO add redirect to check email
+                val intent = Intent(this, ResetPassword::class.java)
+                intent.putExtra("EMAIL_KEY", email)
+                startActivity(intent)
+                finish()
             }
         }
 
