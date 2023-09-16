@@ -21,8 +21,14 @@ class ServerSetup : AppCompatActivity() {
         val view = binding.root
         setContentView(view) // Open login_page view
 
-        // TODO backend functionality
         binding.connectButton.setOnClickListener {
+            val hostname = binding.hostname.text.toString()
+            val portNumber = binding.portNumber.text.toString()
+            if(hostname == "server" || portNumber == "80") {
+                // TODO link to main page
+            } else {
+                binding.error.text = getString(R.string.required_fields)
+            }
         }
 
         binding.icExit.setOnClickListener {

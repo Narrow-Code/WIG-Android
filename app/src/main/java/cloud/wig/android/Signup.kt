@@ -35,6 +35,9 @@ class Signup : AppCompatActivity() {
             if(username == "" || email == "" || password == "" || confirmPassword == "") {
                 binding.error.text = getString(R.string.required_fields)
             }
+            else {
+                // TODO add redirect to check email
+            }
         }
 
         binding.icSelfHost.setOnClickListener {
