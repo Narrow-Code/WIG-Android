@@ -21,5 +21,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Login">
+            <!-- Intent filters, etc. -->
+        </activity>
+
+        <activity android:name=".Signup">
+            <!-- Intent filters, etc. -->
+        </activity>
+
+        <activity android:name=".ServerSetup">
+            <!-- Intent filters, etc. -->
+        </activity>
+
+        <activity android:name=".ForgotPassword">
+            <!-- Intent filters, etc. -->
+        </activity>
+
+        <activity android:name=".ResetPassword">
+            <!-- Intent filters, etc. -->
+        </activity>
+
+        <activity android:name=".EmailVerification">
+            <!-- Intent filters, etc. -->
+        </activity>
+
     </application>
 </manifest>
