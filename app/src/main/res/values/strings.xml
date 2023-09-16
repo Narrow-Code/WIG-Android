@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WIG</string>
     <string name="app_slogan">An inventory management service to remember \"What I Got\"</string>
+    <string name="sign_up">Sign-Up</string>
     <string name="signup_description">Please enter your credentials to start an account</string>
     <string name="self_hosting_title">Self Hosted</string>
     <string name="self_host_description">Please follow these instructions first to connect to your WIG server"</string>
