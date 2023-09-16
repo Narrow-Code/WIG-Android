@@ -36,7 +36,7 @@ class Signup : AppCompatActivity() {
                 binding.error.text = getString(R.string.required_fields)
             }
             else {
-                val intent = Intent(this, ResetPassword::class.java)
+                val intent = Intent(this, EmailVerification::class.java)
                 intent.putExtra("EMAIL_KEY", email)
                 startActivity(intent)
                 finish()
