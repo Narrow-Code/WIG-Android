@@ -43,6 +43,10 @@ class MainScanner : AppCompatActivity() {
 
         setupPermissions()
         codeScanner()
+
+        binding.clear.setOnClickListener {
+            removeAllRowsFromTableLayout()
+        }
     }
 
     private fun codeScanner() {
@@ -167,8 +171,15 @@ class MainScanner : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun removeAllRowsFromTableLayout() {
+        val tableLayout = binding.tableLayout
+
+        // Remove all rows from the table layout
+        while (tableLayout.childCount > 0) {
+            tableLayout.removeViewAt(0)
         }
-
-
+    }
 
 }
