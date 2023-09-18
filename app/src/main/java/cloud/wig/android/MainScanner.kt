@@ -113,7 +113,7 @@ class MainScanner : AppCompatActivity() {
                     handler.postDelayed({
                         // Enable scanning after 5 seconds
                         codeScanner.startPreview()
-                    }, 5000)
+                    }, 1500)
 
                 }
 
