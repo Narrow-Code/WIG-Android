@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.os.Handler
+import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
@@ -30,6 +31,7 @@ class MainScanner : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
     private val handler = Handler()
     private var mocker = Mocker()
+    private var pageView = "items"
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +49,19 @@ class MainScanner : AppCompatActivity() {
         binding.clear.setOnClickListener {
             removeAllRowsFromTableLayout()
         }
+
+        binding.binsButton.setOnClickListener{
+            switchToBinsView()
+        }
+
+        binding.itemsButton.setOnClickListener{
+            switchToItemsView()
+        }
+
+        binding.shelvesButton.setOnClickListener {
+            switchToShelvesView()
+        }
+
     }
 
     private fun codeScanner() {
@@ -65,58 +80,18 @@ class MainScanner : AppCompatActivity() {
                 runOnUiThread {
                     // newText.text = it.text
 
-                    val tableLayout = binding.tableLayout
-                    val dataArray = arrayOf(mocker.getItem(), mocker.getLocation(), mocker.getQuantity().toString())
-                    val row = TableRow(this@MainScanner)
-
-                    val layoutParams = TableRow.LayoutParams(
-                        TableRow.LayoutParams.MATCH_PARENT,
-                        TableRow.LayoutParams.WRAP_CONTENT
-                    )
-
-                    val nameTextView = TextView(this@MainScanner)
-                    nameTextView.text = dataArray[0]
-                    nameTextView.layoutParams = TableRow.LayoutParams(
-                        0,
-                        TableRow.LayoutParams.WRAP_CONTENT,
-                        1f
-                    )
-
-                    val locationTextView = TextView(this@MainScanner)
-                    locationTextView.text = dataArray[1]
-                    locationTextView.layoutParams = TableRow.LayoutParams(
-                        0,
-                        TableRow.LayoutParams.WRAP_CONTENT,
-                        1f
-                    )
-                    locationTextView.gravity = Gravity.CENTER
-
-                    val quantityTextView = TextView(this@MainScanner)
-                    quantityTextView.text = dataArray[2]
-                    quantityTextView.layoutParams = TableRow.LayoutParams(
-                        0,
-                        TableRow.LayoutParams.WRAP_CONTENT,
-                        1f
-                    )
-                    quantityTextView.gravity = Gravity.END
-
-                    row.addView(nameTextView)
-                    row.addView(locationTextView)
-                    row.addView(quantityTextView)
-
-                    row.layoutParams = layoutParams
-
-                    tableLayout.addView(row)
-
-                    codeScanner.stopPreview()
-
-                    handler.postDelayed({
-                        // Enable scanning after 5 seconds
-                        codeScanner.startPreview()
-                    }, 1500)
-
+                    when (pageView) {
+                        "items" -> {
+                            populateMockItems()
+                        }
+                        "bins" -> {
+                            populateMockBins()
+                        }
+                        "shelves" -> {
+                            populateMockShelves()
+                        }
+                    }
                 }
-
             }
 
 
@@ -174,12 +149,190 @@ class MainScanner : AppCompatActivity() {
     }
 
     private fun removeAllRowsFromTableLayout() {
-        val tableLayout = binding.tableLayout
+        val tableLayout = binding.itemsTableLayout
 
         // Remove all rows from the table layout
         while (tableLayout.childCount > 0) {
             tableLayout.removeViewAt(0)
         }
     }
+
+    private fun switchToBinsView() {
+        binding.tableItemsTitles.visibility = View.INVISIBLE
+        binding.tableShelvesTitles.visibility = View.INVISIBLE
+        binding.itemsTable.visibility = View.INVISIBLE
+        binding.shelvesTable.visibility = View.INVISIBLE
+
+        binding.tableBinsTitles.visibility = View.VISIBLE
+        binding.binsTable.visibility = View.VISIBLE
+
+        pageView = "bins"
+    }
+
+    private fun switchToItemsView() {
+        binding.tableBinsTitles.visibility = View.INVISIBLE
+        binding.tableShelvesTitles.visibility = View.INVISIBLE
+        binding.binsTable.visibility = View.INVISIBLE
+        binding.shelvesTable.visibility = View.INVISIBLE
+
+        binding.tableItemsTitles.visibility = View.VISIBLE
+        binding.itemsTable.visibility = View.VISIBLE
+
+        pageView = "items"
+    }
+
+    private fun switchToShelvesView() {
+        binding.tableItemsTitles.visibility = View.INVISIBLE
+        binding.tableItemsTitles.visibility = View.INVISIBLE
+        binding.binsTable.visibility = View.INVISIBLE
+        binding.shelvesTable.visibility = View.INVISIBLE
+
+        binding.tableShelvesTitles.visibility = View.VISIBLE
+        binding.shelvesTable.visibility = View.VISIBLE
+
+        pageView = "shelves"
+    }
+
+    private fun populateMockItems()
+    {
+        val tableLayout = binding.itemsTableLayout
+        val dataArray = arrayOf(mocker.getItem(), mocker.getLocation(), mocker.getQuantity().toString())
+        val row = TableRow(this@MainScanner)
+
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val nameTextView = TextView(this@MainScanner)
+        nameTextView.text = dataArray[0]
+        nameTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+
+        val locationTextView = TextView(this@MainScanner)
+        locationTextView.text = dataArray[1]
+        locationTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+        locationTextView.gravity = Gravity.CENTER
+
+        val quantityTextView = TextView(this@MainScanner)
+        quantityTextView.text = dataArray[2]
+        quantityTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+        quantityTextView.gravity = Gravity.END
+
+        row.addView(nameTextView)
+        row.addView(locationTextView)
+        row.addView(quantityTextView)
+
+        row.layoutParams = layoutParams
+
+        tableLayout.addView(row)
+
+        codeScanner.stopPreview()
+
+        handler.postDelayed({
+            // Enable scanning after 5 seconds
+            codeScanner.startPreview()
+        }, 1500)
+
+    }
+    private fun populateMockBins()
+    {
+        val tableLayout = binding.binsTableLayout
+        val dataArray = arrayOf(mocker.getBin(), mocker.getQuantity().toString())
+        val row = TableRow(this@MainScanner)
+
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val nameTextView = TextView(this@MainScanner)
+        nameTextView.text = dataArray[0]
+        nameTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+
+        val quantityTextView = TextView(this@MainScanner)
+        quantityTextView.text = dataArray[1]
+        quantityTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+        quantityTextView.gravity = Gravity.END
+
+        row.addView(nameTextView)
+        row.addView(quantityTextView)
+
+        row.layoutParams = layoutParams
+
+        tableLayout.addView(row)
+
+        codeScanner.stopPreview()
+
+        handler.postDelayed({
+            // Enable scanning after 5 seconds
+            codeScanner.startPreview()
+        }, 1500)
+
+    }
+
+    private fun populateMockShelves()
+    {
+        val tableLayout = binding.shelvesTableLayout
+        val dataArray = arrayOf(mocker.getShelf(), mocker.getQuantity().toString())
+        val row = TableRow(this@MainScanner)
+
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val nameTextView = TextView(this@MainScanner)
+        nameTextView.text = dataArray[0]
+        nameTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+
+        val quantityTextView = TextView(this@MainScanner)
+        quantityTextView.text = dataArray[1]
+        quantityTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+        quantityTextView.gravity = Gravity.END
+
+        row.addView(nameTextView)
+        row.addView(quantityTextView)
+
+        row.layoutParams = layoutParams
+
+        tableLayout.addView(row)
+
+        codeScanner.stopPreview()
+
+        handler.postDelayed({
+            // Enable scanning after 5 seconds
+            codeScanner.startPreview()
+        }, 1500)
+
+    }
+
 
 }
