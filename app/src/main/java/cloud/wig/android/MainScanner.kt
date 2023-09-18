@@ -149,7 +149,19 @@ class MainScanner : AppCompatActivity() {
     }
 
     private fun removeAllRowsFromTableLayout() {
-        val tableLayout = binding.itemsTableLayout
+        var tableLayout = binding.itemsTableLayout
+
+        when (pageView) {
+            "items" -> {
+                tableLayout = binding.itemsTableLayout
+            }
+            "bins" -> {
+                tableLayout = binding.binsTableLayout
+            }
+            "shelves" -> {
+                tableLayout = binding.shelvesTableLayout
+            }
+        }
 
         // Remove all rows from the table layout
         while (tableLayout.childCount > 0) {

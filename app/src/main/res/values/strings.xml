@@ -34,7 +34,7 @@
     <string name="resend_email">Resend Email</string>
     <string name="place_queue">Place Queue</string>
     <string name="check_out">Check Out</string>
-    <string name="clear">Clear/All</string>
+    <string name="clear">Clear</string>
     <string name="settings">Settings</string>
     <string name="inventory">Manage Inventory</string>
     <string name="checked_out">Checked Out Items</string>
