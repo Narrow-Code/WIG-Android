@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.TableRow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -50,7 +52,15 @@ class MainScanner : AppCompatActivity() {
 
             decodeCallback = DecodeCallback {
                 runOnUiThread {
-                    binding.scannerTest.text = it.text
+                    val newRow = TableRow(this@MainScanner)
+                    val newText = TextView(this@MainScanner)
+                    newText.text = it.text
+
+                    newRow.addView(newText)
+
+                    // Find your TableLayout by its ID
+                    val tableLayout = binding.tableLayout
+                    tableLayout.addView(newRow)
                 }
             }
 

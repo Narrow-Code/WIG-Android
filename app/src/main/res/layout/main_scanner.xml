@@ -112,22 +112,112 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-
+        <!--
         <TextView
             android:id="@+id/scanner_test"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="scan something..."
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/items_button"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+        -->
+
+        <Button
+            android:id="@+id/items_button"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/items"
+            android:layout_marginStart="5dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/bins_button"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bins"
+            app:layout_constraintLeft_toRightOf="@id/items_button"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <Button
+            android:id="@+id/shelves"
+            android:textSize="12sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/shelves"
+            app:layout_constraintLeft_toRightOf="@id/bins_button"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/table_titles"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/textbox_background"
+            android:padding="2dp"
+            app:layout_constraintWidth_percent=".96"
+            app:layout_constraintTop_toBottomOf="@id/items_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <TextView
+                android:id="@+id/table_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:text="@string/table_name"/>
+
+            <TextView
+                android:id="@+id/table_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/table_name"
+                app:layout_constraintRight_toLeftOf="@id/table_quantity"
+                android:text="@string/table_location"/>
+
+            <TextView
+                android:id="@+id/table_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                android:text="@string/table_quantity"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <ScrollView
+            android:id="@+id/table"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/textbox_background"
+            android:padding="2dp"
+            android:contentDescription="@string/table_description"
+            app:layout_constraintWidth_percent=".96"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/table_titles"
+            app:layout_constraintBottom_toTopOf="@id/place_queue">
+
+            <TableLayout
+                android:id="@+id/table_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </TableLayout>
+
+        </ScrollView>
 
         <Button
             android:id="@+id/place_queue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/place_queue"
-            android:textSize="15sp"
+            android:textSize="13sp"
             app:layout_constraintRight_toLeftOf="@id/check_out"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -137,7 +227,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/check_out"
-            android:textSize="15sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/clear"
             app:layout_constraintLeft_toRightOf="@id/place_queue"
@@ -147,7 +237,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/clear"
-            android:textSize="15sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@id/check_out"

@@ -13,6 +13,7 @@
     <string name="sent_email_part2">Check your email and click on the change password link to continue</string>
     <string name="verify_email">Verify Your Email</string>
     <string name="sent_email_part2_verify">Check your email and click on the confirmation link to continue</string>
+    <string name="table_description">Table to populate.</string>
 
     <!-- Input field hints -->
     <string name="username">Username</string>
@@ -38,12 +39,18 @@
     <string name="inventory">Manage Inventory</string>
     <string name="checked_out">Checked Out Items</string>
     <string name="scanner">Scanner</string>
+    <string name="items">Items</string>
+    <string name="bins">Bins</string>
+    <string name="shelves">Shelves</string>
     <!-- Button titles -->
 
     <!-- Error messages, to be replaced by errors from API -->
     <string name="invalid_user_password">Invalid Username or Password</string>
     <string name="empty_login_credentials">Please provide valid login credentials.</string>
     <string name="required_fields">Please enter all required fields</string>
+    <string name="table_name">Name</string>
+    <string name="table_location">Location</string>
+    <string name="table_quantity">Quantity</string>
     <!-- Error messages, to be replaced by errors from API -->
 
 </resources>

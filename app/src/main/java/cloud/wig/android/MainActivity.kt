@@ -12,11 +12,14 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "onCreate method is executing")
 
         // TODO have check if user is logged in
-        val isLoggedIn = false
+        val isLoggedIn = true
 
         // If user is not logged in, start login page
         if (isLoggedIn) {
-            // TODO if user is logged in redirect to main paige
+            Log.d("MainActivity", "User is logged in, starting MainScanner")
+            val intent = Intent(this, MainScanner::class.java)
+            startActivity(intent)
+            finish()
         } else {
             Log.d("MainActivity", "User is not logged in, starting LoginPage")
             val intent = Intent(this, Login::class.java)
