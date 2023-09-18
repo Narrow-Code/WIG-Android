@@ -3,12 +3,14 @@ package cloud.wig.android
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
+import android.os.Handler
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import cloud.wig.android.databinding.MainScannerBinding
@@ -17,12 +19,17 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
+import mockdata.Mocker
+
 
 private const val CAMERA_REQUEST_CODE = 101
 
+@Suppress("DEPRECATION")
 class MainScanner : AppCompatActivity() {
     private lateinit var binding: MainScannerBinding
     private lateinit var codeScanner: CodeScanner
+    private val handler = Handler()
+    private var mocker = Mocker()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,23 +53,68 @@ class MainScanner : AppCompatActivity() {
             formats = CodeScanner.ALL_FORMATS
 
             autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.CONTINUOUS
+            scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = false
 
             decodeCallback = DecodeCallback {
                 runOnUiThread {
-                    val newRow = TableRow(this@MainScanner)
-                    val newText = TextView(this@MainScanner)
-                    newText.text = it.text
+                    // newText.text = it.text
 
-                    newRow.addView(newText)
-
-                    // Find your TableLayout by its ID
                     val tableLayout = binding.tableLayout
-                    tableLayout.addView(newRow)
+                    val dataArray = arrayOf(mocker.getItem(), mocker.getLocation(), mocker.getQuantity().toString())
+                    val row = TableRow(this@MainScanner)
+
+                    val layoutParams = TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT
+                    )
+
+                    val nameTextView = TextView(this@MainScanner)
+                    nameTextView.text = dataArray[0]
+                    nameTextView.layoutParams = TableRow.LayoutParams(
+                        0,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+
+                    val locationTextView = TextView(this@MainScanner)
+                    locationTextView.text = dataArray[1]
+                    locationTextView.layoutParams = TableRow.LayoutParams(
+                        0,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                    locationTextView.gravity = Gravity.CENTER
+
+                    val quantityTextView = TextView(this@MainScanner)
+                    quantityTextView.text = dataArray[2]
+                    quantityTextView.layoutParams = TableRow.LayoutParams(
+                        0,
+                        TableRow.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                    quantityTextView.gravity = Gravity.END
+
+                    row.addView(nameTextView)
+                    row.addView(locationTextView)
+                    row.addView(quantityTextView)
+
+                    row.layoutParams = layoutParams
+
+                    tableLayout.addView(row)
+
+                    codeScanner.stopPreview()
+
+                    handler.postDelayed({
+                        // Enable scanning after 5 seconds
+                        codeScanner.startPreview()
+                    }, 5000)
+
                 }
+
             }
+
 
             errorCallback = ErrorCallback {
                 runOnUiThread {
