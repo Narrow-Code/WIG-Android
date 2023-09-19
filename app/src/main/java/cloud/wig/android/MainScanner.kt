@@ -197,7 +197,7 @@ class MainScanner : AppCompatActivity() {
         binding.tableItemsTitles.visibility = View.INVISIBLE
         binding.tableItemsTitles.visibility = View.INVISIBLE
         binding.binsTable.visibility = View.INVISIBLE
-        binding.shelvesTable.visibility = View.INVISIBLE
+        binding.binsTable.visibility = View.INVISIBLE
 
         binding.tableShelvesTitles.visibility = View.VISIBLE
         binding.shelvesTable.visibility = View.VISIBLE

@@ -112,15 +112,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
-        <!--
-        <TextView
-            android:id="@+id/scanner_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="scan something..."
-            app:layout_constraintTop_toBottomOf="@id/items_button"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-        -->
 
         <Button
             android:id="@+id/items_button"
