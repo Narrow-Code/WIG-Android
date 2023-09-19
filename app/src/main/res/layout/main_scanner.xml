@@ -103,6 +103,79 @@
         </com.budiyev.android.codescanner.CodeScannerView>
     </RelativeLayout>
 
+    <FrameLayout
+        android:id="@+id/overlay_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:visibility="gone">
+    </FrameLayout>
+
+    <TableLayout
+        android:id="@+id/add_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/design_default_color_on_primary"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_menu"
+        android:visibility="visible">
+        <TableRow>
+            <TextView
+                android:id="@+id/location_menu_item"
+                android:layout_width="wrap_content"
+                android:padding="3dp"
+                android:background="@drawable/textbox_background"
+                android:layout_height="wrap_content"
+                android:textSize="23sp"
+                android:text="@string/location" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/shelf_menu_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:background="@drawable/textbox_background"
+                android:textSize="23sp"
+                android:text="@string/shelf" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/bins_menu_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:background="@drawable/textbox_background"
+                android:textSize="23sp"
+                android:text="@string/bin" />
+        </TableRow>
+
+
+        <TableRow>
+            <TextView
+                android:id="@+id/bag_menu_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:background="@drawable/textbox_background"
+                android:textSize="23sp"
+                android:text="@string/bag" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:id="@+id/item_menu_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="3dp"
+                android:background="@drawable/textbox_background"
+                android:textSize="23sp"
+                android:text="@string/item" />
+        </TableRow>
+
+    </TableLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_menu"

@@ -62,6 +62,34 @@ class MainScanner : AppCompatActivity() {
             switchToShelvesView()
         }
 
+        binding.add.setOnClickListener{
+            addMenuPopup()
+        }
+
+        binding.overlayLayout.setOnClickListener{
+            removeMenuPopup()
+        }
+
+        binding.locationMenuItem.setOnClickListener {
+            // TODO
+        }
+
+        binding.shelfMenuItem.setOnClickListener {
+            // TODO
+        }
+
+        binding.binsMenuItem.setOnClickListener {
+            // TODO
+        }
+
+        binding.bagMenuItem.setOnClickListener {
+            // TODO
+        }
+
+        binding.itemMenuItem.setOnClickListener {
+            // TODO
+        }
+
     }
 
     private fun codeScanner() {
@@ -195,9 +223,9 @@ class MainScanner : AppCompatActivity() {
 
     private fun switchToShelvesView() {
         binding.tableItemsTitles.visibility = View.INVISIBLE
-        binding.tableItemsTitles.visibility = View.INVISIBLE
+        binding.tableBinsTitles.visibility = View.INVISIBLE
         binding.binsTable.visibility = View.INVISIBLE
-        binding.binsTable.visibility = View.INVISIBLE
+        binding.itemsTable.visibility = View.INVISIBLE
 
         binding.tableShelvesTitles.visibility = View.VISIBLE
         binding.shelvesTable.visibility = View.VISIBLE
@@ -345,6 +373,19 @@ class MainScanner : AppCompatActivity() {
         }, 1500)
 
     }
+
+    private fun addMenuPopup() {
+        binding.addMenu.visibility = View.VISIBLE
+        binding.overlayLayout.visibility = View.VISIBLE
+        binding.overlayLayout.bringToFront()
+        binding.addMenu.bringToFront()
+    }
+
+    private fun removeMenuPopup() {
+        binding.addMenu.visibility = View.INVISIBLE
+        binding.overlayLayout.visibility = View.INVISIBLE
+    }
+
 
 
 }
