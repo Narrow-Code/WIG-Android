@@ -14,6 +14,8 @@
     <string name="verify_email">Verify Your Email</string>
     <string name="sent_email_part2_verify">Check your email and click on the confirmation link to continue</string>
     <string name="table_description">Table to populate.</string>
+    <string name="search">Search</string>
+    <string name="add">Add New</string>
 
     <!-- Input field hints -->
     <string name="username">Username</string>

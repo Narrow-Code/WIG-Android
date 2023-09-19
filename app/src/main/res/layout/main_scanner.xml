@@ -142,6 +142,30 @@
             app:layout_constraintTop_toTopOf="parent"
             />
 
+        <ImageButton
+            android:id="@+id/search"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:src="@drawable/ic_search"
+            android:padding="7dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/search"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/add"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@null"
+            android:contentDescription="@string/add"
+            android:src="@drawable/ic_plus"
+            android:padding="7dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintRight_toLeftOf="@id/search"
+            app:layout_constraintTop_toTopOf="parent"/>
+
         <!-- Items -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/table_items_titles"
