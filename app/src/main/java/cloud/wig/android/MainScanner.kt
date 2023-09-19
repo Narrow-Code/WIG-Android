@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import android.os.Handler
+import android.util.TypedValue
 import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
@@ -89,6 +90,10 @@ class MainScanner : AppCompatActivity() {
 
         binding.itemMenuItem.setOnClickListener {
             // TODO
+        }
+
+        binding.placeQueue.setOnClickListener{
+            placeQueuePopup()
         }
 
     }
@@ -180,16 +185,41 @@ class MainScanner : AppCompatActivity() {
 
     private fun removeAllRowsFromTableLayout() {
         var tableLayout = binding.itemsTableLayout
+        val placeQueueMenu = binding.placeQueueMenu
 
         when (pageView) {
             "items" -> {
                 tableLayout = binding.itemsTableLayout
             }
+
             "bins" -> {
                 tableLayout = binding.binsTableLayout
+                for (i in placeQueueMenu.childCount - 1 downTo 0) {
+                    val row = placeQueueMenu.getChildAt(i)
+                    if (row is TableRow) {
+                        val textView = row.getChildAt(0) as? TextView
+
+                        if (textView?.text.toString().endsWith("Bin")) {
+                            placeQueueMenu.removeViewAt(i)
+                        }
+
+                    }
+                }
             }
+
             "shelves" -> {
                 tableLayout = binding.shelvesTableLayout
+                for (i in placeQueueMenu.childCount - 1 downTo 0) {
+                    val row = placeQueueMenu.getChildAt(i)
+                    if (row is TableRow) {
+                        val textView = row.getChildAt(0) as? TextView
+
+                        if (textView?.text.toString().endsWith("Shelf")) {
+                            placeQueueMenu.removeViewAt(i)
+                        }
+
+                    }
+                }
             }
         }
 
@@ -301,6 +331,7 @@ class MainScanner : AppCompatActivity() {
 
         val nameTextView = TextView(this@MainScanner)
         nameTextView.text = dataArray[0]
+        addToPlaceQueueMenu(dataArray[0] + " - Bin")
         nameTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -345,6 +376,7 @@ class MainScanner : AppCompatActivity() {
 
         val nameTextView = TextView(this@MainScanner)
         nameTextView.text = dataArray[0]
+        addToPlaceQueueMenu(dataArray[0] + " - Shelf")
         nameTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -370,7 +402,7 @@ class MainScanner : AppCompatActivity() {
         codeScanner.stopPreview()
 
         handler.postDelayed({
-            // Enable scanning after 5 seconds
+            // Enable scanning after 1.5 seconds
             codeScanner.startPreview()
         }, 1500)
 
@@ -381,13 +413,46 @@ class MainScanner : AppCompatActivity() {
         binding.overlayLayout.visibility = View.VISIBLE
         binding.overlayLayout.bringToFront()
         binding.addMenu.bringToFront()
+        codeScanner.stopPreview()
     }
 
     private fun removeMenuPopup() {
         binding.addMenu.visibility = View.INVISIBLE
         binding.overlayLayout.visibility = View.INVISIBLE
+        binding.placeQueueMenu.visibility = View.INVISIBLE
+        codeScanner.startPreview()
     }
 
+    private fun placeQueuePopup() {
+        binding.placeQueueMenu.visibility = View.VISIBLE
+        binding.overlayLayout.visibility = View.VISIBLE
+        binding.overlayLayout.bringToFront()
+        binding.placeQueueMenu.bringToFront()
+        codeScanner.stopPreview()
+    }
 
+    private fun addToPlaceQueueMenu(binName: String) {
+        val placeQueueMenu = binding.placeQueueMenu
+        val row = TableRow(this@MainScanner)
 
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val binTextView = TextView(this@MainScanner)
+        binTextView.text = binName
+        binTextView.layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.WRAP_CONTENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+        binTextView.setPadding(3, 3, 3, 3) // Set padding
+        binTextView.setBackgroundResource(R.drawable.menu_background)
+        binTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 23f) // Set text size
+
+        row.addView(binTextView)
+        row.layoutParams = layoutParams
+
+        placeQueueMenu.addView(row)
+    }
 }
