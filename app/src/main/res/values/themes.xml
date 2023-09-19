@@ -14,5 +14,6 @@
         <!-- Customize your theme here. -->
         <item name="colorTextboxOutline">@color/black</item>
         <item name="colorIcons">@color/black</item>
+        <item name="menuBackground">@color/white</item>
     </style>
 </resources>

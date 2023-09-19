@@ -16,6 +16,11 @@
     <string name="table_description">Table to populate.</string>
     <string name="search">Search</string>
     <string name="add">Add New</string>
+    <string name="location">Location</string>
+    <string name="shelf">Shelf</string>
+    <string name="bin">Bin</string>
+    <string name="bag">Bag</string>
+    <string name="item">Item</string>
 
     <!-- Input field hints -->
     <string name="username">Username</string>

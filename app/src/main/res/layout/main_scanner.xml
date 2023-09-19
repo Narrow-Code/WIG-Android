@@ -115,7 +115,7 @@
         android:id="@+id/add_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/design_default_color_on_primary"
+        android:background="?attr/colorOnPrimary"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_menu"
         android:visibility="visible">
@@ -124,7 +124,7 @@
                 android:id="@+id/location_menu_item"
                 android:layout_width="wrap_content"
                 android:padding="3dp"
-                android:background="@drawable/textbox_background"
+                android:background="@drawable/menu_background"
                 android:layout_height="wrap_content"
                 android:textSize="23sp"
                 android:text="@string/location" />
@@ -136,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:background="@drawable/textbox_background"
+                android:background="@drawable/menu_background"
                 android:textSize="23sp"
                 android:text="@string/shelf" />
         </TableRow>
@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:background="@drawable/textbox_background"
+                android:background="@drawable/menu_background"
                 android:textSize="23sp"
                 android:text="@string/bin" />
         </TableRow>
@@ -159,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:background="@drawable/textbox_background"
+                android:background="@drawable/menu_background"
                 android:textSize="23sp"
                 android:text="@string/bag" />
         </TableRow>
@@ -170,7 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="3dp"
-                android:background="@drawable/textbox_background"
+                android:background="@drawable/menu_background"
                 android:textSize="23sp"
                 android:text="@string/item" />
         </TableRow>
