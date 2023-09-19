@@ -20,6 +20,7 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
+import com.google.zxing.BarcodeFormat
 import mockdata.Mocker
 
 
@@ -97,7 +98,8 @@ class MainScanner : AppCompatActivity() {
 
         codeScanner.apply {
             camera = CodeScanner.CAMERA_BACK
-            formats = CodeScanner.ALL_FORMATS
+            formats = listOf(BarcodeFormat.UPC_A, BarcodeFormat.UPC_E, BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.QR_CODE)
+
 
             autoFocusMode = AutoFocusMode.SAFE
             scanMode = ScanMode.SINGLE
