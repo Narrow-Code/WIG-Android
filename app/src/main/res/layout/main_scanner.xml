@@ -118,7 +118,7 @@
         android:background="?attr/colorOnPrimary"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_menu"
-        android:visibility="visible">
+        android:visibility="invisible">
         <TableRow>
             <TextView
                 android:id="@+id/location_menu_item"
