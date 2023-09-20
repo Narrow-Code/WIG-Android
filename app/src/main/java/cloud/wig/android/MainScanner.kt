@@ -96,6 +96,10 @@ class MainScanner : AppCompatActivity() {
             placeQueuePopup()
         }
 
+        binding.placeQueueMenu.setOnClickListener{
+            // TODO figure out how to click on all indexes
+        }
+
     }
 
     private fun codeScanner() {
