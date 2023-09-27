@@ -64,32 +64,8 @@ class MainScanner : AppCompatActivity() {
             switchToShelvesView()
         }
 
-        binding.add.setOnClickListener{
-            addMenuPopup()
-        }
-
         binding.overlayLayout.setOnClickListener{
             removeMenuPopup()
-        }
-
-        binding.locationMenuItem.setOnClickListener {
-            // TODO
-        }
-
-        binding.shelfMenuItem.setOnClickListener {
-            // TODO
-        }
-
-        binding.binsMenuItem.setOnClickListener {
-            // TODO
-        }
-
-        binding.bagMenuItem.setOnClickListener {
-            // TODO
-        }
-
-        binding.itemMenuItem.setOnClickListener {
-            // TODO
         }
 
         binding.placeQueue.setOnClickListener{
@@ -412,16 +388,7 @@ class MainScanner : AppCompatActivity() {
 
     }
 
-    private fun addMenuPopup() {
-        binding.addMenu.visibility = View.VISIBLE
-        binding.overlayLayout.visibility = View.VISIBLE
-        binding.overlayLayout.bringToFront()
-        binding.addMenu.bringToFront()
-        codeScanner.stopPreview()
-    }
-
     private fun removeMenuPopup() {
-        binding.addMenu.visibility = View.INVISIBLE
         binding.overlayLayout.visibility = View.INVISIBLE
         binding.placeQueueMenu.visibility = View.INVISIBLE
         codeScanner.startPreview()
@@ -446,6 +413,12 @@ class MainScanner : AppCompatActivity() {
 
         val binTextView = TextView(this@MainScanner)
         binTextView.text = binName
+        // TODO change this to pass to place queue confirmation page
+        // binTextView.setOnClickListener {
+        //    val intent = Intent(this@MainScanner, NextActivity::class.java)
+        //    intent.putExtra("BIN_NAME", binName)
+        //    startActivity(intent)
+        //}
         binTextView.layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.WRAP_CONTENT,
             TableRow.LayoutParams.WRAP_CONTENT
