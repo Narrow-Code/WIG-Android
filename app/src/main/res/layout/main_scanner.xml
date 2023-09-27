@@ -112,17 +112,6 @@
         android:visibility="gone">
     </FrameLayout>
 
-    <!-- Place Queue Menu -->
-    <TableLayout
-        android:id="@+id/place_queue_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorOnPrimary"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_menu"
-        android:visibility="invisible">
-    </TableLayout>
-
     <!-- Bottom menu -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_menu"
@@ -354,6 +343,17 @@
                 android:layout_height="wrap_content">
             </TableLayout>
         </ScrollView>
+
+        <!-- Place Queue Menu -->
+        <TableLayout
+            android:id="@+id/place_queue_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorOnPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/place_queue"
+            android:visibility="invisible">
+        </TableLayout>
 
         <Button
             android:id="@+id/place_queue"
