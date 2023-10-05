@@ -49,8 +49,6 @@ pipeline {
                 script {
 
                     sh "./gradlew build"
-
-                    ls -la
                     
                 }
             }
