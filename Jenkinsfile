@@ -43,7 +43,7 @@ pipeline {
                 echo 'Running Tests'
                 script {
 
-                    sh "./gradlew test${env.BRANCH_NAME}UnitTest"
+                    sh "./gradlew build"
                 }
             }
         }
