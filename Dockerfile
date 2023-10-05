@@ -1,5 +1,4 @@
-FROM openjdk:17.0-bullseye
-
+FROM openjdk:9
 WORKDIR project/
 
 # Install Build Essentials
