@@ -35,7 +35,7 @@ pipeline {
     agent { 
         docker {
             image 'mingc/android-build-box:latest' 
-            args  'android-sdk-cache:/opt/android-sdk/'
+//            args  'android-sdk-cache:/opt/android-sdk/'
                 }
             }
     environment {
