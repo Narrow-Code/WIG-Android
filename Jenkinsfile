@@ -43,9 +43,9 @@ pipeline {
 
     }
     stages {
-        stage('Run Tests') {
+        stage('Build') {
             steps {
-                echo 'Running Tests'
+                echo 'Running Build'
                 script {
 
                     sh "./gradlew build"
@@ -53,12 +53,11 @@ pipeline {
                 }
             }
         }
-        stage('Build Bundle') {
-            when { expression { return isDeployCandidate() } }
+        stage('Deploy') {
             steps {
-                echo 'Building'
+                echo 'Copying to web server'
                 script {
-                    sh "./gradlew bundle${env.BRANCH_NAME}"
+                    sh "ls"
                 }
             }
         }
