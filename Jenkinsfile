@@ -32,7 +32,7 @@ def isDeployCandidate() {
 }
 
 pipeline {
-    agent { dockerfile true }
+    agent { docker.image 'mingc/android-build-box:latest' }
     environment {
         appName = 'wig'
 
