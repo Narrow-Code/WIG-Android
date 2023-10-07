@@ -63,11 +63,8 @@ pipeline {
             steps {
                 echo 'Copying to web server'
 
-                echo GIT_BRANCH_BASE[0] + env.BUILD_NUMBER
-                
-                echo env.BUILD_NUMBER
-
-                
+                echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
+          
                 script {
                     sh "ls"
                 }
