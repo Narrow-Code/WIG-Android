@@ -63,9 +63,14 @@ pipeline {
             steps {
                 echo 'Copying to web server'
 
+          
+                script {
+
+
+                    
                 switch(GIT_GRANCH_BASE) {
      
-                  case ["master"]:
+                  case "master":
                     echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
                     break
                   case "development":
@@ -78,8 +83,9 @@ pipeline {
                     echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
                     break
                 }
-          
-                script {
+
+
+                    
                     sh "ls"
                 }
             }
