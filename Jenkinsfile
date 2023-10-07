@@ -67,15 +67,16 @@ pipeline {
      
                   case ["master"]:
                     echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
-                    
+                    break
                   case "development":
                     echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
-                    
+                    break
                   case "release":
                     echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
-                    
+                    break
                   default:
                     echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
+                    break
                 }
           
                 script {
