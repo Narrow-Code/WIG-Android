@@ -64,6 +64,7 @@ pipeline {
                 echo 'Copying to web server'
 
                 echo GIT_BRANCH_BASE[0] 
+                
                 echo env.BUILD_NUMBER
 
                 
