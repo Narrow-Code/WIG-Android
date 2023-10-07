@@ -68,7 +68,7 @@ pipeline {
 
 
                     
-                switch(GIT_GRANCH_BASE) {
+                switch(GIT_BRANCH_BASE) {
      
                   case "master":
                     echo GIT_BRANCH_BASE[0] +'[' + env.BUILD_NUMBER + ']'
