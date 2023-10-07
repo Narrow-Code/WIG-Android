@@ -31,6 +31,12 @@ def isDeployCandidate() {
     return ("${env.BRANCH_NAME}" =~ /(develop|master)/)
 }
 
+
+
+def GIT_BRANCH_BASE = env.BRANCH_NAME.split('/')
+
+
+
 pipeline {
     agent { 
         docker {
@@ -57,9 +63,7 @@ pipeline {
             steps {
                 echo 'Copying to web server'
 
-                def GIT_GRANCH_BASE = env.BRANCH_NAME.split('/')
-
-                echo GIT_GRANCH_BASE[0]
+                echo GIT_BRANCH_BASE[0]
 
                 
                 script {
