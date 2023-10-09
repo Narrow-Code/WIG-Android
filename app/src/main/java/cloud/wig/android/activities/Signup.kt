@@ -9,10 +9,6 @@ import android.util.Log
 import cloud.wig.android.R
 import cloud.wig.android.databinding.SignupBinding
 import cloud.wig.android.models.SaltAndHash
-import cloud.wig.android.api.User
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class Signup : AppCompatActivity() {
     private lateinit var binding: SignupBinding
@@ -49,10 +45,7 @@ class Signup : AppCompatActivity() {
         // Check verifications
         Log.d("signupButton", "About to start signUp method")
         val verification = signUp(username, email, password, confirmPassword)
-
-        // Handle results
-        handleResult(verification, email)
-
+        // TODO handle verification
     }
 
     /**
@@ -107,25 +100,9 @@ class Signup : AppCompatActivity() {
         // Generate Hash
         val hash = SaltAndHash().generateHash(password, salt.toHexString())
 
-        // Pass to API
-        GlobalScope.launch(Dispatchers.Main) {
-            val result = User().SignupPost(username, email, hash, salt)
-            handleResult(result, email)
-        }
-        return "Fail"
-    }
+        // TODO pass to API
 
-    private fun handleResult(result: String, email: String) {
-        if (result == "User added successfully") {
-            // Load Email Verification page
-            val intent = Intent(this, EmailVerification::class.java)
-            intent.putExtra("EMAIL_KEY", email)
-            startActivity(intent)
-            finish()
-        } else{
-            // Return error message
-            binding.error.text = result
-        }
+        return "Fail"
     }
 
     /**
