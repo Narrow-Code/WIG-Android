@@ -36,6 +36,8 @@
     <string name="invalid_user_password">Invalid Username or Password</string>
     <string name="empty_login_credentials">Please provide valid login credentials.</string>
     <string name="required_fields">Please enter all required fields</string>
+    <string name="password_missmatch">Passwords do not match</string>
+    <string name="email_not_valid">Not a valid email address</string>
     <!-- Error messages, to be replaced by errors from API -->
 
 </resources>

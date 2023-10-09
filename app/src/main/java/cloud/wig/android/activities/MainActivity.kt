@@ -1,4 +1,4 @@
-package cloud.wig.android
+package cloud.wig.android.activities
 
 import android.util.Log
 import android.content.Intent

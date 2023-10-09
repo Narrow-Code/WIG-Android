@@ -1,4 +1,4 @@
-package cloud.wig.android
+package cloud.wig.android.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import cloud.wig.android.R
 import cloud.wig.android.databinding.ServerSetupBinding
 
 class ServerSetup : AppCompatActivity() {
