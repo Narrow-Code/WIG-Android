@@ -6,9 +6,14 @@ import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.databinding.SignupBinding
+import cloud.wig.android.kotorclient.data.remote.PostsService
 import cloud.wig.android.models.SaltAndHash
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class Signup : AppCompatActivity() {
     private lateinit var binding: SignupBinding
@@ -17,6 +22,7 @@ class Signup : AppCompatActivity() {
     private val usernameRegex = Regex(".*")
     private val passwordRegex = Regex(".*")
 
+    private val service = PostsService.create()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,11 +86,29 @@ class Signup : AppCompatActivity() {
             // Generate Hash
             val hash = SaltAndHash().generateHash(password, salt.toHexString())
 
-            // TODO pass to API
-        }
+            // Pass to API
+            lifecycleScope.launch {
+                try {
+                    val posts = withContext(Dispatchers.IO) {
+                        service.getPosts() // Change to createPost
+                    }
 
-        // TODO if API is success switch to email screen
-        // TODO else log error
+                    // If API is success switch to email screen
+                    if (posts.success){
+                        val intent = Intent(this@Signup, EmailVerification::class.java)
+                        intent.putExtra("EMAIL_KEY", posts.data.email)
+                        startActivity(intent)
+                        finish()
+                    }
+                    else {
+                        binding.error.text = posts.message
+                    }
+
+                } catch (e: Exception) {
+                    // TODO handle exception, maybe network issue popup?
+                }
+            }
+        }
 
     }
 
