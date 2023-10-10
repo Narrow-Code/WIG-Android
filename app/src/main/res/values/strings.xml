@@ -38,6 +38,8 @@
     <string name="required_fields">Please enter all required fields</string>
     <string name="password_missmatch">Passwords do not match</string>
     <string name="email_not_valid">Not a valid email address</string>
+    <string name="wrong_username_criteria">Username does not match criteria</string>
+    <string name="wrong_password_criteria">Password does not match criteria</string>
     <!-- Error messages, to be replaced by errors from API -->
 
 </resources>
