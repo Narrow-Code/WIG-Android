@@ -18,9 +18,9 @@ import kotlinx.coroutines.withContext
 class Signup : AppCompatActivity() {
     private lateinit var binding: SignupBinding
     // TODO set verification rules, maybe in own file
-    private val emailRegex = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
-    private val usernameRegex = Regex(".*")
-    private val passwordRegex = Regex(".*")
+    private val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+    private val usernameRegex = Regex("^[a-zA-Z0-9_-]{4,20}\$")
+    private val passwordRegex = Regex("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d\\s!@#\$%^&*()_+={}\\[\\]:;<>,.?~\\\\-]{8,}\$")
 
     private val service = PostsService.create()
 
