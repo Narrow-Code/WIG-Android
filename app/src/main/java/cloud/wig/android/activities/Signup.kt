@@ -9,15 +9,20 @@ import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.databinding.SignupBinding
-import cloud.wig.android.api.users.PostsService
+import cloud.wig.android.api.users.UserService
 import cloud.wig.android.models.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- * The Signup class controls the functionality on the signup page of the WIG application
- * @author Matthew McCaughey
+ * The Signup class controls the functionality on the signup page of the WIG application.
+ *
+ * @property binding The binding for the Signup page layout.
+ * @property usernameRegex Regular expression for username validation.
+ * @property passwordRegex Regular expression for password validation.
+ * @property emailRegex Regular expression for email validation.
+ * @property service An instance of [UserService] for making API calls related to user operations.
  */
 class Signup : AppCompatActivity() {
 
@@ -26,7 +31,7 @@ class Signup : AppCompatActivity() {
     private val usernameRegex = Regex("^[a-zA-Z0-9_-]{4,20}$")
     private val passwordRegex = Regex("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d\\s!@#\$%^&*()_+={}\\[\\]:;<>,.?~\\\\-]{8,}\$")
     private val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
-    private val service = PostsService.create()
+    private val service = UserService.create()
 
     /**
      * Called when the activity is first created.
@@ -59,10 +64,14 @@ class Signup : AppCompatActivity() {
     }
 
     /**
-     * signupButton controls the functions of the Signup button on the main page.
-     * It will check all input field requirements and make the API call to create a new user in the backend database.
+     * Handles the signup button click event.
+     * Disables the button, retrieves field inputs, checks requirements, generates salt and hash,
+     * and makes an API call to create a new user.
      */
     private fun signupButton() {
+        // Disable button
+        binding.signupButton.isEnabled = false
+
         // Store field inputs as variables
         val username = binding.username.text.toString()
         val email = binding.email.text.toString()
@@ -84,8 +93,8 @@ class Signup : AppCompatActivity() {
     }
 
     /**
-     * loginButton controls the functions of the Login button.
-     * This redirects the user to the Login page.
+     * Handles the login button click event.
+     * Starts the [Login] activity.
      */
     private fun loginButton() {
         val intent = Intent(this, Login::class.java)
@@ -94,8 +103,8 @@ class Signup : AppCompatActivity() {
     }
 
     /**
-     * selfHostButton controls the functions of the self host button.
-     * This redirects the user to the Server Setup page.
+     * Handles the self-host button click event.
+     * Starts the [ServerSetup] activity.
      */
     private fun selfHostButton() {
         val intent = Intent(this, ServerSetup::class.java)
@@ -104,19 +113,17 @@ class Signup : AppCompatActivity() {
     }
 
     /**
-     * Turns salt into Hex String.
-     * @return Salt as a hex string.
+     * Converts a byte array to its hexadecimal representation.
+     *
+     * @return A string representing the hexadecimal value of the byte array.
      */
     private fun ByteArray.toHexString(): String {
         return joinToString("") { "%02x".format(it) }
     }
 
     /**
-     * signupAPICall handles the API call to create a user in the database.
-     * @param username The username to be added to database
-     * @param email The email to be added to database
-     * @param hash The hash to be added to database
-     * @param salt The ByteArray to be added to database
+     * Makes an API call to create a new user.
+     * Handles API response, enables the signup button on failure, and displays error messages.
      */
     private fun signupAPICall(username: String, email: String, hash: String, salt: ByteArray){
         lifecycleScope.launch {
@@ -125,7 +132,7 @@ class Signup : AppCompatActivity() {
                 binding.signupButton.isEnabled = false
 
                 val posts = withContext(Dispatchers.IO) {
-                    service.getPosts() // Change to createPost
+                    service.getUser() // Change to createPost
                 }
 
                 // If API is success switch to email screen
@@ -150,41 +157,44 @@ class Signup : AppCompatActivity() {
     }
 
     /**
-     * Requirements checks the fields for valid entries before making the API call.
-     * @param username The username to check
-     * @param email The email to check
-     * @param password The password to check
-     * @param confirmPassword The second password to confirm
+     * Checks the requirements for username, email, and password.
+     *
+     * @return True if all requirements are met, false otherwise.
      */
     private fun requirementsCheck(username: String, email: String, password: String, confirmPassword: String): Boolean{
 
         // Check null fields
         if (username == "" || email == "" || password == "" || confirmPassword == "") {
             binding.error.text = getString(R.string.required_fields)
+            binding.signupButton.isEnabled = true
             return false
         }
 
         // Check that passwords match
         else if (password != confirmPassword) {
             binding.error.text = getString(R.string.password_missmatch)
+            binding.signupButton.isEnabled = true
             return false
         }
 
         // Check username requirements
         else if (!usernameRegex.matches(username)) {
             binding.error.text = getString(R.string.wrong_username_criteria)
+            binding.signupButton.isEnabled = true
             return false
         }
 
         // Check Email validity
         else if (!emailRegex.matches(email)) {
             binding.error.text = getString(R.string.email_not_valid)
+            binding.signupButton.isEnabled = true
             return false
         }
 
         // Check password requirements
         else if(!passwordRegex.matches(password)){
             binding.error.text = getString(R.string.wrong_password_criteria)
+            binding.signupButton.isEnabled = true
             return false
         }
         return true

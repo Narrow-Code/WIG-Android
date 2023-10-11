@@ -11,16 +11,24 @@ import io.ktor.client.request.*
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
-class PostsServiceImpl(
+/**
+ * Implementation of [UserService] interface for handling user-related operations.
+ *
+ * @author Matthew McCaughey
+ * @property client An instance of [HttpClient] used for making HTTP requests.
+ */
+class UserServiceImpl(
     private val client: HttpClient
-) : PostsService {
+) : UserService {
 
     private val nullResponse: SignupResponse = SignupResponse(UserData(0, "", "", "", "", "", ""), "fail", false)
 
-    override suspend fun getPosts(): SignupResponse {
+
+    // TODO remove when real API is implemented, maybe use to get user info
+    override suspend fun getUser(): SignupResponse {
         return try {
             client.get<SignupResponse> {
-                url(HttpRoutes.POSTS)}
+                url(HttpRoutes.SIGNUP)}
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             println("Error: ${e.response.status.description}")
@@ -39,12 +47,18 @@ class PostsServiceImpl(
         }
     }
 
-    override suspend fun createPost(postRequest: SignupRequest): SignupResponse? {
+    /**
+     * Creates a new user with the provided [signupRequest].
+     *
+     * @param signupRequest Request object containing user information for signup.
+     * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
+     */
+    override suspend fun createUser(signupRequest: SignupRequest): SignupResponse? {
         return try {
             client.post<SignupResponse> {
-                url(HttpRoutes.POSTS)
+                url(HttpRoutes.SIGNUP)
                 contentType(ContentType.Application.Json)
-                body = postRequest
+                body = signupRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
