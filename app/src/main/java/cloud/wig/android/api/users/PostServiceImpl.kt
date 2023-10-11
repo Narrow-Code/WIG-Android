@@ -1,8 +1,8 @@
-package cloud.wig.android.kotorclient.data.remote
+package cloud.wig.android.api.users
 
-import cloud.wig.android.kotorclient.data.remote.dto.PostRequest
-import cloud.wig.android.kotorclient.data.remote.dto.PostResponse
-import cloud.wig.android.kotorclient.data.remote.dto.UserData
+import cloud.wig.android.api.users.dto.SignupRequest
+import cloud.wig.android.api.users.dto.SignupResponse
+import cloud.wig.android.api.users.dto.UserData
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
@@ -15,11 +15,11 @@ class PostsServiceImpl(
     private val client: HttpClient
 ) : PostsService {
 
-    val nullResponse: PostResponse = PostResponse(UserData(0, "", "", "", "", "", ""), "fail", false)
+    private val nullResponse: SignupResponse = SignupResponse(UserData(0, "", "", "", "", "", ""), "fail", false)
 
-    override suspend fun getPosts(): PostResponse {
+    override suspend fun getPosts(): SignupResponse {
         return try {
-            client.get<PostResponse> {
+            client.get<SignupResponse> {
                 url(HttpRoutes.POSTS)}
         } catch(e: RedirectResponseException) {
             // 3xx - responses
@@ -39,9 +39,9 @@ class PostsServiceImpl(
         }
     }
 
-    override suspend fun createPost(postRequest: PostRequest): PostResponse? {
+    override suspend fun createPost(postRequest: SignupRequest): SignupResponse? {
         return try {
-            client.post<PostResponse> {
+            client.post<SignupResponse> {
                 url(HttpRoutes.POSTS)
                 contentType(ContentType.Application.Json)
                 body = postRequest

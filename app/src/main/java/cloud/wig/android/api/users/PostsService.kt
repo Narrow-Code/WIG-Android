@@ -1,7 +1,7 @@
-package cloud.wig.android.kotorclient.data.remote
+package cloud.wig.android.api.users
 
-import cloud.wig.android.kotorclient.data.remote.dto.PostRequest
-import cloud.wig.android.kotorclient.data.remote.dto.PostResponse
+import cloud.wig.android.api.users.dto.SignupRequest
+import cloud.wig.android.api.users.dto.SignupResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.json.JsonFeature
@@ -11,9 +11,9 @@ import io.ktor.client.features.logging.Logging
 
 interface PostsService {
 
-    suspend fun getPosts(): PostResponse
+    suspend fun getPosts(): SignupResponse
 
-    suspend fun createPost(postRequest: PostRequest): PostResponse?
+    suspend fun createPost(postRequest: SignupRequest): SignupResponse?
 
     companion object {
         fun create(): PostsService {

@@ -1,9 +1,9 @@
-package cloud.wig.android.kotorclient.data.remote.dto
+package cloud.wig.android.api.users.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PostResponse(
+data class SignupResponse(
     val data: UserData,
     val message: String,
     val success: Boolean

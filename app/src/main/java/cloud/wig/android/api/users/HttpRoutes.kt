@@ -1,4 +1,4 @@
-package cloud.wig.android.kotorclient.data.remote
+package cloud.wig.android.api.users
 
 object HttpRoutes {
     private const val BASE_URL = "https://mocki.io/v1"
