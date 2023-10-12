@@ -18,6 +18,7 @@ import kotlinx.coroutines.withContext
 /**
  * The Signup class controls the functionality on the signup page of the WIG application.
  *
+ * @author Matthew McCaughey
  * @property binding The binding for the Signup page layout.
  * @property usernameRegex Regular expression for username validation.
  * @property passwordRegex Regular expression for password validation.
@@ -132,7 +133,7 @@ class Signup : AppCompatActivity() {
                 binding.signupButton.isEnabled = false
 
                 val posts = withContext(Dispatchers.IO) {
-                    service.getUser() // Change to createPost
+                    service.getUser() // TODO Change to createPost
                 }
 
                 // If API is success switch to email screen
