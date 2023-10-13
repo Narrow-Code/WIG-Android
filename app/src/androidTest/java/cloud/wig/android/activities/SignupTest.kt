@@ -3,7 +3,9 @@ package cloud.wig.android.activities
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.launchActivity
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -16,25 +18,143 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
+/**
+ * SignupTest is a set of Large UI tests for the Signup page of WIG.
+ */
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class SignupTest{
 
     private lateinit var scenario: ActivityScenario<Signup>
 
+    /**
+     * Set up the scenario before each test
+     */
     @Before fun setup(){
         scenario = launchActivity()
         scenario.moveToState(Lifecycle.State.RESUMED)
     }
 
+    /**
+     * Testing the error message when all fields are empty during sign up.
+     */
     @Test
     fun allFieldsEmpty(){
         onView(withId(R.id.signup_button)).perform(click())
         onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
     }
 
-    // onView(withId(R.id.username)).perform(ViewActions.typeText("Stitchy"))
-    // Espresso.closeSoftKeyboard()
+    /**
+     * Testing the error message when the username field is empty during sign up.
+     */
+    @Test
+    fun usernameEmpty(){
+        onView(withId(R.id.email)).perform(ViewActions.typeText("john3-16@breadoflife.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("PraiseHim12"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("PraiseHim12"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.required_fields))
+    }
 
+    /**
+     * Testing the error message when the email field is empty during sign up.
+     */
+    @Test
+    fun emailEmpty(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("GodsServant"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("Ephesians6"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("Ephesians6"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.required_fields))
+    }
+
+    /**
+     * Testing the error message when the password field is empty during sign up.
+     */
+    @Test
+    fun passwordEmpty(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Moses"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("ten@commandments.gov"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("LawAndOrder5"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.required_fields))
+    }
+
+    /**
+     * Testing the error message when the confirm password field is empty during sign up.
+     */
+    @Test
+    fun confirmPasswordEmpty(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Goliath"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("BigGuy@philistine.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform((ViewActions.typeText(("Am1ADog?!"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.required_fields))
+    }
+
+    /**
+     * Testing the error message when the username field input is too short during sign up.
+     */
+    @Test
+    fun usernameTooShort(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("nun"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("joshua1-19@imHisDad.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform((ViewActions.typeText(("PraiseHim12"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("PraiseHim12"))
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.wrong_username_criteria))
+    }
+
+    /**
+     * Testing the error message when the username field input has spaces during sign up.
+     */
+    @Test
+    fun usernameHasSpaces(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Jesus Loves Me"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("truth@bible.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform((ViewActions.typeText(("Romans3-23"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Romans3-23"))
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.wrong_username_criteria))
+        onView(withId(R.id.username)).perform(ViewActions.clearText())
+        onView(withId(R.id.username)).perform(ViewActions.typeText(" ThisIKnow"))
+        Espresso.closeSoftKeyboard()
+        onView(withText(R.string.wrong_username_criteria))
+    }
+
+    /**
+     * Testing the error message when the username field input has symbols during sign up.
+     */
+    @Test
+    fun usernameHasSymbols(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("TheLoveOf$$$$"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("firtsTimmothy@sixTen.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform((ViewActions.typeText(("Money12$$"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.clearText())
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Money12$$"))
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.wrong_username_criteria))
+    }
 
 }
