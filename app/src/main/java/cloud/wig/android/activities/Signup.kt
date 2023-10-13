@@ -173,7 +173,7 @@ class Signup : AppCompatActivity() {
 
         // Check that passwords match
         else if (password != confirmPassword) {
-            binding.error.text = getString(R.string.password_missmatch)
+            binding.error.text = getString(R.string.password_mismatch)
             binding.signupButton.isEnabled = true
             return false
         }

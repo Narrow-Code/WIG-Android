@@ -1,5 +1,6 @@
 package cloud.wig.android.activities
 
+import android.util.Log
 import androidx.lifecycle.Lifecycle
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.launchActivity
@@ -40,8 +41,12 @@ class SignupTest{
      */
     @Test
     fun allFieldsEmpty(){
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = ""; val email = ""; val password = ""; val confirmPassword = ""
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
+        Log.d("SignupTest", " allFieldsEmpty: required_fields error is displayed")
     }
 
     /**
@@ -49,14 +54,12 @@ class SignupTest{
      */
     @Test
     fun usernameEmpty(){
-        onView(withId(R.id.email)).perform(ViewActions.typeText("john3-16@breadoflife.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("PraiseHim12"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("PraiseHim12"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = ""; val email = "john3-16@breadoflife.com"; val password = "PraiseHim12"; val confirmPassword = "PraiseHim12"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "usernameEmpty: required_fields error is displayed")
     }
 
     /**
@@ -64,14 +67,12 @@ class SignupTest{
      */
     @Test
     fun emailEmpty(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("GodsServant"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("Ephesians6"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("Ephesians6"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "GodsServant"; val email = ""; val password = "Ephesians6"; val confirmPassword = "Ephesians6"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "emailEmpty: required_fields error is displayed")
     }
 
     /**
@@ -79,14 +80,12 @@ class SignupTest{
      */
     @Test
     fun passwordEmpty(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Moses"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("ten@commandments.gov"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("LawAndOrder5"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Moses"; val email = "ten@commandments.gov"; val password = ""; val confirmPassword = "LawAndOrder"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "passwordEmpty: required_fields error is displayed")
     }
 
     /**
@@ -94,14 +93,12 @@ class SignupTest{
      */
     @Test
     fun confirmPasswordEmpty(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Goliath"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("BigGuy@philistine.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform((ViewActions.typeText(("Am1ADog?!"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Goliath"; val email = "BigGuy@philistine.com"; val password = "Am1ADog"; val confirmPassword = ""
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "confirmPasswordEmpty: required_fields error is displayed")
     }
 
     /**
@@ -109,16 +106,12 @@ class SignupTest{
      */
     @Test
     fun usernameTooShort(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("nun"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("joshua1-19@imHisDad.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform((ViewActions.typeText(("PraiseHim12"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("PraiseHim12"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "nun"; val email = "joshua1-19@imHistDad.com"; val password = "PraiseHim12"; val confirmPassword = "PraiseHim12"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.wrong_username_criteria)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "usernameTooShort: wrong_username_criteria error is displayed")
     }
 
     /**
@@ -126,16 +119,12 @@ class SignupTest{
      */
     @Test
     fun usernameHasSpaces(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Jesus Loves Me"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("truth@bible.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform((ViewActions.typeText(("Romans3-23"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Romans3-23"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Jesus Loves Me"; val email = "truth@bible.com"; val password = "Romans3-23"; val confirmPassword = "Romans3-23"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.wrong_username_criteria))
+        Log.d("SignupTest", "usernameHasSpaces: wrong_username_criteria error is displayed")
     }
 
     /**
@@ -143,16 +132,12 @@ class SignupTest{
      */
     @Test
     fun usernameStartsWithSpace(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText(" JesusLovesMe"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("truth@bible.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform((ViewActions.typeText(("Romans3-23"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Romans3-23"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = " JesusLovesMe"; val email = "truth@bible.com"; val password = "Romans3-23"; val confirmPassword = "Romans3-23"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.wrong_username_criteria))
+        Log.d("SignupTest", "usernameStartsWithSpace: wrong_username_criteria error is displayed")
     }
 
     /**
@@ -160,16 +145,13 @@ class SignupTest{
      */
     @Test
     fun usernameHasSymbols(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("TheLoveOf$$$$"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("firtsTimmothy@sixTen.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform((ViewActions.typeText(("Money12$$"))))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Money12$$"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "TheLoveOf$$$$"; val email = "firstTimothy@sixTen.com"; val password = "Money12$$"; val confirmPassword = "Money12$$"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.wrong_username_criteria)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "usernameHasSymbols: wrong_username_criteria error is displayed")
+
     }
 
     /**
@@ -177,16 +159,13 @@ class SignupTest{
      */
     @Test
     fun emailMissingAtSign(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("buildingTemples.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Solomon"; val email = "buildingTemples.com"; val password = "Proverbs1"; val confirmPassword = "Proverbs1"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "emailMissingAtSign: email_not_valid error is displayed")
+
     }
 
     /**
@@ -194,16 +173,12 @@ class SignupTest{
      */
     @Test
     fun emailMissingTopLevelDomain(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("originalMason@buildingTemples"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Solomon"; val email = "originalMason@buildingTemples"; val password = "Proverbs1"; val confirmPassword = "Proverbs1"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "emailMissingTopLevelDomain: email_not_valid error is displayed")
     }
 
     /**
@@ -211,16 +186,12 @@ class SignupTest{
      */
     @Test
     fun emailHasSpacesInName(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("original Mason@buildingTemples.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Solomon"; val email = "original Mason@buildingTemples.com"; val password = "Proverbs1"; val confirmPassword = "Proverbs1"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "emailHasSpacesInName: email_not_valid error is displayed")
     }
 
     /**
@@ -228,16 +199,12 @@ class SignupTest{
      */
     @Test
     fun emailHasSpacesInDomain(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("originalMason@building Temples.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Solomon"; val email = "originalMason@building Temples.com"; val password = "Proverbs1"; val confirmPassword = "Proverbs1"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "emailHasSpacesInDomain: email_not_valid error is displayed")
     }
 
     /**
@@ -245,16 +212,12 @@ class SignupTest{
      */
     @Test
     fun emailStartsWithASpace(){
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText(" originalMason@buildingTemples.com"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Solomon"; val email = " originalMason@buildingTemples.com"; val password = "Proverbs1"; val confirmPassword = "Proverbs1"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "emailStartsWithASpace: email_not_valid error is displayed")
     }
 
     /**
@@ -262,16 +225,12 @@ class SignupTest{
      */
     @Test
     fun passwordsDoNotMatch() {
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText(" writingLetters@epistles.net"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("Damascus1!"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Dramatic1!"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.password_missmatch)).check(matches(isDisplayed()))
+        val username = "Paul"; val email = "writingLetters@epistles.net"; val password = "Damascus1!"; val confirmPassword = "Dramatic1!"
+
+        enterFields(username, email, password, confirmPassword)
+
+        onView(withText(R.string.password_mismatch)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "passwordsDoNoMatch: password_mismatch error is displayed")
     }
 
     /**
@@ -279,16 +238,12 @@ class SignupTest{
      */
     @Test
     fun passwordConfirmationEndsWithSpace() {
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText(" writingLetters@epistles.net"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("Damascus1!"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Damascus1! "))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.password_missmatch)).check(matches(isDisplayed()))
+        val username = "Paul"; val email = "writingLetters@epistles.net"; val password = "Damascus1!"; val confirmPassword = "Damascus1! "
+
+        enterFields(username, email, password, confirmPassword)
+
+        onView(withText(R.string.password_mismatch)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "passwordConfirmationEndsWithSpace: password_mismatch error is displayed")
     }
 
     /**
@@ -296,16 +251,12 @@ class SignupTest{
      */
     @Test
     fun passwordMinimumCharacters() {
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("writingLetters@epistles.net"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("Romans1"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Romans1"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Paul"; val email = "writingLetters@epistles.net"; val password = "Romans1"; val confirmPassword = "Romans1"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.wrong_password_criteria)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "passwordMinimumCharacters: wrong_password_criteria error is displayed")
     }
 
     /**
@@ -313,16 +264,12 @@ class SignupTest{
      */
     @Test
     fun passwordNoNumbers() {
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("writingLetters@epistles.net"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("RomansOne"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("RomansOne"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Paul"; val email = "writingLetters@epistles.net"; val password = "RomansOne"; val confirmPassword = "RomansOne"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.wrong_password_criteria)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "passwordNoNumbers: wrong_password_criteria error is displayed")
     }
 
     /**
@@ -330,16 +277,65 @@ class SignupTest{
      */
     @Test
     fun passwordNoCapitals() {
-        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.email)).perform(ViewActions.typeText("writingLetters@epistles.net"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.password)).perform(ViewActions.typeText("romans110"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("romans110"))
-        Espresso.closeSoftKeyboard()
-        onView(withId(R.id.signup_button)).perform(click())
+        val username = "Paul"; val email = "writingLetters@epistles.net"; val password = "romans110"; val confirmPassword = "romans110"
+
+        enterFields(username, email, password, confirmPassword)
+
         onView(withText(R.string.wrong_password_criteria)).check(matches(isDisplayed()))
+        Log.d("SignupTest", "passwordNoCapitals: wrong_password_criteria error is displayed")
+    }
+
+    /**
+     * The enterFields function enters all of the fields in the signup field with the arguments.
+     * If a string is empty, the field will be skipped over
+     *
+     * @param username The username to enter
+     * @param email The email to enter
+     * @param password The password to enter
+     * @param confirmPassword The confirm_password to enter
+     */
+    private fun enterFields(username: String, email: String, password: String, confirmPassword: String){
+        val testName = Thread.currentThread().stackTrace[2].methodName
+
+        Log.d("SignupTest", "$testName: test begins")
+        if(username != "") {
+            onView(withId(R.id.username)).perform(ViewActions.typeText(username))
+            Espresso.closeSoftKeyboard()
+            Log.d("SignupTest", "$testName: $username was entered in the username field")
+        }
+        else{
+            Log.d("SignupTest", "$testName: username field was skipped")
+        }
+
+        if(email != "") {
+            onView(withId(R.id.email)).perform(ViewActions.typeText(email))
+            Espresso.closeSoftKeyboard()
+            Log.d("SignupTest", "$testName: $email was entered in the email field")
+        }
+        else {
+            Log.d("SignupTest", "$testName: email field was skipped")
+        }
+
+        if(password != "") {
+            onView(withId(R.id.password)).perform(ViewActions.typeText(password))
+            Espresso.closeSoftKeyboard()
+            Log.d("SignupTest", "$testName: $password was entered in the password field")
+        }
+        else{
+            Log.d("SignupTest", "$testName: password field was skipped")
+        }
+
+        if(confirmPassword != "") {
+            onView(withId(R.id.confirm_password)).perform(ViewActions.typeText(confirmPassword))
+            Espresso.closeSoftKeyboard()
+            Log.d("SignupTest", "$testName: $confirmPassword was entered in the confirm_password field")
+        }
+        else{
+            Log.d("SignupTest", "$testName: confirm_password field was skipped")
+        }
+
+        onView(withId(R.id.signup_button)).perform(click())
+        Log.d("SignupTest", "$testName: signup_button was clicked")
     }
 
 }
