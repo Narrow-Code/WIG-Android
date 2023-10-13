@@ -56,7 +56,7 @@ class SignupTest{
         onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("PraiseHim12"))))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.required_fields))
+        onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
     }
 
     /**
@@ -71,7 +71,7 @@ class SignupTest{
         onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("Ephesians6"))))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.required_fields))
+        onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
     }
 
     /**
@@ -86,7 +86,7 @@ class SignupTest{
         onView(withId(R.id.confirm_password)).perform((ViewActions.typeText(("LawAndOrder5"))))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.required_fields))
+        onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
     }
 
     /**
@@ -101,7 +101,7 @@ class SignupTest{
         onView(withId(R.id.password)).perform((ViewActions.typeText(("Am1ADog?!"))))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.required_fields))
+        onView(withText(R.string.required_fields)).check(matches(isDisplayed()))
     }
 
     /**
@@ -116,8 +116,9 @@ class SignupTest{
         onView(withId(R.id.password)).perform((ViewActions.typeText(("PraiseHim12"))))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("PraiseHim12"))
+        Espresso.closeSoftKeyboard()
         onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.wrong_username_criteria))
+        onView(withText(R.string.wrong_username_criteria)).check(matches(isDisplayed()))
     }
 
     /**
@@ -132,11 +133,25 @@ class SignupTest{
         onView(withId(R.id.password)).perform((ViewActions.typeText(("Romans3-23"))))
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Romans3-23"))
+        Espresso.closeSoftKeyboard()
         onView(withId(R.id.signup_button)).perform(click())
         onView(withText(R.string.wrong_username_criteria))
-        onView(withId(R.id.username)).perform(ViewActions.clearText())
-        onView(withId(R.id.username)).perform(ViewActions.typeText(" ThisIKnow"))
+    }
+
+    /**
+     * Testing the error message when the username field input starts with a space during sign up.
+     */
+    @Test
+    fun usernameStartsWithSpace(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText(" JesusLovesMe"))
         Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("truth@bible.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform((ViewActions.typeText(("Romans3-23"))))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Romans3-23"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
         onView(withText(R.string.wrong_username_criteria))
     }
 
@@ -151,10 +166,180 @@ class SignupTest{
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.password)).perform((ViewActions.typeText(("Money12$$"))))
         Espresso.closeSoftKeyboard()
-        onView(withId(R.id.confirm_password)).perform(ViewActions.clearText())
         onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Money12$$"))
+        Espresso.closeSoftKeyboard()
         onView(withId(R.id.signup_button)).perform(click())
-        onView(withText(R.string.wrong_username_criteria))
+        onView(withText(R.string.wrong_username_criteria)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Testing the error message when the email field input is missing the @ symbol.
+     */
+    @Test
+    fun emailMissingAtSign(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("buildingTemples.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Testing the error message when the email field is missing a top level domain.
+     */
+    @Test
+    fun emailMissingTopLevelDomain(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("originalMason@buildingTemples"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+    }
+
+    /**
+    Testing the error message when the email field has spaces in its name
+     */
+    @Test
+    fun emailHasSpacesInName(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("original Mason@buildingTemples.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+    }
+
+    /**
+    Testing the error message when the email field has spaces in its domain
+     */
+    @Test
+    fun emailHasSpacesInDomain(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("originalMason@building Temples.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+    }
+
+    /**
+    Testing the error message when the email field starts with a space
+     */
+    @Test
+    fun emailStartsWithASpace(){
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Solomon"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText(" originalMason@buildingTemples.com"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("proverbs"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.email_not_valid)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Testing the error message when the password and confirm_password fields do not match
+     */
+    @Test
+    fun passwordsDoNotMatch() {
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText(" writingLetters@epistles.net"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("Damascus1!"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Dramatic1!"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.password_missmatch)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Testing the error message when the confirm_password matches but ends with a space
+     */
+    @Test
+    fun passwordConfirmationEndsWithSpace() {
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText(" writingLetters@epistles.net"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("Damascus1!"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Damascus1! "))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.password_missmatch)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Testing the error message when the password is bellow the minimum character limit
+     */
+    @Test
+    fun passwordMinimumCharacters() {
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("writingLetters@epistles.net"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("Romans1"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("Romans1"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.wrong_password_criteria)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Testing the error message when the password does not have a number in it
+     */
+    @Test
+    fun passwordNoNumbers() {
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("writingLetters@epistles.net"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("RomansOne"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("RomansOne"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.wrong_password_criteria)).check(matches(isDisplayed()))
+    }
+
+    /**
+     * Testing the error message when the password does not have a capital in it
+     */
+    @Test
+    fun passwordNoCapitals() {
+        onView(withId(R.id.username)).perform(ViewActions.typeText("Paul"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.email)).perform(ViewActions.typeText("writingLetters@epistles.net"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.password)).perform(ViewActions.typeText("romans110"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.confirm_password)).perform(ViewActions.typeText("romans110"))
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.signup_button)).perform(click())
+        onView(withText(R.string.wrong_password_criteria)).check(matches(isDisplayed()))
     }
 
 }
