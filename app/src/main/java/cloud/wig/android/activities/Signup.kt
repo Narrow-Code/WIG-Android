@@ -139,7 +139,7 @@ class Signup : AppCompatActivity() {
                 // If API is success switch to email screen
                 if (posts.success){
                     val intent = Intent(this@Signup, EmailVerification::class.java)
-                    intent.putExtra("EMAIL_KEY", posts.data.email)
+                    intent.putExtra("EMAIL_KEY", email)
                     startActivity(intent)
                     finish()
                 }

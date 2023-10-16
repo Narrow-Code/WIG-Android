@@ -2,7 +2,6 @@ package cloud.wig.android.api.users
 
 import cloud.wig.android.api.users.dto.SignupRequest
 import cloud.wig.android.api.users.dto.SignupResponse
-import cloud.wig.android.api.users.dto.UserData
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
@@ -21,7 +20,7 @@ class UserServiceImpl(
     private val client: HttpClient
 ) : UserService {
 
-    private val nullResponse: SignupResponse = SignupResponse(UserData(0, "", "", "", "", "", ""), "fail", false)
+    private val nullResponse: SignupResponse = SignupResponse("fail", false, 0, "")
 
 
     // TODO remove when real API is implemented, maybe use to get user info
