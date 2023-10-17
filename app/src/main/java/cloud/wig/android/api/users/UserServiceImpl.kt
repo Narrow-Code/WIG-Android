@@ -20,8 +20,7 @@ class UserServiceImpl(
     private val client: HttpClient
 ) : UserService {
 
-    private val nullResponse: SignupResponse = SignupResponse("fail", false, 0, "")
-
+    private val nullResponse: SignupResponse = SignupResponse("fail", false)
 
     // TODO remove when real API is implemented, maybe use to get user info
     override suspend fun getUser(): SignupResponse {
