@@ -15,5 +15,5 @@ object HttpRoutes {
     /**
      * The endpoint for retrieving signup posts.
      */
-    const val SIGNUP = "$BASE_URL/63302c2b-988a-451c-8c03-75e2681eb6b3"
+    const val SIGNUP = "$BASE_URL/2aa68215-aede-43eb-94d7-cf505f70c13d "
 }

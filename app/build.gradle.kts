@@ -82,6 +82,6 @@ dependencies {
     implementation ("io.ktor:ktor-client-serialization:$ktorVersion")
     implementation ("io.ktor:ktor-client-logging:$ktorVersion")
     implementation ("ch.qos.logback:logback-classic:1.2.3")
-
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 }
