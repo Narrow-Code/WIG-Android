@@ -25,4 +25,5 @@ class StoreToken(private val context: Context) {
             preferences[TOKEN] = token
         }
     }
+
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.databinding.SignupBinding
 import cloud.wig.android.api.users.UserService
+import cloud.wig.android.datastore.StoreToken
 import cloud.wig.android.models.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -138,6 +139,7 @@ class Signup : AppCompatActivity() {
 
                 // If API is success switch to email screen
                 if (posts.success){
+
                     val intent = Intent(this@Signup, EmailVerification::class.java)
                     intent.putExtra("EMAIL_KEY", email)
                     startActivity(intent)
