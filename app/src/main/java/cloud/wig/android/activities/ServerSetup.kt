@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import cloud.wig.android.MainScanner
 import cloud.wig.android.R
 import cloud.wig.android.databinding.ServerSetupBinding
 
@@ -27,7 +26,7 @@ class ServerSetup : AppCompatActivity() {
             val hostname = binding.hostname.text.toString()
             val portNumber = binding.portNumber.text.toString()
             if(hostname == "server" || portNumber == "80") {
-                val intent = Intent(this, MainScanner::class.java)
+                val intent = Intent(this, Scanner::class.java)
                 startActivity(intent)
                 finish()
             } else {

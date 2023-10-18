@@ -1,4 +1,4 @@
-package cloud.wig.android
+package cloud.wig.android.activities
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import cloud.wig.android.R
 import cloud.wig.android.databinding.MainScannerBinding
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
@@ -28,7 +29,7 @@ import mockdata.Mocker
 private const val CAMERA_REQUEST_CODE = 101
 
 @Suppress("DEPRECATION")
-class MainScanner : AppCompatActivity() {
+class Scanner : AppCompatActivity() {
     private lateinit var binding: MainScannerBinding
     private lateinit var codeScanner: CodeScanner
     private val handler = Handler()
@@ -144,7 +145,8 @@ class MainScanner : AppCompatActivity() {
     private fun makeRequest() {
         ActivityCompat.requestPermissions(this,
             arrayOf(android.Manifest.permission.CAMERA),
-            CAMERA_REQUEST_CODE)
+            CAMERA_REQUEST_CODE
+        )
     }
 
     @SuppressLint("MissingSuperCall")
@@ -249,14 +251,14 @@ class MainScanner : AppCompatActivity() {
     {
         val tableLayout = binding.itemsTableLayout
         val dataArray = arrayOf(mocker.getItem(), mocker.getLocation(), mocker.getQuantity().toString())
-        val row = TableRow(this@MainScanner)
+        val row = TableRow(this@Scanner)
 
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
 
-        val nameTextView = TextView(this@MainScanner)
+        val nameTextView = TextView(this@Scanner)
         nameTextView.text = dataArray[0]
         nameTextView.layoutParams = TableRow.LayoutParams(
             0,
@@ -264,7 +266,7 @@ class MainScanner : AppCompatActivity() {
             1f
         )
 
-        val locationTextView = TextView(this@MainScanner)
+        val locationTextView = TextView(this@Scanner)
         locationTextView.text = dataArray[1]
         locationTextView.layoutParams = TableRow.LayoutParams(
             0,
@@ -273,7 +275,7 @@ class MainScanner : AppCompatActivity() {
         )
         locationTextView.gravity = Gravity.CENTER
 
-        val quantityTextView = TextView(this@MainScanner)
+        val quantityTextView = TextView(this@Scanner)
         quantityTextView.text = dataArray[2]
         quantityTextView.layoutParams = TableRow.LayoutParams(
             0,
@@ -302,14 +304,14 @@ class MainScanner : AppCompatActivity() {
     {
         val tableLayout = binding.binsTableLayout
         val dataArray = arrayOf(mocker.getBin(), mocker.getQuantity().toString())
-        val row = TableRow(this@MainScanner)
+        val row = TableRow(this@Scanner)
 
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
 
-        val nameTextView = TextView(this@MainScanner)
+        val nameTextView = TextView(this@Scanner)
         nameTextView.text = dataArray[0]
         addToPlaceQueueMenu(dataArray[0] + " - Bin")
         nameTextView.layoutParams = TableRow.LayoutParams(
@@ -318,7 +320,7 @@ class MainScanner : AppCompatActivity() {
             1f
         )
 
-        val quantityTextView = TextView(this@MainScanner)
+        val quantityTextView = TextView(this@Scanner)
         quantityTextView.text = dataArray[1]
         quantityTextView.layoutParams = TableRow.LayoutParams(
             0,
@@ -347,14 +349,14 @@ class MainScanner : AppCompatActivity() {
     {
         val tableLayout = binding.shelvesTableLayout
         val dataArray = arrayOf(mocker.getShelf(), mocker.getQuantity().toString())
-        val row = TableRow(this@MainScanner)
+        val row = TableRow(this@Scanner)
 
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
 
-        val nameTextView = TextView(this@MainScanner)
+        val nameTextView = TextView(this@Scanner)
         nameTextView.text = dataArray[0]
         addToPlaceQueueMenu(dataArray[0] + " - Shelf")
         nameTextView.layoutParams = TableRow.LayoutParams(
@@ -363,7 +365,7 @@ class MainScanner : AppCompatActivity() {
             1f
         )
 
-        val quantityTextView = TextView(this@MainScanner)
+        val quantityTextView = TextView(this@Scanner)
         quantityTextView.text = dataArray[1]
         quantityTextView.layoutParams = TableRow.LayoutParams(
             0,
@@ -404,14 +406,14 @@ class MainScanner : AppCompatActivity() {
 
     private fun addToPlaceQueueMenu(binName: String) {
         val placeQueueMenu = binding.placeQueueMenu
-        val row = TableRow(this@MainScanner)
+        val row = TableRow(this@Scanner)
 
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT
         )
 
-        val binTextView = TextView(this@MainScanner)
+        val binTextView = TextView(this@Scanner)
         binTextView.text = binName
         // TODO change this to pass to place queue confirmation page
         // binTextView.setOnClickListener {

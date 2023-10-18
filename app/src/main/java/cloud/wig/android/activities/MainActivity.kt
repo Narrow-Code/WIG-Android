@@ -4,7 +4,6 @@ import android.util.Log
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import cloud.wig.android.MainScanner
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         // If user is not logged in, start login page
         if (isLoggedIn) {
             Log.d("MainActivity", "User is logged in, starting MainScanner")
-            val intent = Intent(this, MainScanner::class.java)
+            val intent = Intent(this, Scanner::class.java)
             startActivity(intent)
             finish()
         } else {
