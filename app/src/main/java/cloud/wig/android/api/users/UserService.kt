@@ -1,5 +1,7 @@
 package cloud.wig.android.api.users
 
+import cloud.wig.android.api.users.dto.SaltRequest
+import cloud.wig.android.api.users.dto.SaltResponse
 import cloud.wig.android.api.users.dto.SignupRequest
 import cloud.wig.android.api.users.dto.SignupResponse
 import io.ktor.client.HttpClient
@@ -17,12 +19,16 @@ import io.ktor.client.features.logging.Logging
  */
 interface UserService {
 
-    /**
-     * Retrieves user information.
-     *
-     * @return [SignupResponse] containing user information.
-     */
+    // TODO remove getUser
     suspend fun getUser(): SignupResponse
+
+    /**
+     * Retrieves salt of a user with the provided [saltRequest].
+     *
+     * @param saltRequest Request object containing user UID for login.
+     * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
+     */
+    suspend fun getSalt(saltRequest: SaltRequest): SaltResponse?
 
     /**
      * Creates a new user with the provided [signupRequest].

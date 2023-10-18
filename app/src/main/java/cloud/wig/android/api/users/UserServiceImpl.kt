@@ -1,5 +1,7 @@
 package cloud.wig.android.api.users
 
+import cloud.wig.android.api.users.dto.SaltRequest
+import cloud.wig.android.api.users.dto.SaltResponse
 import cloud.wig.android.api.users.dto.SignupRequest
 import cloud.wig.android.api.users.dto.SignupResponse
 import io.ktor.client.HttpClient
@@ -42,6 +44,37 @@ class UserServiceImpl(
         } catch(e: Exception) {
             println("Error: ${e.message}")
             return nullResponse
+        }
+    }
+
+    /**
+     * Retrieves salt of a user with the provided [saltRequest].
+     *
+     * @param saltRequest Request object containing user UID for login.
+     * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
+     */
+    override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse? {
+        return try {
+            client.post<SaltResponse> {
+                url(HttpRoutes.LOGIN)
+                contentType(ContentType.Application.Json)
+                body = saltRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            println("Error: ${e.response.status.description}")
+            null
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            println("Error: ${e.response.status.description}")
+            null
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            println("Error: ${e.response.status.description}")
+            null
+        } catch(e: Exception) {
+            println("Error: ${e.message}")
+            null
         }
     }
 
