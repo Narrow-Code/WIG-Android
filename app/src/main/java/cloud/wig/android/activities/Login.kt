@@ -5,11 +5,31 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
+import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
+import cloud.wig.android.api.users.UserService
+import cloud.wig.android.api.users.dto.LoginRequest
+import cloud.wig.android.api.users.dto.SaltRequest
 import cloud.wig.android.databinding.LoginBinding
+import cloud.wig.android.datastore.StoreToken
+import cloud.wig.android.datastore.StoreUserUID
+import cloud.wig.android.models.SaltAndHash
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
+
+/**
+ * The Signup class controls the functionality on the login page of the WIG application.
+ *
+ * @property binding The binding for the Login page layout.
+ * @property service An instance of [UserService] for making API calls related to user operations.
+ */
 class Login : AppCompatActivity() {
     private lateinit var binding: LoginBinding
+    private val service = UserService.create()
+
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,13 +60,12 @@ class Login : AppCompatActivity() {
         val username = binding.username.text.toString()
         val password = binding.password.text.toString()
 
-        if(username == "stitchy" && password == "Test123" || username == "solo" && password == "Test123"){
-            // TODO have redirect to main page
-            binding.error.text = ""
-        } else if(username == "" || password == ""){
-            binding.error.text = getString(R.string.empty_login_credentials)
-        } else{
-            binding.error.text = getString(R.string.invalid_user_password)
+        // Disable button
+        disableButtons()
+
+        // Check if fields are empty
+        if(requirementsCheck(username, password)){
+            saltAPICall(username, password)
         }
     }
 
@@ -78,5 +97,109 @@ class Login : AppCompatActivity() {
         val intent = Intent(this, ForgotPassword::class.java)
         startActivity(intent)
         finish()
+    }
+
+    /**
+     * saltAPICall begins the api call process, requesting the salt, salt and hashing the password,
+     * and then calling the Login API
+     */
+    private fun saltAPICall(username: String, password: String){
+        lifecycleScope.launch {
+            try {
+                val posts = withContext(Dispatchers.IO) {
+                    service.getSalt(SaltRequest(username))
+                }
+                    if(posts.success){
+                        val hash = SaltAndHash().generateHash(password, posts.salt)
+
+                        // Call Login API
+                        loginAPICall(username, hash)
+
+                    } else {
+                        // Enable button
+                        enableButtons()
+
+                        // Set error message
+                        binding.error.text = posts.message
+                    }
+
+            } catch(e: Exception) {
+                // TODO handle exception, maybe network issue popup?
+            }
+
+        }
+    }
+
+    /**
+     *loginAPICall sends the username and hash to the login API,
+     * if a success it saves the returned token and UID and redirects to the main scanner page.
+     */
+    private fun loginAPICall(username: String, hash: String) {
+        lifecycleScope.launch {
+            try {
+                val posts = withContext(Dispatchers.IO) {
+                    service.loginUser(LoginRequest(username, hash))
+                }
+                if(posts.success){
+                    // Save token & UID
+                    val storeToken = StoreToken(this@Login)
+                    val storeUserUID = StoreUserUID(this@Login)
+                    storeToken.saveToken(posts.token)
+                    storeUserUID.saveUID(posts.uid.toString())
+
+                    // TODO Redirect to scanner page
+
+                } else {
+                    // Enable button
+                    enableButtons()
+
+                    // Set error message
+                    binding.error.text = posts.message
+                }
+
+            } catch(e: Exception) {
+                // TODO handle exception, maybe network issue popup?
+            }
+        }
+    }
+
+    /**
+     * Checks the requirements for username, email, and password.
+     *
+     * @param username The username
+     * @param password The password
+     * @return True if all requirements are met, false otherwise.
+     */
+    private fun requirementsCheck(username: String, password: String): Boolean {
+        if(username == "" || password == ""){
+            binding.error.text = getString(R.string.required_fields)
+            enableButtons()
+            return false
+        }
+        return true
+    }
+
+    /**
+     * Disables all of the buttons on the page.
+     */
+    private fun disableButtons() {
+        for (i in 0 until binding.root.childCount) {
+            val view = binding.root.getChildAt(i)
+            if (view is Button) {
+                view.isEnabled = false
+            }
+        }
+    }
+
+    /**
+     * Enables all of the buttons on the page.
+     */
+    private fun enableButtons() {
+        for (i in 0 until binding.root.childCount) {
+            val view = binding.root.getChildAt(i)
+            if (view is Button) {
+                view.isEnabled = true
+            }
+        }
     }
 }

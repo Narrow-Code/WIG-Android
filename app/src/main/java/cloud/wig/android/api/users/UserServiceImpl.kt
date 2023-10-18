@@ -24,30 +24,9 @@ class UserServiceImpl(
     private val client: HttpClient
 ) : UserService {
 
-    private val nullResponse: SignupResponse = SignupResponse("fail", false)
-
-    // TODO remove when real API is implemented, maybe use to get user info
-    override suspend fun getUser(): SignupResponse {
-        return try {
-            client.get<SignupResponse> {
-                url(HttpRoutes.SIGNUP)}
-        } catch(e: RedirectResponseException) {
-            // 3xx - responses
-            println("Error: ${e.response.status.description}")
-            return nullResponse
-        } catch(e: ClientRequestException) {
-            // 4xx - responses
-            println("Error: ${e.response.status.description}")
-            return nullResponse
-        } catch(e: ServerResponseException) {
-            // 5xx - responses
-            println("Error: ${e.response.status.description}")
-            return nullResponse
-        } catch(e: Exception) {
-            println("Error: ${e.message}")
-            return nullResponse
-        }
-    }
+    private val nullSignupResponse: SignupResponse = SignupResponse("fail", false)
+    private val nullSaltResponse: SaltResponse = SaltResponse("fail", false, "")
+    private val nullLoginResponse: LoginResponse = LoginResponse("fail", false, "", 0)
 
     /**
      * Retrieves salt of a user with the provided [saltRequest].
@@ -55,7 +34,7 @@ class UserServiceImpl(
      * @param saltRequest Request object containing user UID for login.
      * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
      */
-    override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse? {
+    override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse {
         return try {
             client.get<SaltResponse> {
                 url(HttpRoutes.LOGIN)
@@ -65,18 +44,18 @@ class UserServiceImpl(
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullSaltResponse
         } catch(e: ClientRequestException) {
             // 4xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullSaltResponse
         } catch(e: ServerResponseException) {
             // 5xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullSaltResponse
         } catch(e: Exception) {
             println("Error: ${e.message}")
-            null
+            nullSaltResponse
         }
     }
 
@@ -86,7 +65,7 @@ class UserServiceImpl(
      * @param loginRequest Request object containing username and hash.
      * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    override suspend fun loginUser(loginRequest: LoginRequest): LoginResponse? {
+    override suspend fun loginUser(loginRequest: LoginRequest): LoginResponse {
         return try {
             client.post<LoginResponse> {
                 url(HttpRoutes.LOGIN)
@@ -96,18 +75,18 @@ class UserServiceImpl(
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullLoginResponse
         } catch(e: ClientRequestException) {
             // 4xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullLoginResponse
         } catch(e: ServerResponseException) {
             // 5xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullLoginResponse
         } catch(e: Exception) {
             println("Error: ${e.message}")
-            null
+            nullLoginResponse
         }
     }
 
@@ -117,7 +96,7 @@ class UserServiceImpl(
      * @param signupRequest Request object containing user information for signup.
      * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
      */
-    override suspend fun createUser(signupRequest: SignupRequest): SignupResponse? {
+    override suspend fun createUser(signupRequest: SignupRequest): SignupResponse {
         return try {
             client.post<SignupResponse> {
                 url(HttpRoutes.SIGNUP)
@@ -127,18 +106,18 @@ class UserServiceImpl(
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullSignupResponse
         } catch(e: ClientRequestException) {
             // 4xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullSignupResponse
         } catch(e: ServerResponseException) {
             // 5xx - responses
             println("Error: ${e.response.status.description}")
-            null
+            nullSignupResponse
         } catch(e: Exception) {
             println("Error: ${e.message}")
-            null
+            nullSignupResponse
         }
     }
 }

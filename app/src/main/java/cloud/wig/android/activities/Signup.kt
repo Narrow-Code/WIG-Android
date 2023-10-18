@@ -5,10 +5,12 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.databinding.SignupBinding
 import cloud.wig.android.api.users.UserService
+import cloud.wig.android.api.users.dto.SignupRequest
 import cloud.wig.android.models.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,7 +31,8 @@ class Signup : AppCompatActivity() {
     // Set variables
     private lateinit var binding: SignupBinding
     private val usernameRegex = Regex("^[a-zA-Z0-9_-]{4,20}$")
-    private val passwordRegex = Regex("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d\\s!@#\$%^&*()_+={}\\[\\]:;<>,.?~\\\\-]{8,}\$")
+    private val passwordRegex =
+        Regex("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d\\s!@#\$%^&*()_+={}\\[\\]:;<>,.?~\\\\-]{8,}\$")
     private val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
     private val service = UserService.create()
 
@@ -57,9 +60,9 @@ class Signup : AppCompatActivity() {
         setContentView(view)
 
         // Set on click listeners
-        binding.loginButton.setOnClickListener {loginButton()}
-        binding.signupButton.setOnClickListener {signupButton()}
-        binding.icSelfHost.setOnClickListener {selfHostButton()}
+        binding.loginButton.setOnClickListener { loginButton() }
+        binding.signupButton.setOnClickListener { signupButton() }
+        binding.icSelfHost.setOnClickListener { selfHostButton() }
     }
 
     /**
@@ -69,7 +72,7 @@ class Signup : AppCompatActivity() {
      */
     private fun signupButton() {
         // Disable button
-        binding.signupButton.isEnabled = false
+        disableButtons()
 
         // Store field inputs as variables
         val username = binding.username.text.toString()
@@ -78,7 +81,7 @@ class Signup : AppCompatActivity() {
         val confirmPassword = binding.confirmPassword.text.toString()
 
         // Check requirements and pass API
-        if(requirementsCheck(username, email, password, confirmPassword)) {
+        if (requirementsCheck(username, email, password, confirmPassword)) {
             // Generate Salt
             val salt = SaltAndHash().generateSalt()
 
@@ -124,27 +127,23 @@ class Signup : AppCompatActivity() {
      * Makes an API call to create a new user.
      * Handles API response, enables the signup button on failure, and displays error messages.
      */
-    private fun signupAPICall(username: String, email: String, hash: String, salt: ByteArray){
+    private fun signupAPICall(username: String, email: String, hash: String, salt: ByteArray) {
         lifecycleScope.launch {
             try {
-                // Disable button
-                binding.signupButton.isEnabled = false
-
                 val posts = withContext(Dispatchers.IO) {
-                    service.getUser() // TODO Change to createPost
+                    service.createUser(SignupRequest(username, email, hash, salt))
                 }
 
                 // If API is success switch to email screen
-                if (posts.success){
+                if (posts.success) {
 
                     val intent = Intent(this@Signup, EmailVerification::class.java)
                     intent.putExtra("EMAIL_KEY", email)
                     startActivity(intent)
                     finish()
-                }
-                else {
+                } else {
                     // Enable button
-                    binding.signupButton.isEnabled = true
+                    enableButtons()
 
                     // Set error message
                     binding.error.text = posts.message
@@ -159,44 +158,78 @@ class Signup : AppCompatActivity() {
     /**
      * Checks the requirements for username, email, and password.
      *
+     * @param username The username
+     * @param email The email
+     * @param password The password
+     * @param confirmPassword The confirmation password
      * @return True if all requirements are met, false otherwise.
      */
-    private fun requirementsCheck(username: String, email: String, password: String, confirmPassword: String): Boolean{
+    private fun requirementsCheck(
+        username: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): Boolean {
 
         // Check null fields
         if (username == "" || email == "" || password == "" || confirmPassword == "") {
             binding.error.text = getString(R.string.required_fields)
-            binding.signupButton.isEnabled = true
+            enableButtons()
             return false
         }
 
         // Check that passwords match
         else if (password != confirmPassword) {
             binding.error.text = getString(R.string.password_mismatch)
-            binding.signupButton.isEnabled = true
+            enableButtons()
             return false
         }
 
         // Check username requirements
         else if (!usernameRegex.matches(username)) {
             binding.error.text = getString(R.string.wrong_username_criteria)
-            binding.signupButton.isEnabled = true
+            enableButtons()
             return false
         }
 
         // Check Email validity
         else if (!emailRegex.matches(email)) {
             binding.error.text = getString(R.string.email_not_valid)
-            binding.signupButton.isEnabled = true
+            enableButtons()
             return false
         }
 
         // Check password requirements
-        else if(!passwordRegex.matches(password)){
+        else if (!passwordRegex.matches(password)) {
             binding.error.text = getString(R.string.wrong_password_criteria)
-            binding.signupButton.isEnabled = true
+            enableButtons()
             return false
         }
         return true
     }
+
+    /**
+     * Disables all of the buttons on the page.
+     */
+    private fun disableButtons() {
+        for (i in 0 until binding.root.childCount) {
+            val view = binding.root.getChildAt(i)
+            if (view is Button) {
+                view.isEnabled = false
+            }
+        }
+    }
+
+    /**
+     * Enables all of the buttons on the page.
+     */
+    private fun enableButtons() {
+        for (i in 0 until binding.root.childCount) {
+            val view = binding.root.getChildAt(i)
+            if (view is Button) {
+                view.isEnabled = true
+            }
+        }
+    }
+
 }
