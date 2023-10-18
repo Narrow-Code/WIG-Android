@@ -53,12 +53,16 @@
 
     <!-- Error messages, to be replaced by errors from API -->
     <string name="invalid_user_password">Invalid Username or Password</string>
-    <string name="empty_login_credentials">Please provide valid login credentials.</string>
+    <string name="empty_login_credentials">Please provide valid login credentials</string>
     <string name="required_fields">Please enter all required fields</string>
     <string name="table_name">Name</string>
     <string name="table_location">Location</string>
     <string name="table_quantity">Quantity</string>
     <string name="table_bin_items">Items</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="email_not_valid">Not a valid email address</string>
+    <string name="wrong_username_criteria">Username does not match criteria</string>
+    <string name="wrong_password_criteria">Password does not match criteria</string>
     <!-- Error messages, to be replaced by errors from API -->
 
 </resources>

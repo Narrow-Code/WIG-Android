@@ -1,9 +1,10 @@
-package cloud.wig.android
+package cloud.wig.android.activities
 
 import android.util.Log
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import cloud.wig.android.MainScanner
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "onCreate method is executing")
 
-        // TODO have check if user is logged in
+        // TODO have check if user is logged in by stored authentication token
         val isLoggedIn = true
 
         // If user is not logged in, start login page

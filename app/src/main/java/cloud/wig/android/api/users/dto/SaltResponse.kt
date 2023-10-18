@@ -1,0 +1,18 @@
+package cloud.wig.android.api.users.dto
+
+import kotlinx.serialization.Serializable
+
+/**
+ * Represents a data class for the response to the first step of login, retrieving salt value.
+ *
+ * @author Matthew McCaughey
+ * @property message A message indicating the result of the signup operation.
+ * @property success A boolean indicating whether the signup operation was successful.
+ * @property salt The salt value
+ */
+@Serializable
+data class SaltResponse(
+    val message: String,
+    val success: Boolean,
+    val salt: String
+)
