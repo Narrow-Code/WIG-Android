@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "onCreate method is executing")
 
-        // TODO have check if user is logged in
+        // TODO have check if user is logged in by stored authentication token
         val isLoggedIn = false
 
         // If user is not logged in, start login page

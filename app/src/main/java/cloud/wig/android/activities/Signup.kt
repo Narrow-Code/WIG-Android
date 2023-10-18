@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.databinding.SignupBinding
@@ -48,7 +47,6 @@ class Signup : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("SignupPage", "onCreate method is executing")
 
         // Set page orientation to portrait
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -66,7 +64,7 @@ class Signup : AppCompatActivity() {
 
     /**
      * Handles the signup button click event.
-     * Disables the button, retrieves field inputs, checks requirements, generates salt and hash,
+     * Retrieves field inputs, checks requirements, generates salt and hash,
      * and makes an API call to create a new user.
      */
     private fun signupButton() {
