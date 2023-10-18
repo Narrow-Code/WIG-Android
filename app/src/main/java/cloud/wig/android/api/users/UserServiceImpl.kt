@@ -37,7 +37,7 @@ class UserServiceImpl(
     override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse {
         return try {
             client.get<SaltResponse> {
-                url(HttpRoutes.LOGIN)
+                url(HttpRoutes.SALT)
                 contentType(ContentType.Application.Json)
                 body = saltRequest
             }

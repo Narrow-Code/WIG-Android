@@ -147,7 +147,10 @@ class Login : AppCompatActivity() {
                     storeToken.saveToken(posts.token)
                     storeUserUID.saveUID(posts.uid.toString())
 
-                    // TODO Redirect to scanner page
+                    // Redirect to scanner page
+                    val intent = Intent(this@Login, Scanner::class.java)
+                    startActivity(intent)
+                    finish()
 
                 } else {
                     // Enable button

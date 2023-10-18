@@ -10,13 +10,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.databinding.MainScannerBinding
+import cloud.wig.android.datastore.StoreToken
+import cloud.wig.android.datastore.StoreUserUID
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
+import kotlinx.coroutines.launch
 
 private const val CAMERA_REQUEST_CODE = 101
 
@@ -46,7 +50,9 @@ class Scanner : AppCompatActivity() {
         // Set on click listeners
         binding.binsButton.setOnClickListener{switchToBinsView()}
         binding.itemsButton.setOnClickListener{switchToItemsView()}
-        binding.shelvesButton.setOnClickListener {switchToShelvesView()}
+        binding.shelvesButton.setOnClickListener {switchToShelvesView()
+        binding.icSettings.setOnClickListener{logout()}
+        }
     }
 
     private fun codeScanner() {
@@ -135,12 +141,23 @@ class Scanner : AppCompatActivity() {
         }
     }
 
+    //TODO REMOVE THIS IS FOR TESTING LOG IN AND OUT UNTIL SETTINGS PAGE IS ADDED
+    private fun logout() {
+        // Delete token & UID
+        lifecycleScope.launch {
+            val storeToken = StoreToken(this@Scanner)
+            val storeUserUID = StoreUserUID(this@Scanner)
+            storeToken.saveToken("")
+            storeUserUID.saveUID("")
+        }
+    }
+
+
     private fun switchToBinsView() {
         binding.tableItemsTitles.visibility = View.INVISIBLE
         binding.tableShelvesTitles.visibility = View.INVISIBLE
         binding.itemsTable.visibility = View.INVISIBLE
         binding.shelvesTable.visibility = View.INVISIBLE
-
         binding.tableBinsTitles.visibility = View.VISIBLE
         binding.binsTable.visibility = View.VISIBLE
 
@@ -152,7 +169,6 @@ class Scanner : AppCompatActivity() {
         binding.tableShelvesTitles.visibility = View.INVISIBLE
         binding.binsTable.visibility = View.INVISIBLE
         binding.shelvesTable.visibility = View.INVISIBLE
-
         binding.tableItemsTitles.visibility = View.VISIBLE
         binding.itemsTable.visibility = View.VISIBLE
 
@@ -164,7 +180,6 @@ class Scanner : AppCompatActivity() {
         binding.tableBinsTitles.visibility = View.INVISIBLE
         binding.binsTable.visibility = View.INVISIBLE
         binding.itemsTable.visibility = View.INVISIBLE
-
         binding.tableShelvesTitles.visibility = View.VISIBLE
         binding.shelvesTable.visibility = View.VISIBLE
 
