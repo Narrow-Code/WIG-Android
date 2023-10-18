@@ -3,4 +3,5 @@
     <!-- Define your custom attributes here -->
     <attr name="colorTextboxOutline" format="color" />
     <attr name="colorIcons" format="color" />
+    <attr name="menuBackground" format="color" />
 </resources>
