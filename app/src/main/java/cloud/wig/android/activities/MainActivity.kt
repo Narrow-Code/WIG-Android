@@ -12,12 +12,13 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "onCreate method is executing")
 
         // TODO have check if user is logged in by stored authentication token
-        val isLoggedIn = true
+        val isLoggedIn = false
 
         // If user is not logged in, start login page
         if (isLoggedIn) {
             Log.d("MainActivity", "User is logged in, starting MainScanner")
             val intent = Intent(this, Scanner::class.java)
+            Log.d("MainActivity", "set Intent")
             startActivity(intent)
             finish()
         } else {

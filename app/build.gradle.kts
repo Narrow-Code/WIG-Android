@@ -58,7 +58,7 @@ android {
 }
 
 dependencies {
-
+    implementation("androidx.compose.runtime:runtime:1.6.0-alpha08")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
@@ -71,9 +71,6 @@ dependencies {
     androidTestImplementation ("androidx.test:core-ktx:1.5.0")
     androidTestImplementation ("androidx.test:rules:1.5.0")
     androidTestImplementation ("androidx.test:runner:1.5.2")
-
-
-
 
     val ktorVersion = "1.6.3"
     implementation ("io.ktor:ktor-client-core:$ktorVersion")

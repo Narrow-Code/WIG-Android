@@ -34,6 +34,10 @@
             <!-- Intent filters, etc. -->
         </activity>
 
+        <activity android:name=".activities.Scanner">
+            <!-- Intent filters, etc. -->
+        </activity>
+
         <activity android:name=".activities.Signup">
             <!-- Intent filters, etc. -->
         </activity>

@@ -1,5 +1,6 @@
 package cloud.wig.android.api.users
 
+import android.util.Log
 import cloud.wig.android.api.users.dto.LoginRequest
 import cloud.wig.android.api.users.dto.LoginResponse
 import cloud.wig.android.api.users.dto.SaltRequest
@@ -105,18 +106,18 @@ class UserServiceImpl(
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
-            println("Error: ${e.response.status.description}")
+            Log.d("createUser", "Error: ${e.response.status.description}")
             nullSignupResponse
         } catch(e: ClientRequestException) {
             // 4xx - responses
-            println("Error: ${e.response.status.description}")
+            Log.d("createUser", "Error: ${e.response.status.description}")
             nullSignupResponse
         } catch(e: ServerResponseException) {
             // 5xx - responses
-            println("Error: ${e.response.status.description}")
+            Log.d("createUser", "Error: ${e.response.status.description}")
             nullSignupResponse
         } catch(e: Exception) {
-            println("Error: ${e.message}")
+            Log.d("createUser", "Error: ${e.message}")
             nullSignupResponse
         }
     }
