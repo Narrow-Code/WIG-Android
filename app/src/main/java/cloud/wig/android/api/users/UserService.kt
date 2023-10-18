@@ -1,5 +1,7 @@
 package cloud.wig.android.api.users
 
+import cloud.wig.android.api.users.dto.LoginRequest
+import cloud.wig.android.api.users.dto.LoginResponse
 import cloud.wig.android.api.users.dto.SaltRequest
 import cloud.wig.android.api.users.dto.SaltResponse
 import cloud.wig.android.api.users.dto.SignupRequest
@@ -29,6 +31,9 @@ interface UserService {
      * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
      */
     suspend fun getSalt(saltRequest: SaltRequest): SaltResponse?
+
+
+    suspend fun loginUser(loginRequest: LoginRequest): LoginResponse?
 
     /**
      * Creates a new user with the provided [signupRequest].

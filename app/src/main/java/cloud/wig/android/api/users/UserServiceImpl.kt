@@ -1,5 +1,7 @@
 package cloud.wig.android.api.users
 
+import cloud.wig.android.api.users.dto.LoginRequest
+import cloud.wig.android.api.users.dto.LoginResponse
 import cloud.wig.android.api.users.dto.SaltRequest
 import cloud.wig.android.api.users.dto.SaltResponse
 import cloud.wig.android.api.users.dto.SignupRequest
@@ -55,10 +57,41 @@ class UserServiceImpl(
      */
     override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse? {
         return try {
-            client.post<SaltResponse> {
+            client.get<SaltResponse> {
                 url(HttpRoutes.LOGIN)
                 contentType(ContentType.Application.Json)
                 body = saltRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            println("Error: ${e.response.status.description}")
+            null
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            println("Error: ${e.response.status.description}")
+            null
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            println("Error: ${e.response.status.description}")
+            null
+        } catch(e: Exception) {
+            println("Error: ${e.message}")
+            null
+        }
+    }
+
+    /**
+     * Logs in the user with the provided [loginRequest].
+     *
+     * @param loginRequest Request object containing username and hash.
+     * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     */
+    override suspend fun loginUser(loginRequest: LoginRequest): LoginResponse? {
+        return try {
+            client.post<LoginResponse> {
+                url(HttpRoutes.LOGIN)
+                contentType(ContentType.Application.Json)
+                body = loginRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
