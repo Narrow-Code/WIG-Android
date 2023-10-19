@@ -1,6 +1,8 @@
 package cloud.wig.android.api.users
 
 import android.util.Log
+import cloud.wig.android.api.users.dto.LoginGetRequest
+import cloud.wig.android.api.users.dto.LoginGetResponse
 import cloud.wig.android.api.users.dto.LoginRequest
 import cloud.wig.android.api.users.dto.LoginResponse
 import cloud.wig.android.api.users.dto.SaltRequest
@@ -28,6 +30,7 @@ class UserServiceImpl(
     private val nullSignupResponse: SignupResponse = SignupResponse("fail", false)
     private val nullSaltResponse: SaltResponse = SaltResponse("fail", false, "")
     private val nullLoginResponse: LoginResponse = LoginResponse("fail", false, "", 0)
+    private val nullLoginGetResponse: LoginGetResponse = LoginGetResponse("fail", false)
 
     /**
      * Retrieves salt of a user with the provided [saltRequest].
@@ -88,6 +91,37 @@ class UserServiceImpl(
         } catch(e: Exception) {
             println("Error: ${e.message}")
             nullLoginResponse
+        }
+    }
+
+    /**
+     * Authenticates user is still logged in at startup of app [loginGetRequest].
+     *
+     * @param loginGetRequest Request object containing username and hash.
+     * @return [LoginGetResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     */
+    override suspend fun getLoginUser(loginGetRequest: LoginGetRequest): LoginGetResponse {
+        return try {
+            client.get<LoginGetResponse> {
+                url(HttpRoutes.LOGIN)
+                contentType(ContentType.Application.Json)
+                body = loginGetRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            println("Error: ${e.response.status.description}")
+            nullLoginGetResponse
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            println("Error: ${e.response.status.description}")
+            nullLoginGetResponse
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            println("Error: ${e.response.status.description}")
+            nullLoginGetResponse
+        } catch(e: Exception) {
+            println("Error: ${e.message}")
+            nullLoginGetResponse
         }
     }
 

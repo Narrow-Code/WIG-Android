@@ -1,6 +1,7 @@
 package cloud.wig.android.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -50,9 +51,8 @@ class Scanner : AppCompatActivity() {
         // Set on click listeners
         binding.binsButton.setOnClickListener{switchToBinsView()}
         binding.itemsButton.setOnClickListener{switchToItemsView()}
-        binding.shelvesButton.setOnClickListener {switchToShelvesView()
+        binding.shelvesButton.setOnClickListener {switchToShelvesView()}
         binding.icSettings.setOnClickListener{logout()}
-        }
     }
 
     private fun codeScanner() {
@@ -150,6 +150,9 @@ class Scanner : AppCompatActivity() {
             storeToken.saveToken("")
             storeUserUID.saveUID("")
         }
+        val intent = Intent(this@Scanner, Login::class.java)
+        startActivity(intent)
+        finish()
     }
 
 

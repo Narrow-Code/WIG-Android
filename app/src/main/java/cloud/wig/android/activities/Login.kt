@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
@@ -65,6 +66,7 @@ class Login : AppCompatActivity() {
 
         // Check if fields are empty
         if(requirementsCheck(username, password)){
+            Log.d("Login", "Before saltAPICall")
             saltAPICall(username, password)
         }
     }

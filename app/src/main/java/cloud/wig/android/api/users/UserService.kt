@@ -1,5 +1,7 @@
 package cloud.wig.android.api.users
 
+import cloud.wig.android.api.users.dto.LoginGetRequest
+import cloud.wig.android.api.users.dto.LoginGetResponse
 import cloud.wig.android.api.users.dto.LoginRequest
 import cloud.wig.android.api.users.dto.LoginResponse
 import cloud.wig.android.api.users.dto.SaltRequest
@@ -32,7 +34,10 @@ interface UserService {
 
     suspend fun loginUser(loginRequest: LoginRequest): LoginResponse
 
-    /**
+    suspend fun getLoginUser(loginGetRequest: LoginGetRequest): LoginGetResponse
+
+
+        /**
      * Creates a new user with the provided [signupRequest].
      *
      * @param signupRequest Request object containing user information for signup.
