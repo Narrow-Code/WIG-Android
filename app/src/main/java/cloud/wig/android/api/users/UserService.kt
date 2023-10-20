@@ -31,9 +31,20 @@ interface UserService {
      */
     suspend fun getSalt(saltRequest: SaltRequest): SaltResponse
 
-
+    /**
+     * Logs in the user with the provided [loginRequest].
+     *
+     * @param loginRequest Request object containing username and hash.
+     * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     */
     suspend fun loginUser(loginRequest: LoginRequest): LoginResponse
 
+    /**
+     * Authenticates user is still logged in at startup of app [loginGetRequest].
+     *
+     * @param loginGetRequest Request object containing username and hash.
+     * @return [LoginGetResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     */
     suspend fun getLoginUser(loginGetRequest: LoginGetRequest): LoginGetResponse
 
 

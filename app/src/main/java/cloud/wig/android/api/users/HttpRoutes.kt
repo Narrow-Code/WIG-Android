@@ -2,8 +2,6 @@ package cloud.wig.android.api.users
 
 /**
  * This package provides HTTP route constants for user-related operations in the cloud.wig.android.api.users module.
- *
- * @author Matthew McCaughey
  */
 object HttpRoutes {
 

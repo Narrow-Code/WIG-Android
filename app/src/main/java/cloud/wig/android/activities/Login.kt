@@ -31,7 +31,13 @@ class Login : AppCompatActivity() {
     private lateinit var binding: LoginBinding
     private val service = UserService.create()
 
-
+    /**
+     * Called when the activity is first created.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then
+     * this Bundle contains the data it most recently supplied in [onSaveInstanceState].
+     * Note: Otherwise it is null.
+     */
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +109,10 @@ class Login : AppCompatActivity() {
 
     /**
      * saltAPICall begins the api call process, requesting the salt, salt and hashing the password,
-     * and then calling the Login API
+     * and then calling the Login API.
+     *
+     * @param username The username
+     * @param password The password to salt and hash
      */
     private fun saltAPICall(username: String, password: String){
         lifecycleScope.launch {
@@ -135,6 +144,9 @@ class Login : AppCompatActivity() {
     /**
      *loginAPICall sends the username and hash to the login API,
      * if a success it saves the returned token and UID and redirects to the main scanner page.
+     *
+     * @param username The username
+     * @param hash The hashed password
      */
     private fun loginAPICall(username: String, hash: String) {
         lifecycleScope.launch {

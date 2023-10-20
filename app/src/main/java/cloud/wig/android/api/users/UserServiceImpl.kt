@@ -20,12 +20,14 @@ import io.ktor.http.contentType
 /**
  * Implementation of [UserService] interface for handling user-related operations.
  *
- * @author Matthew McCaughey
  * @property client An instance of [HttpClient] used for making HTTP requests.
+ * @property nullSignupResponse a SignupResponse for failed process
+ * @property nullSaltResponse a SaltResponse for failed process
+ * @property nullLoginResponse a LoginResponse for failed process
+ * @property nullLoginGetResponse a LoginGetResponse for failed process
  */
 class UserServiceImpl(
-    private val client: HttpClient
-) : UserService {
+    private val client: HttpClient ) : UserService {
 
     private val nullSignupResponse: SignupResponse = SignupResponse("fail", false)
     private val nullSaltResponse: SaltResponse = SaltResponse("fail", false, "")

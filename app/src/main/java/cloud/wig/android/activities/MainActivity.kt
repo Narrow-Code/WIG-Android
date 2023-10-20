@@ -14,18 +14,36 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/**
+ * The MainActivity class controls the functionality on the startup of the WIG application.
+ *
+ * @property service An instance of [UserService] for making API calls related to user operations.
+ */
 class MainActivity : AppCompatActivity() {
 
     private val service = UserService.create()
 
+    /**
+     * Called when the activity is first created.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then
+     * this Bundle contains the data it most recently supplied in [onSaveInstanceState].
+     * Note: Otherwise it is null.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("MainActivity", "onCreate method is executing")
 
-         storedCheck()
+         checkStoredDataAndCall()
     }
 
-    private fun storedCheck() {
+    /**
+     * checkStoredDataAndCall checks to see if a token and UID exist in the DataStore.
+     * If they do exist, it makes an API call checking if the token is currently active.
+     * If the token is active, the app is redirected to the Scanner page.
+     * If there is no token or it is not active, the user is redirected to the Login page.
+     */
+    private fun checkStoredDataAndCall() {
         lifecycleScope.launch {
             val storeToken = StoreToken(this@MainActivity)
             val tokenFlow: Flow<String?> = storeToken.getToken
@@ -55,6 +73,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Makes the API call to check the status of the token.
+     * If the token is active, the app is redirected to the Scanner page.
+     * If the token is not active, the app is redirected to the Login page,
+     * and the token is removed from DataStore.
+     *
+     * @param uid The saved UID
+     * @param token The saved token
+     */
     private fun apiCall(uid: String, token: String) {
         lifecycleScope.launch {
 
@@ -70,6 +97,12 @@ class MainActivity : AppCompatActivity() {
                     startActivity(intent)
                     finish()
                 } else {
+                    // TODO make else IF TOKEN IS NOT ACTIVE
+                    val storeToken = StoreToken(this@MainActivity)
+                    val storeUserUID = StoreUserUID(this@MainActivity)
+                    storeToken.saveToken("")
+                    storeUserUID.saveUID("")
+
                     val intent = Intent(this@MainActivity, Login::class.java)
                     startActivity(intent)
                     finish()

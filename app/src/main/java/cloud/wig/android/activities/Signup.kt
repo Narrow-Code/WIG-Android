@@ -19,7 +19,6 @@ import kotlinx.coroutines.withContext
 /**
  * The Signup class controls the functionality on the signup page of the WIG application.
  *
- * @author Matthew McCaughey
  * @property binding The binding for the Signup page layout.
  * @property usernameRegex Regular expression for username validation.
  * @property passwordRegex Regular expression for password validation.
@@ -38,10 +37,6 @@ class Signup : AppCompatActivity() {
 
     /**
      * Called when the activity is first created.
-     *
-     * This is where you should do all of your normal static set up: create views, bind data to lists, etc.
-     * This method also provides you with a [Bundle] containing the activity's previously saved state, if that state
-     * was recorded. Always followed by [onStart].
      *
      * @param savedInstanceState If the activity is being re-initialized after previously being shut down then
      * this Bundle contains the data it most recently supplied in [onSaveInstanceState].
@@ -126,6 +121,11 @@ class Signup : AppCompatActivity() {
     /**
      * Makes an API call to create a new user.
      * Handles API response, enables the signup button on failure, and displays error messages.
+     *
+     * @param username Input from the username field
+     * @param email Input from the email field
+     * @param hash Input from the hash field
+     * @param salt Input from the salt field
      */
     private fun signupAPICall(username: String, email: String, hash: String, salt: ByteArray) {
         lifecycleScope.launch {
@@ -164,12 +164,7 @@ class Signup : AppCompatActivity() {
      * @param confirmPassword The confirmation password
      * @return True if all requirements are met, false otherwise.
      */
-    private fun requirementsCheck(
-        username: String,
-        email: String,
-        password: String,
-        confirmPassword: String
-    ): Boolean {
+    private fun requirementsCheck(username: String, email: String, password: String, confirmPassword: String): Boolean {
 
         // Check null fields
         if (username == "" || email == "" || password == "" || confirmPassword == "") {
