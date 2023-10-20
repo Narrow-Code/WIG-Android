@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.api.users.UserService
@@ -44,6 +45,10 @@ class Login : AppCompatActivity() {
 
         // Set page orientation to portrait
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        // Disable back press
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
 
         // Set bindings for Signup Page and Open
         binding = LoginBinding.inflate(layoutInflater)
@@ -219,4 +224,5 @@ class Login : AppCompatActivity() {
             }
         }
     }
+
 }

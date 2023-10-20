@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import cloud.wig.android.databinding.ResetPasswordBinding
 
 class ResetPassword : AppCompatActivity() {
@@ -14,13 +14,21 @@ class ResetPassword : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("ResetPassword", "onCreate method is executing")
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // Portrait lock
+
+        // Lock to portrait
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val email = intent.getStringExtra("EMAIL_KEY")
 
-        binding = ResetPasswordBinding.inflate(layoutInflater) // set bindings to login_page layout id's
+        // Disable back press
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
+
+        // Set bindings to page and open
+        binding = ResetPasswordBinding.inflate(layoutInflater)
         val view = binding.root
-        setContentView(view) // Open login_page view
+        setContentView(view)
+
+        // Display email on page
         binding.email.text = email
 
         binding.icExit.setOnClickListener {
@@ -30,4 +38,5 @@ class ResetPassword : AppCompatActivity() {
         }
 
     }
+
 }

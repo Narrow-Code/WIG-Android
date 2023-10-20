@@ -3,14 +3,15 @@ package cloud.wig.android.activities
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
-import cloud.wig.android.databinding.SignupBinding
 import cloud.wig.android.api.users.UserService
 import cloud.wig.android.api.users.dto.SignupRequest
+import cloud.wig.android.databinding.SignupBinding
 import cloud.wig.android.models.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,6 +49,10 @@ class Signup : AppCompatActivity() {
 
         // Set page orientation to portrait
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        // Disable back press
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
 
         // Set bindings for Signup Page and Open
         binding = SignupBinding.inflate(layoutInflater)
@@ -226,5 +231,4 @@ class Signup : AppCompatActivity() {
             }
         }
     }
-
 }

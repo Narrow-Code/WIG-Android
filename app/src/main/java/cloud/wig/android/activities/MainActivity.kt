@@ -4,6 +4,7 @@ import android.util.Log
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.api.users.UserService
 import cloud.wig.android.api.users.dto.LoginGetRequest
@@ -32,7 +33,10 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "onCreate method is executing")
+
+        // Disable back press
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
 
          checkStoredDataAndCall()
     }

@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import cloud.wig.android.R
 import cloud.wig.android.databinding.ForgotPasswordBinding
 
@@ -15,10 +16,16 @@ class ForgotPassword : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("ForgotPassword", "onCreate method is executing")
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // Portrait lock
 
-        binding = ForgotPasswordBinding.inflate(layoutInflater) // set bindings to login_page layout id's
+        // Lock to portrait
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        // Disable back press
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
+
+        // Set bindings and open page
+        binding = ForgotPasswordBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
 
@@ -43,4 +50,5 @@ class ForgotPassword : AppCompatActivity() {
         }
 
     }
+
 }

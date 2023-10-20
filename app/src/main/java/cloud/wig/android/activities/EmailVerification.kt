@@ -5,7 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import cloud.wig.android.databinding.EmailVerificationBinding
 
 class EmailVerification : AppCompatActivity() {
@@ -14,13 +14,19 @@ class EmailVerification : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Email Verification", "onCreate method is executing")
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // Portrait lock
+
+        // Lock to portrait
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val email = intent.getStringExtra("EMAIL_KEY")
 
-        binding = EmailVerificationBinding.inflate(layoutInflater) // set bindings to login_page layout id's
+        // Disable back press
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
+
+        // Set bindings and open page
+        binding = EmailVerificationBinding.inflate(layoutInflater)
         val view = binding.root
-        setContentView(view) // Open login_page view
+        setContentView(view)
         binding.email.text = email
 
         binding.icExit.setOnClickListener {
@@ -30,4 +36,5 @@ class EmailVerification : AppCompatActivity() {
         }
 
     }
+
 }

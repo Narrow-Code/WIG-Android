@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -37,7 +38,11 @@ class Scanner : AppCompatActivity() {
         Log.d("LoginPage", "onCreate method is executing")
 
         // Set page orientation to portrait
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // Portrait lock
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        // Disable back press
+        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
 
         // Set bindings for Signup Page and Open
         binding = MainScannerBinding.inflate(layoutInflater)
@@ -188,4 +193,5 @@ class Scanner : AppCompatActivity() {
 
         pageView = "shelves"
     }
+
 }
