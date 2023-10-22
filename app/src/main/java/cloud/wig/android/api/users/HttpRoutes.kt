@@ -5,9 +5,9 @@ package cloud.wig.android.api.users
  */
 object HttpRoutes {
 
-    private const val BASE_URL = "https://mocki.io/v1"
+    private const val BASE_URL = "https://dev03.zahite.net"
 
-    const val SIGNUP = "$BASE_URL/2aa68215-aede-43eb-94d7-cf505f70c13d"
-    const val SALT = "$BASE_URL/addSaltURL"
-    const val LOGIN = "$BASE_URL/5f02136c-e0de-4a54-a603-212f15f14f13"
+    const val SIGNUP = "$BASE_URL/users/signup"
+    const val SALT = "$BASE_URL/users/salt"
+    const val LOGIN = "$BASE_URL/users/login"
 }
