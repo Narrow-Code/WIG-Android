@@ -43,9 +43,8 @@ class UserServiceImpl(
     override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse {
         return try {
             client.get<SaltResponse> {
-                url(HttpRoutes.SALT)
+                url("${HttpRoutes.SALT}?username=${saltRequest.username}")
                 contentType(ContentType.Application.Json)
-                body = saltRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
@@ -105,9 +104,8 @@ class UserServiceImpl(
     override suspend fun getLoginUser(loginGetRequest: LoginGetRequest): LoginGetResponse {
         return try {
             client.get<LoginGetResponse> {
-                url(HttpRoutes.LOGIN)
+                url("${HttpRoutes.LOGIN}?token=${loginGetRequest.token}&uid=${loginGetRequest.uid}")
                 contentType(ContentType.Application.Json)
-                body = loginGetRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
