@@ -13,7 +13,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
 import io.ktor.client.features.ServerResponseException
-import io.ktor.client.request.*
+import io.ktor.client.request.get
+import io.ktor.client.request.header
+import io.ktor.client.request.post
+import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 
@@ -42,9 +45,10 @@ class UserServiceImpl(
      */
     override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse {
         return try {
-            client.get<SaltResponse> {
+            client.get {
                 url("${HttpRoutes.SALT}?username=${saltRequest.username}")
                 contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
@@ -72,9 +76,10 @@ class UserServiceImpl(
      */
     override suspend fun loginUser(loginRequest: LoginRequest): LoginResponse {
         return try {
-            client.post<LoginResponse> {
+            client.post {
                 url(HttpRoutes.LOGIN)
                 contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
                 body = loginRequest
             }
         } catch(e: RedirectResponseException) {
@@ -103,9 +108,10 @@ class UserServiceImpl(
      */
     override suspend fun getLoginUser(loginGetRequest: LoginGetRequest): LoginGetResponse {
         return try {
-            client.get<LoginGetResponse> {
+            client.get {
                 url("${HttpRoutes.LOGIN}?token=${loginGetRequest.token}&uid=${loginGetRequest.uid}")
                 contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
@@ -133,9 +139,10 @@ class UserServiceImpl(
      */
     override suspend fun createUser(signupRequest: SignupRequest): SignupResponse {
         return try {
-            client.post<SignupResponse> {
+            client.post {
                 url(HttpRoutes.SIGNUP)
                 contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
                 body = signupRequest
             }
         } catch(e: RedirectResponseException) {
