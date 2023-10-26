@@ -7,7 +7,7 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.api.users.UserService
-import cloud.wig.android.api.users.dto.LoginGetRequest
+import cloud.wig.android.api.users.dto.PostLoginCheckRequest
 import cloud.wig.android.datastore.StoreToken
 import cloud.wig.android.datastore.StoreUserUID
 import kotlinx.coroutines.Dispatchers
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
             try {
                 val getLogin = withContext(Dispatchers.IO) {
-                    service.postLoginCheck(LoginGetRequest(uid, token))
+                    service.postLoginCheck(PostLoginCheckRequest(uid, token))
                 }
 
                 if (getLogin.success) {

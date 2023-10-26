@@ -11,8 +11,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.api.users.UserService
-import cloud.wig.android.api.users.dto.LoginRequest
-import cloud.wig.android.api.users.dto.SaltRequest
+import cloud.wig.android.api.users.dto.PostLoginRequest
+import cloud.wig.android.api.users.dto.GetSaltRequest
 import cloud.wig.android.databinding.LoginBinding
 import cloud.wig.android.datastore.StoreToken
 import cloud.wig.android.datastore.StoreUserUID
@@ -123,7 +123,7 @@ class Login : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.getSalt(SaltRequest(username))
+                    service.getSalt(GetSaltRequest(username))
                 }
                     if(posts.success){
                         val hash = SaltAndHash().generateHash(password, posts.salt)
@@ -157,7 +157,7 @@ class Login : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.postLogin(LoginRequest(username, hash))
+                    service.postLogin(PostLoginRequest(username, hash))
                 }
                 if(posts.success){
                     // Save token & UID

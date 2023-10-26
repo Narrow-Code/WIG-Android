@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
  * @property salt The salt value used for hashing the password.
  */
 @Serializable
-data class SignupRequest(
+data class PostSignupRequest(
     val username: String,
     val email: String,
     val hash: String,

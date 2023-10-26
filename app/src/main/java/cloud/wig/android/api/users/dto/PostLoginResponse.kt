@@ -12,7 +12,7 @@ import kotlinx.serialization.Serializable
  * @property uid The users UID
  */
 @Serializable
-data class LoginResponse(
+data class PostLoginResponse(
     val message: String,
     val success: Boolean,
     val token: String,

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @property token THe users authentication token
  */
 @Serializable
-data class LoginGetRequest(
+data class PostLoginCheckRequest(
     val uid: String,
     val token: String
 )

@@ -1,13 +1,13 @@
 package cloud.wig.android.api.users
 
-import cloud.wig.android.api.users.dto.LoginGetRequest
-import cloud.wig.android.api.users.dto.LoginGetResponse
-import cloud.wig.android.api.users.dto.LoginRequest
-import cloud.wig.android.api.users.dto.LoginResponse
-import cloud.wig.android.api.users.dto.SaltRequest
-import cloud.wig.android.api.users.dto.SaltResponse
-import cloud.wig.android.api.users.dto.SignupRequest
-import cloud.wig.android.api.users.dto.SignupResponse
+import cloud.wig.android.api.users.dto.GetSaltRequest
+import cloud.wig.android.api.users.dto.GetSaltResponse
+import cloud.wig.android.api.users.dto.PostLoginCheckRequest
+import cloud.wig.android.api.users.dto.PostLoginCheckResponse
+import cloud.wig.android.api.users.dto.PostLoginRequest
+import cloud.wig.android.api.users.dto.PostLoginResponse
+import cloud.wig.android.api.users.dto.PostSignupRequest
+import cloud.wig.android.api.users.dto.PostSignupResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.json.JsonFeature
@@ -24,37 +24,37 @@ import io.ktor.client.features.logging.Logging
 interface UserService {
 
     /**
-     * Retrieves salt of a user with the provided [saltRequest].
+     * Retrieves salt of a user with the provided [getSaltRequest].
      *
-     * @param saltRequest Request object containing user UID for login.
-     * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
+     * @param getSaltRequest Request object containing user UID for login.
+     * @return [GetSaltResponse] containing the users specific salt value, or null if unsuccessful.
      */
-    suspend fun getSalt(saltRequest: SaltRequest): SaltResponse
+    suspend fun getSalt(getSaltRequest: GetSaltRequest): GetSaltResponse
 
     /**
-     * Logs in the user with the provided [loginRequest].
+     * Logs in the user with the provided [postLoginRequest].
      *
-     * @param loginRequest Request object containing username and hash.
-     * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     * @param postLoginRequest Request object containing username and hash.
+     * @return [PostLoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun postLogin(loginRequest: LoginRequest): LoginResponse
+    suspend fun postLogin(postLoginRequest: PostLoginRequest): PostLoginResponse
 
     /**
-     * Authenticates user is still logged in at startup of app [loginGetRequest].
+     * Authenticates user is still logged in at startup of app [postLoginCheckRequest].
      *
-     * @param loginGetRequest Request object containing username and hash.
-     * @return [LoginGetResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     * @param postLoginCheckRequest Request object containing username and hash.
+     * @return [PostLoginCheckResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun postLoginCheck(loginGetRequest: LoginGetRequest): LoginGetResponse
+    suspend fun postLoginCheck(postLoginCheckRequest: PostLoginCheckRequest): PostLoginCheckResponse
 
 
         /**
-     * Creates a new user with the provided [signupRequest].
+     * Creates a new user with the provided [postSignupRequest].
      *
-     * @param signupRequest Request object containing user information for signup.
-     * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
+     * @param postSignupRequest Request object containing user information for signup.
+     * @return [PostSignupResponse] containing the newly created user's information, or null if unsuccessful.
      */
-    suspend fun postSignup(signupRequest: SignupRequest): SignupResponse
+    suspend fun postSignup(postSignupRequest: PostSignupRequest): PostSignupResponse
 
     /**
      * Companion object for creating instances of [UserService].

@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @property success A boolean indicating whether the login verification was successful.
  */
 @Serializable
-data class LoginGetResponse(
+data class PostLoginCheckResponse(
     val message: String,
     val success: Boolean
 )

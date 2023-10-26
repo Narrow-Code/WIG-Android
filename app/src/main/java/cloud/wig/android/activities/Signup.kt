@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.api.users.UserService
-import cloud.wig.android.api.users.dto.SignupRequest
+import cloud.wig.android.api.users.dto.PostSignupRequest
 import cloud.wig.android.databinding.SignupBinding
 import cloud.wig.android.models.SaltAndHash
 import kotlinx.coroutines.Dispatchers
@@ -136,7 +136,7 @@ class Signup : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.postSignup(SignupRequest(username, email, hash, salt))
+                    service.postSignup(PostSignupRequest(username, email, hash, salt))
                 }
 
                 // If API is success switch to email screen
