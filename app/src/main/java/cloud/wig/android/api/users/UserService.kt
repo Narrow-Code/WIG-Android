@@ -37,7 +37,7 @@ interface UserService {
      * @param loginRequest Request object containing username and hash.
      * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun loginUser(loginRequest: LoginRequest): LoginResponse
+    suspend fun postLogin(loginRequest: LoginRequest): LoginResponse
 
     /**
      * Authenticates user is still logged in at startup of app [loginGetRequest].
@@ -45,7 +45,7 @@ interface UserService {
      * @param loginGetRequest Request object containing username and hash.
      * @return [LoginGetResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun getLoginUser(loginGetRequest: LoginGetRequest): LoginGetResponse
+    suspend fun postLoginCheck(loginGetRequest: LoginGetRequest): LoginGetResponse
 
 
         /**
@@ -54,7 +54,7 @@ interface UserService {
      * @param signupRequest Request object containing user information for signup.
      * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
      */
-    suspend fun createUser(signupRequest: SignupRequest): SignupResponse
+    suspend fun postSignup(signupRequest: SignupRequest): SignupResponse
 
     /**
      * Companion object for creating instances of [UserService].

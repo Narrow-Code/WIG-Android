@@ -136,7 +136,7 @@ class Signup : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.createUser(SignupRequest(username, email, hash, salt))
+                    service.postSignup(SignupRequest(username, email, hash, salt))
                 }
 
                 // If API is success switch to email screen

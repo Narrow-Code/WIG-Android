@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
             try {
                 val getLogin = withContext(Dispatchers.IO) {
-                    service.getLoginUser(LoginGetRequest(uid, token))
+                    service.postLoginCheck(LoginGetRequest(uid, token))
                 }
 
                 if (getLogin.success) {

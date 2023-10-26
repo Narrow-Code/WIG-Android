@@ -157,7 +157,7 @@ class Login : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.loginUser(LoginRequest(username, hash))
+                    service.postLogin(LoginRequest(username, hash))
                 }
                 if(posts.success){
                     // Save token & UID

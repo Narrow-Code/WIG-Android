@@ -74,7 +74,7 @@ class UserServiceImpl(
      * @param loginRequest Request object containing username and hash.
      * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    override suspend fun loginUser(loginRequest: LoginRequest): LoginResponse {
+    override suspend fun postLogin(loginRequest: LoginRequest): LoginResponse {
         return try {
             client.post {
                 url(HttpRoutes.LOGIN)
@@ -106,12 +106,13 @@ class UserServiceImpl(
      * @param loginGetRequest Request object containing username and hash.
      * @return [LoginGetResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    override suspend fun getLoginUser(loginGetRequest: LoginGetRequest): LoginGetResponse {
+    override suspend fun postLoginCheck(loginGetRequest: LoginGetRequest): LoginGetResponse {
         return try {
-            client.get {
-                url("${HttpRoutes.LOGIN}?token=${loginGetRequest.token}&uid=${loginGetRequest.uid}")
+            client.post {
+                url(HttpRoutes.LOGIN_CHECK)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
+                body = loginGetRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
@@ -137,7 +138,7 @@ class UserServiceImpl(
      * @param signupRequest Request object containing user information for signup.
      * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
      */
-    override suspend fun createUser(signupRequest: SignupRequest): SignupResponse {
+    override suspend fun postSignup(signupRequest: SignupRequest): SignupResponse {
         return try {
             client.post {
                 url(HttpRoutes.SIGNUP)
