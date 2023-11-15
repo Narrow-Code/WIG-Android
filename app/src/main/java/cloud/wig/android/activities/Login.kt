@@ -3,16 +3,16 @@ package cloud.wig.android.activities
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.R
 import cloud.wig.android.api.users.UserService
-import cloud.wig.android.api.users.dto.PostLoginRequest
 import cloud.wig.android.api.users.dto.GetSaltRequest
+import cloud.wig.android.api.users.dto.PostLoginRequest
 import cloud.wig.android.databinding.LoginBinding
 import cloud.wig.android.datastore.StoreToken
 import cloud.wig.android.datastore.StoreUserUID
@@ -127,6 +127,7 @@ class Login : AppCompatActivity() {
                 }
                     if(posts.success){
                         val hash = SaltAndHash().generateHash(password, posts.salt)
+
 
                         // Call Login API
                         loginAPICall(username, hash)

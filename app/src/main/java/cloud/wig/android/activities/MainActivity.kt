@@ -1,10 +1,10 @@
 package cloud.wig.android.activities
 
-import android.util.Log
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.api.users.UserService
 import cloud.wig.android.api.users.dto.PostLoginCheckRequest

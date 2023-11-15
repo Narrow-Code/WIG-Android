@@ -5,14 +5,21 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.widget.TableRow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import cloud.wig.android.api.items.ItemService
+import cloud.wig.android.api.items.dto.PostScanRequest
+import cloud.wig.android.api.items.dto.PostScanResponse
 import cloud.wig.android.databinding.MainScannerBinding
 import cloud.wig.android.datastore.StoreToken
 import cloud.wig.android.datastore.StoreUserUID
@@ -22,15 +29,21 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val CAMERA_REQUEST_CODE = 101
 
+@Suppress("DEPRECATION")
 class Scanner : AppCompatActivity() {
     // Set variables
     private lateinit var binding: MainScannerBinding
     private lateinit var codeScanner: CodeScanner
     private var pageView = "items"
+    private val handler = Handler()
+    private val service = ItemService.create()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,16 +90,9 @@ class Scanner : AppCompatActivity() {
                 runOnUiThread {
                     // newText.text = it.text
 
-                    when (pageView) {
-                        "items" -> {
-                            // TODO what to do when items scan
-                        }
-                        "bins" -> {
-                            // TODO what to do when bins scan
-                        }
-                        "shelves" -> {
-                            // TODO what to do when shelves scan
-                        }
+                    if(it.barcodeFormat != BarcodeFormat.QR_CODE){
+                        scanBarcodeAPICall(it.text)
+                        // populateItems()
                     }
                 }
             }
@@ -160,7 +166,6 @@ class Scanner : AppCompatActivity() {
         finish()
     }
 
-
     private fun switchToBinsView() {
         binding.tableItemsTitles.visibility = View.INVISIBLE
         binding.tableShelvesTitles.visibility = View.INVISIBLE
@@ -192,6 +197,100 @@ class Scanner : AppCompatActivity() {
         binding.shelvesTable.visibility = View.VISIBLE
 
         pageView = "shelves"
+    }
+
+    private fun populateItems(postScanResponse: PostScanResponse){
+        val tableLayout = binding.itemsTableLayout
+        val row = TableRow(this@Scanner)
+
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val nameTextView = TextView(this@Scanner)
+        nameTextView.text = postScanResponse.item.substring(0 until 15)
+        nameTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+
+        val locationTextView = TextView(this@Scanner)
+        locationTextView.text = postScanResponse.ownership[0].item_location.substring(0 until 15)
+        locationTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+        locationTextView.gravity = Gravity.CENTER
+
+        val quantityTextView = TextView(this@Scanner)
+        quantityTextView.text = postScanResponse.ownership[0].item_quantity.toString()
+        quantityTextView.layoutParams = TableRow.LayoutParams(
+            0,
+            TableRow.LayoutParams.WRAP_CONTENT,
+            1f
+        )
+        quantityTextView.gravity = Gravity.END
+
+        row.addView(nameTextView)
+        row.addView(locationTextView)
+        row.addView(quantityTextView)
+
+        row.layoutParams = layoutParams
+
+        tableLayout.addView(row)
+
+        codeScanner.stopPreview()
+
+        handler.postDelayed({
+            // Enable scanning after 5 seconds
+            codeScanner.startPreview()
+        }, 1500)
+
+    }
+
+    private fun scanBarcodeAPICall(barcode: String) {
+        lifecycleScope.launch {
+            try {
+                    // TODO make get token and get uid methods
+                    val storeToken = StoreToken(this@Scanner)
+                    val tokenFlow: Flow<String?> = storeToken.getToken
+                    tokenFlow.collect { token ->
+                        if (!token.isNullOrBlank()) {
+                            val storeUserUID = StoreUserUID(this@Scanner)
+                            val userUIDFlow: Flow<String?> = storeUserUID.getUID
+
+                            userUIDFlow.collect { uid ->
+                                if (!uid.isNullOrBlank()) {
+                                    // Make API call
+                                    val postScanRequest = PostScanRequest(uid, token)
+                                    val posts = withContext(Dispatchers.IO) {
+                                        service.postScan(postScanRequest, barcode)
+                                    }
+                                    if (posts.success) {
+                                        populateItems(posts)
+                                    } else {
+                                        codeScanner.startPreview()
+                                    }
+                                } else {
+                                    val intent = Intent(this@Scanner, MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                            }
+                        } else {
+                            val intent = Intent(this@Scanner, MainActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+
+            } catch (e: Exception) {
+                // TODO handle exception, maybe network issue popup?
+            }
+        }
     }
 
 }

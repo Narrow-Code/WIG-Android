@@ -16,5 +16,5 @@ data class PostSignupRequest(
     val username: String,
     val email: String,
     val hash: String,
-    val salt: ByteArray
+    val salt: String
 )

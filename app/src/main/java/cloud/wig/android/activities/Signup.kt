@@ -136,12 +136,11 @@ class Signup : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.postSignup(PostSignupRequest(username, email, hash, salt))
+                    service.postSignup(PostSignupRequest(username, email, hash, salt.toHexString()))
                 }
 
                 // If API is success switch to email screen
                 if (posts.success) {
-
                     val intent = Intent(this@Signup, EmailVerification::class.java)
                     intent.putExtra("EMAIL_KEY", email)
                     startActivity(intent)
