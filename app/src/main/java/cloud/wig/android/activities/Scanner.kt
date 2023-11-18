@@ -92,7 +92,7 @@ class Scanner : AppCompatActivity() {
 
                     if(it.barcodeFormat != BarcodeFormat.QR_CODE){
                         scanBarcodeAPICall(it.text)
-                        // populateItems()
+                        codeScanner.startPreview()
                     }
                 }
             }
@@ -209,7 +209,7 @@ class Scanner : AppCompatActivity() {
         )
 
         val nameTextView = TextView(this@Scanner)
-        nameTextView.text = postScanResponse.item.substring(0 until 15)
+        nameTextView.text = postScanResponse.item.substring(0 until 15.coerceAtMost(postScanResponse.item.length)) ?: ""
         nameTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -217,7 +217,7 @@ class Scanner : AppCompatActivity() {
         )
 
         val locationTextView = TextView(this@Scanner)
-        locationTextView.text = postScanResponse.ownership[0].item_location.substring(0 until 15)
+        locationTextView.text = postScanResponse.ownership[0].item_location.substring(0 until 15.coerceAtMost(postScanResponse.ownership[0].item_location.length)) ?: ""
         locationTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -267,12 +267,14 @@ class Scanner : AppCompatActivity() {
                                     // Make API call
                                     val postScanRequest = PostScanRequest(uid, token)
                                     val posts = withContext(Dispatchers.IO) {
+                                        Log.d("API CALL", "Coroutine started")
                                         service.postScan(postScanRequest, barcode)
                                     }
                                     if (posts.success) {
+                                        Log.d("API CALL", "Posts success")
                                         populateItems(posts)
                                     } else {
-                                        codeScanner.startPreview()
+
                                     }
                                 } else {
                                     val intent = Intent(this@Scanner, MainActivity::class.java)
