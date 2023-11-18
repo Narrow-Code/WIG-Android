@@ -7,5 +7,5 @@ object HttpRoutes {
 
     private const val BASE_URL = "http://52.23.166.40:30001"
 
-    const val SCAN_ITEM = "$BASE_URL/items/barcode"
+    const val SCAN_ITEM = "$BASE_URL/scan/barcode"
 }

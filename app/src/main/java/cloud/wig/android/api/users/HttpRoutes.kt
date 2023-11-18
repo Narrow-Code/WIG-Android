@@ -7,8 +7,8 @@ object HttpRoutes {
 
     private const val BASE_URL = "http://52.23.166.40:30001"
 
-    const val SIGNUP = "$BASE_URL/users/signup"
-    const val SALT = "$BASE_URL/users/salt"
-    const val LOGIN = "$BASE_URL/users/login"
-    const val LOGIN_CHECK = "$BASE_URL/users/login/check"
+    const val SIGNUP = "$BASE_URL/user/signup"
+    const val SALT = "$BASE_URL/user/salt"
+    const val LOGIN = "$BASE_URL/user/login"
+    const val LOGIN_CHECK = "$BASE_URL/user/validate"
 }
