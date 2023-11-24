@@ -20,7 +20,7 @@ import io.ktor.http.contentType
 class ItemServiceImpl(private val client: HttpClient ) : ItemService {
 
     private val nullOwnerships: List<Ownership> = ArrayList()
-    private val nullPostScanResponse: PostScanResponse = PostScanResponse("fail", false, "", "", "", 0, "", nullOwnerships)
+    private val nullPostScanResponse: PostScanResponse = PostScanResponse("fail", "", nullOwnerships)
 
     override suspend fun postScan(postScanRequest: PostScanRequest, barcode: String): PostScanResponse {
         return try {

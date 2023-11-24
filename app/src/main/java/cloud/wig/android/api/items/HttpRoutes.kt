@@ -5,7 +5,7 @@ package cloud.wig.android.api.items
  */
 object HttpRoutes {
 
-    private const val BASE_URL = "http://52.23.166.40:30001"
+    private const val BASE_URL = "http://34.234.73.177:30001"
 
     const val SCAN_ITEM = "$BASE_URL/scan/barcode"
 }

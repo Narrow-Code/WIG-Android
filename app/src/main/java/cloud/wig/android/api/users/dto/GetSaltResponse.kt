@@ -7,12 +7,10 @@ import kotlinx.serialization.Serializable
  *
  * @author Matthew McCaughey
  * @property message A message indicating the result of the signup operation.
- * @property success A boolean indicating whether the signup operation was successful.
  * @property salt The salt value
  */
 @Serializable
 data class GetSaltResponse(
     val message: String,
-    val success: Boolean,
     val salt: String
 )

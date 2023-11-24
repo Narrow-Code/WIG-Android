@@ -8,11 +8,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostScanResponse(
     val message: String,
-    val success: Boolean,
-    val barcode: String,
-    val brand: String,
-    val image: String,
-    val owner: Int,
     val item: String,
     val ownership: List<Ownership>
 )
@@ -20,6 +15,8 @@ data class PostScanResponse(
 @Serializable
 data class Ownership(
     val ownership_uid: Int,
+    val item_owner: Int,
+    val item_number: Int,
     val custom_item_name: String,
     val custom_item_img: String,
     val custom_item_description: String,

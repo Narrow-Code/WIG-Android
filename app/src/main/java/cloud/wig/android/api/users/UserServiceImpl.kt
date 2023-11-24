@@ -33,10 +33,10 @@ import io.ktor.http.contentType
 class UserServiceImpl(
     private val client: HttpClient ) : UserService {
 
-    private val nullPostSignupResponse: PostSignupResponse = PostSignupResponse("fail", false)
-    private val nullGetSaltResponse: GetSaltResponse = GetSaltResponse("fail", false, "")
-    private val nullPostLoginResponse: PostLoginResponse = PostLoginResponse("fail", false, "", 0)
-    private val nullPostLoginCheckResponse: PostLoginCheckResponse = PostLoginCheckResponse("fail", false)
+    private val nullPostSignupResponse: PostSignupResponse = PostSignupResponse("fail")
+    private val nullGetSaltResponse: GetSaltResponse = GetSaltResponse("fail", "")
+    private val nullPostLoginResponse: PostLoginResponse = PostLoginResponse("fail", "", 0)
+    private val nullPostLoginCheckResponse: PostLoginCheckResponse = PostLoginCheckResponse("fail")
 
     /**
      * Retrieves salt of a user with the provided [getSaltRequest].

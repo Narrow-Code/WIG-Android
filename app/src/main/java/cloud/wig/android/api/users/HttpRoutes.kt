@@ -5,7 +5,7 @@ package cloud.wig.android.api.users
  */
 object HttpRoutes {
 
-    private const val BASE_URL = "http://52.23.166.40:30001"
+    private const val BASE_URL = "http://34.234.73.177:30001"
 
     const val SIGNUP = "$BASE_URL/user/signup"
     const val SALT = "$BASE_URL/user/salt"
