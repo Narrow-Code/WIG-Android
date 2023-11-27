@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
  * @property context The Android context used for DataStore operations.
  */
 class StoreToken(private val context: Context) {
-    companion object{
+    companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("token")
         val TOKEN = stringPreferencesKey("token")
     }
@@ -40,5 +40,4 @@ class StoreToken(private val context: Context) {
             preferences[TOKEN] = token
         }
     }
-
 }

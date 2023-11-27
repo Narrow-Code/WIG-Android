@@ -1,4 +1,4 @@
-package cloud.wig.android.models
+package cloud.wig.android.utils
 
 import java.security.SecureRandom
 import java.security.spec.KeySpec

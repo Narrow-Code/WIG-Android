@@ -10,5 +10,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class PostLoginCheckResponse(
-    val message: String
+    val message: String,
+    val success: Boolean
 )

@@ -12,5 +12,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GetSaltResponse(
     val message: String,
+    val success: Boolean,
     val salt: String
 )

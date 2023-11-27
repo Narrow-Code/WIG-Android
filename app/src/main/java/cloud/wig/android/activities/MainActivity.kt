@@ -7,9 +7,8 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.api.users.UserService
-import cloud.wig.android.api.users.dto.PostLoginCheckRequest
 import cloud.wig.android.datastore.StoreToken
-import cloud.wig.android.datastore.StoreUserUID
+import cloud.wig.android.datastore.TokenManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -54,19 +53,8 @@ class MainActivity : AppCompatActivity() {
 
             tokenFlow.collect { token ->
                 if (!token.isNullOrBlank()) {
-                    val storeUserUID = StoreUserUID(this@MainActivity)
-                    val userUIDFlow: Flow<String?> = storeUserUID.getUID
-
-                    userUIDFlow.collect { uid ->
-                        if (!uid.isNullOrBlank()) {
-                            // Make API call
-                            apiCall(uid, token)
-                        } else {
-                            val intent = Intent(this@MainActivity, Login::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
-                    }
+                    TokenManager.setToken(token)
+                    apiCall()
                 } else {
                     val intent = Intent(this@MainActivity, Login::class.java)
                     startActivity(intent)
@@ -82,16 +70,13 @@ class MainActivity : AppCompatActivity() {
      * If the token is active, the app is redirected to the Scanner page.
      * If the token is not active, the app is redirected to the Login page,
      * and the token is removed from DataStore.
-     *
-     * @param uid The saved UID
-     * @param token The saved token
      */
-    private fun apiCall(uid: String, token: String) {
+    private fun apiCall() {
         lifecycleScope.launch {
 
             try {
                 val getLogin = withContext(Dispatchers.IO) {
-                    service.postLoginCheck(PostLoginCheckRequest(uid, token))
+                    service.postLoginCheck()
                 }
 
                 if (getLogin.success) {
@@ -103,9 +88,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     // TODO make else IF TOKEN IS NOT ACTIVE
                     val storeToken = StoreToken(this@MainActivity)
-                    val storeUserUID = StoreUserUID(this@MainActivity)
                     storeToken.saveToken("")
-                    storeUserUID.saveUID("")
 
                     val intent = Intent(this@MainActivity, Login::class.java)
                     startActivity(intent)

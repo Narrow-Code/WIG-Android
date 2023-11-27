@@ -13,6 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostLoginResponse(
     val message: String,
+    val success: Boolean,
     val token: String,
     val uid: Int
 )

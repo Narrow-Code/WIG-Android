@@ -10,5 +10,6 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class PostSignupResponse(
-    val message: String
+    val message: String,
+    val success: Boolean
 )

@@ -1,8 +1,8 @@
 package cloud.wig.android.api.items
 
 import cloud.wig.android.api.items.dto.Ownership
-import cloud.wig.android.api.items.dto.PostScanRequest
 import cloud.wig.android.api.items.dto.PostScanResponse
+import cloud.wig.android.datastore.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
@@ -20,15 +20,15 @@ import io.ktor.http.contentType
 class ItemServiceImpl(private val client: HttpClient ) : ItemService {
 
     private val nullOwnerships: List<Ownership> = ArrayList()
-    private val nullPostScanResponse: PostScanResponse = PostScanResponse("fail", "", nullOwnerships)
+    private val nullPostScanResponse: PostScanResponse = PostScanResponse("fail", false, nullOwnerships)
 
-    override suspend fun postScan(postScanRequest: PostScanRequest, barcode: String): PostScanResponse {
+    override suspend fun postScan(barcode: String): PostScanResponse {
         return try {
             client.post {
                 url("${HttpRoutes.SCAN_ITEM}?barcode=${barcode}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
-                body = postScanRequest
+                header("Authorization", TokenManager.getToken())
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses

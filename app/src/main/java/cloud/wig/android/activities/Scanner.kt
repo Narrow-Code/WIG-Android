@@ -18,11 +18,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import cloud.wig.android.api.items.ItemService
-import cloud.wig.android.api.items.dto.PostScanRequest
 import cloud.wig.android.api.items.dto.PostScanResponse
 import cloud.wig.android.databinding.MainScannerBinding
 import cloud.wig.android.datastore.StoreToken
-import cloud.wig.android.datastore.StoreUserUID
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
@@ -30,7 +28,6 @@ import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -157,9 +154,7 @@ class Scanner : AppCompatActivity() {
         // Delete token & UID
         lifecycleScope.launch {
             val storeToken = StoreToken(this@Scanner)
-            val storeUserUID = StoreUserUID(this@Scanner)
             storeToken.saveToken("")
-            storeUserUID.saveUID("")
         }
         val intent = Intent(this@Scanner, Login::class.java)
         startActivity(intent)
@@ -209,7 +204,7 @@ class Scanner : AppCompatActivity() {
         )
 
         val nameTextView = TextView(this@Scanner)
-        nameTextView.text = postScanResponse.item.substring(0 until 15.coerceAtMost(postScanResponse.item.length)) ?: ""
+        nameTextView.text = postScanResponse.ownership[0].Item.item_name.substring(0 until 20.coerceAtMost(postScanResponse.ownership[0].Item.item_name.length))
         nameTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -217,7 +212,7 @@ class Scanner : AppCompatActivity() {
         )
 
         val locationTextView = TextView(this@Scanner)
-        locationTextView.text = postScanResponse.ownership[0].item_location.substring(0 until 15.coerceAtMost(postScanResponse.ownership[0].item_location.length)) ?: ""
+        locationTextView.text = postScanResponse.ownership[0].Location.location_name.substring(0 until 18.coerceAtMost(postScanResponse.ownership[0].Location.location_name.length))
         locationTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -254,41 +249,16 @@ class Scanner : AppCompatActivity() {
     private fun scanBarcodeAPICall(barcode: String) {
         lifecycleScope.launch {
             try {
-                    // TODO make get token and get uid methods
-                    val storeToken = StoreToken(this@Scanner)
-                    val tokenFlow: Flow<String?> = storeToken.getToken
-                    tokenFlow.collect { token ->
-                        if (!token.isNullOrBlank()) {
-                            val storeUserUID = StoreUserUID(this@Scanner)
-                            val userUIDFlow: Flow<String?> = storeUserUID.getUID
-
-                            userUIDFlow.collect { uid ->
-                                if (!uid.isNullOrBlank()) {
-                                    // Make API call
-                                    val postScanRequest = PostScanRequest(uid, token)
-                                    val posts = withContext(Dispatchers.IO) {
-                                        Log.d("API CALL", "Coroutine started")
-                                        service.postScan(postScanRequest, barcode)
-                                    }
-                                    if (posts.success) {
-                                        Log.d("API CALL", "Posts success")
-                                        populateItems(posts)
-                                    } else {
-
-                                    }
-                                } else {
-                                    val intent = Intent(this@Scanner, MainActivity::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                            }
-                        } else {
-                            val intent = Intent(this@Scanner, MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }
-                    }
-
+                val posts = withContext(Dispatchers.IO) {
+                    Log.d("API CALL", "Coroutine started")
+                    service.postScan(barcode)
+                }
+                if (posts.success) {
+                    Log.d("API CALL", "Posts success")
+                    populateItems(posts)
+                } else {
+                    // TODO handle what else
+                }
             } catch (e: Exception) {
                 // TODO handle exception, maybe network issue popup?
             }

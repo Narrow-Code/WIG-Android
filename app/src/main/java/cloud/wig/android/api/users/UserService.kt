@@ -2,7 +2,6 @@ package cloud.wig.android.api.users
 
 import cloud.wig.android.api.users.dto.GetSaltRequest
 import cloud.wig.android.api.users.dto.GetSaltResponse
-import cloud.wig.android.api.users.dto.PostLoginCheckRequest
 import cloud.wig.android.api.users.dto.PostLoginCheckResponse
 import cloud.wig.android.api.users.dto.PostLoginRequest
 import cloud.wig.android.api.users.dto.PostLoginResponse
@@ -40,12 +39,9 @@ interface UserService {
     suspend fun postLogin(postLoginRequest: PostLoginRequest): PostLoginResponse
 
     /**
-     * Authenticates user is still logged in at startup of app [postLoginCheckRequest].
-     *
-     * @param postLoginCheckRequest Request object containing username and hash.
      * @return [PostLoginCheckResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun postLoginCheck(postLoginCheckRequest: PostLoginCheckRequest): PostLoginCheckResponse
+    suspend fun postLoginCheck(): PostLoginCheckResponse
 
 
         /**

@@ -3,12 +3,12 @@ package cloud.wig.android.api.users
 import android.util.Log
 import cloud.wig.android.api.users.dto.GetSaltRequest
 import cloud.wig.android.api.users.dto.GetSaltResponse
-import cloud.wig.android.api.users.dto.PostLoginCheckRequest
 import cloud.wig.android.api.users.dto.PostLoginCheckResponse
 import cloud.wig.android.api.users.dto.PostLoginRequest
 import cloud.wig.android.api.users.dto.PostLoginResponse
 import cloud.wig.android.api.users.dto.PostSignupRequest
 import cloud.wig.android.api.users.dto.PostSignupResponse
+import cloud.wig.android.datastore.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
@@ -33,10 +33,10 @@ import io.ktor.http.contentType
 class UserServiceImpl(
     private val client: HttpClient ) : UserService {
 
-    private val nullPostSignupResponse: PostSignupResponse = PostSignupResponse("fail")
-    private val nullGetSaltResponse: GetSaltResponse = GetSaltResponse("fail", "")
-    private val nullPostLoginResponse: PostLoginResponse = PostLoginResponse("fail", "", 0)
-    private val nullPostLoginCheckResponse: PostLoginCheckResponse = PostLoginCheckResponse("fail")
+    private val nullPostSignupResponse: PostSignupResponse = PostSignupResponse("fail", false)
+    private val nullGetSaltResponse: GetSaltResponse = GetSaltResponse("fail", false, "")
+    private val nullPostLoginResponse: PostLoginResponse = PostLoginResponse("fail", false,"", 0)
+    private val nullPostLoginCheckResponse: PostLoginCheckResponse = PostLoginCheckResponse("fail", false)
 
     /**
      * Retrieves salt of a user with the provided [getSaltRequest].
@@ -102,18 +102,17 @@ class UserServiceImpl(
     }
 
     /**
-     * Authenticates user is still logged in at startup of app [postLoginCheckRequest].
+     * Authenticates user is still logged in at startup of app.
      *
-     * @param postLoginCheckRequest Request object containing username and hash.
      * @return [PostLoginCheckResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    override suspend fun postLoginCheck(postLoginCheckRequest: PostLoginCheckRequest): PostLoginCheckResponse {
+    override suspend fun postLoginCheck(): PostLoginCheckResponse {
         return try {
             client.post {
                 url(HttpRoutes.LOGIN_CHECK)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
-                body = postLoginCheckRequest
+                header("Authorization", TokenManager.getToken())
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses

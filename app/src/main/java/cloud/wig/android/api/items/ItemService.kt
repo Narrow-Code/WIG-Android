@@ -1,6 +1,5 @@
 package cloud.wig.android.api.items
 
-import cloud.wig.android.api.items.dto.PostScanRequest
 import cloud.wig.android.api.items.dto.PostScanResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
@@ -17,7 +16,7 @@ import io.ktor.client.features.logging.Logging
  */
 interface ItemService {
 
-    suspend fun postScan(postScanRequest: PostScanRequest, barcode: String): PostScanResponse
+    suspend fun postScan(barcode: String): PostScanResponse
 
     /**
      * Companion object for creating instances of [ItemService].

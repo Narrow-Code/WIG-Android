@@ -12,7 +12,7 @@ import cloud.wig.android.R
 import cloud.wig.android.api.users.UserService
 import cloud.wig.android.api.users.dto.PostSignupRequest
 import cloud.wig.android.databinding.SignupBinding
-import cloud.wig.android.models.SaltAndHash
+import cloud.wig.android.utils.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

@@ -15,8 +15,8 @@ import cloud.wig.android.api.users.dto.GetSaltRequest
 import cloud.wig.android.api.users.dto.PostLoginRequest
 import cloud.wig.android.databinding.LoginBinding
 import cloud.wig.android.datastore.StoreToken
-import cloud.wig.android.datastore.StoreUserUID
-import cloud.wig.android.models.SaltAndHash
+import cloud.wig.android.datastore.TokenManager
+import cloud.wig.android.utils.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -163,9 +163,8 @@ class Login : AppCompatActivity() {
                 if(posts.success){
                     // Save token & UID
                     val storeToken = StoreToken(this@Login)
-                    val storeUserUID = StoreUserUID(this@Login)
                     storeToken.saveToken(posts.token)
-                    storeUserUID.saveUID(posts.uid.toString())
+                    TokenManager.setToken(posts.token)
 
                     // Redirect to scanner page
                     val intent = Intent(this@Login, Scanner::class.java)
