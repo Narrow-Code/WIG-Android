@@ -3,8 +3,6 @@ package wig.activities
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import wig.api.UserService
 import wig.utils.StoreToken
@@ -19,7 +17,7 @@ import kotlinx.coroutines.withContext
  *
  * @property service An instance of [UserService] for making API calls related to user operations.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val service = UserService.create()
 
@@ -32,10 +30,10 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
+        disableBackPress()
          checkStoredDataAndCall()
     }
+
 
     /**
      * checkStoredDataAndCall checks to see if a token and UID exist in the DataStore.

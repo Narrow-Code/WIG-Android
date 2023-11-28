@@ -2,35 +2,41 @@ package wig.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import wig.databinding.ResetPasswordBinding
 
-class ResetPassword : AppCompatActivity() {
+class ResetPassword : BaseActivity() {
     private lateinit var binding: ResetPasswordBinding
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        binding = ResetPasswordBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
+        disableBackPress()
+        setScreenOrientation()
+        setKeyBindings()
+        appendEmailToPage()
+        setOnClickListeners()
+    }
 
-        // Display email on page
-        val email = intent.getStringExtra("EMAIL_KEY")
-        binding.email.text = email
-
-        binding.icExit.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
-            startActivity(intent)
-            finish()
-        }
+    private fun setOnClickListeners() {
+        binding.icExit.setOnClickListener { exitClick() }
 
     }
 
+    private fun setKeyBindings(){
+        binding = ResetPasswordBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+    }
+
+    private fun appendEmailToPage() {
+        val email = intent.getStringExtra("EMAIL_KEY")
+        binding.email.text = email
+    }
+
+    private fun exitClick() {
+        val intent = Intent(this, Login::class.java)
+        startActivity(intent)
+        finish()
+    }
 }

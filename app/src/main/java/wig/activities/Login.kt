@@ -1,13 +1,9 @@
 package wig.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import wig.api.dto.SaltRequest
 import wig.utils.StoreToken
@@ -28,7 +24,7 @@ import wig.databinding.LoginBinding
  * @property binding The binding for the Login page layout.
  * @property service An instance of [UserService] for making API calls related to user operations.
  */
-class Login : AppCompatActivity() {
+class Login : BaseActivity() {
     private lateinit var binding: LoginBinding
     private val service = UserService.create()
 
@@ -39,21 +35,25 @@ class Login : AppCompatActivity() {
      * this Bundle contains the data it most recently supplied in [onSaveInstanceState].
      * Note: Otherwise it is null.
      */
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        setScreenOrientation()
+        setKeyBindings()
+        disableBackPress()
+        setOnClickListeners()
+    }
+
+    private fun setOnClickListeners() {
+        binding.loginButton.setOnClickListener { loginButton() }
+        binding.signupButton.setOnClickListener { signupButton() }
+        binding.icSelfHost.setOnClickListener { selfHostedButton() }
+        binding.forgotPassword.setOnClickListener { forgotPasswordButton() }
+    }
+
+    private fun setKeyBindings(){
         binding = LoginBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
-
-        // Set on click listeners
-        binding.loginButton.setOnClickListener {loginButton()}
-        binding.signupButton.setOnClickListener {signupButton()}
-        binding.icSelfHost.setOnClickListener {selfHostedButton()}
-        binding.forgotPassword.setOnClickListener {forgotPasswordButton()}
     }
 
     /**

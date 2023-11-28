@@ -1,48 +1,49 @@
 package wig.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.OnBackPressedCallback
 import wig.R
 import wig.databinding.ForgotPasswordBinding
 
-class ForgotPassword : AppCompatActivity() {
+class ForgotPassword : BaseActivity() {
     private lateinit var binding: ForgotPasswordBinding
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        setScreenOrientation()
+        setKeyBindings()
+        disableBackPress()
+        setOnClickListeners()
+    }
+
+    private fun setOnClickListeners() {
+        binding.send.setOnClickListener { sendClick() }
+        binding.icExit.setOnClickListener { exitClick() }
+    }
+
+    private fun setKeyBindings(){
         binding = ForgotPasswordBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
+    }
 
-        // TODO backend functionality
-        binding.send.setOnClickListener {
-            Log.d("ForgotPassword", "Send button clicked")
-            val email = binding.email.text.toString()
-            if(email != "") {
-                val intent = Intent(this, ResetPassword::class.java)
-                intent.putExtra("EMAIL_KEY", email)
-                startActivity(intent)
-                finish()
-            } else {
-                binding.error.text = getString(R.string.required_fields)
-            }
-        }
+    private fun exitClick() {
+        val intent = Intent(this, Login::class.java)
+        startActivity(intent)
+        finish()
+    }
 
-        binding.icExit.setOnClickListener {
-            val intent = Intent(this, Login::class.java)
+    private fun sendClick() {
+        // TODO add functionality
+        val email = binding.email.text.toString()
+        if(email != "") {
+            val intent = Intent(this, ResetPassword::class.java)
+            intent.putExtra("EMAIL_KEY", email)
             startActivity(intent)
             finish()
+        } else {
+            binding.error.text = getString(R.string.required_fields)
         }
-
     }
 
 }

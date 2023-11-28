@@ -2,11 +2,8 @@ package wig.activities
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.Button
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import wig.R
 import wig.databinding.SignupBinding
@@ -26,7 +23,7 @@ import wig.utils.SaltAndHash
  * @property emailRegex Regular expression for email validation.
  * @property service An instance of [UserService] for making API calls related to user operations.
  */
-class Signup : AppCompatActivity() {
+class Signup : BaseActivity() {
 
     // Set variables
     private lateinit var binding: SignupBinding
@@ -46,17 +43,22 @@ class Signup : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        binding = SignupBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
+        disableBackPress()
+        setScreenOrientation()
+        setKeyBindings()
+        setOnClickListeners()
+    }
 
-        // Set on click listeners
+    private fun setOnClickListeners(){
         binding.loginButton.setOnClickListener { loginButton() }
         binding.signupButton.setOnClickListener { signupButton() }
         binding.icSelfHost.setOnClickListener { selfHostButton() }
+    }
+
+    private fun setKeyBindings(){
+        binding = SignupBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
     }
 
     /**

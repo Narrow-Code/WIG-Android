@@ -3,7 +3,6 @@ package wig.activities
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -13,8 +12,6 @@ import android.view.View
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -35,7 +32,7 @@ import kotlinx.coroutines.withContext
 private const val CAMERA_REQUEST_CODE = 101
 
 @Suppress("DEPRECATION")
-class Scanner : AppCompatActivity() {
+class Scanner : BaseActivity() {
     // Set variables
     private lateinit var binding: MainScannerBinding
     private lateinit var codeScanner: CodeScanner
@@ -46,22 +43,25 @@ class Scanner : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        disableBackPress()
+        setScreenOrientation()
+        setKeyBindings()
+        setupPermissions()
+        codeScanner()
+        setOnClickListeners()
+    }
+
+    private fun setOnClickListeners() {
+        binding.binsButton.setOnClickListener{ switchToBinsView() }
+        binding.itemsButton.setOnClickListener{ switchToItemsView() }
+        binding.shelvesButton.setOnClickListener { switchToShelvesView() }
+        binding.icSettings.setOnClickListener{ logout() }
+    }
+
+    private fun setKeyBindings(){
         binding = MainScannerBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
-
-        // Set up camera permissions and start camera
-        setupPermissions()
-        codeScanner()
-
-        // Set on click listeners
-        binding.binsButton.setOnClickListener{switchToBinsView()}
-        binding.itemsButton.setOnClickListener{switchToItemsView()}
-        binding.shelvesButton.setOnClickListener {switchToShelvesView()}
-        binding.icSettings.setOnClickListener{logout()}
     }
 
     private fun codeScanner() {
