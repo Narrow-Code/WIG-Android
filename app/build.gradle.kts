@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "cloud.wig.android"
+    namespace = "wig"
     compileSdk = 34
 
     buildFeatures {
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "cloud.wig.android"
+        applicationId = "wig.wig.android"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

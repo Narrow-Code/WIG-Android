@@ -23,7 +23,7 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name="wig.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,31 +32,31 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.Login">
+        <activity android:name="wig.activities.Login">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".activities.Scanner">
+        <activity android:name="wig.activities.Scanner">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".activities.Signup">
+        <activity android:name="wig.activities.Signup">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".activities.ServerSetup">
+        <activity android:name="wig.activities.ServerSetup">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".activities.ForgotPassword">
+        <activity android:name="wig.activities.ForgotPassword">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".activities.ResetPassword">
+        <activity android:name="wig.activities.ResetPassword">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name=".activities.EmailVerification">
+        <activity android:name="wig.activities.EmailVerification">
             <!-- Intent filters, etc. -->
         </activity>
 
