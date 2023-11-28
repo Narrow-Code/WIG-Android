@@ -46,19 +46,12 @@ class Scanner : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("LoginPage", "onCreate method is executing")
-
-        // Set page orientation to portrait
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        // Disable back press
-        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
-
-        // Set bindings for Signup Page and Open
         binding = MainScannerBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
 
         // Set up camera permissions and start camera
         setupPermissions()

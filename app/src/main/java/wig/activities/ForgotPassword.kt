@@ -16,18 +16,12 @@ class ForgotPassword : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Lock to portrait
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        // Disable back press
-        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
-
-        // Set bindings and open page
         binding = ForgotPasswordBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
 
         // TODO backend functionality
         binding.send.setOnClickListener {

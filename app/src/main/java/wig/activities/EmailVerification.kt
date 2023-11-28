@@ -14,19 +14,15 @@ class EmailVerification : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Lock to portrait
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        val email = intent.getStringExtra("EMAIL_KEY")
-
-        // Disable back press
-        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
-
-        // Set bindings and open page
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // Lock to portrait
         binding = EmailVerificationBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
+
+        // Get email from intent and add to message
+        val email = intent.getStringExtra("EMAIL_KEY") // Email passed from Signup
         binding.email.text = email
 
         binding.icExit.setOnClickListener {

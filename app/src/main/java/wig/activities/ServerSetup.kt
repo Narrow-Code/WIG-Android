@@ -15,18 +15,12 @@ class ServerSetup : AppCompatActivity() {
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Lock to portrait
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
-        // Disable back press
-        onBackPressedDispatcher.addCallback(this /* lifecycle owner */, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {} })
-
-        // Set page bindings and open page
         binding = ServerSetupBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {} })
 
         binding.connectButton.setOnClickListener {
             val hostname = binding.hostname.text.toString()
@@ -39,7 +33,6 @@ class ServerSetup : AppCompatActivity() {
                 binding.error.text = getString(R.string.required_fields)
             }
         }
-
         binding.icExit.setOnClickListener {
             val intent = Intent(this, Login::class.java)
             startActivity(intent)
