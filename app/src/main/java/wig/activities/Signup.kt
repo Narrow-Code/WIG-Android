@@ -1,7 +1,6 @@
 package wig.activities
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.api.UserService
 import wig.api.dto.SignupRequest
+import wig.utils.EmailManager
 import wig.utils.SaltAndHash
 
 class Signup : BaseActivity() {
@@ -70,15 +70,11 @@ class Signup : BaseActivity() {
     }
 
     private fun loginButton() {
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-        finish()
+        startActivityLogin()
     }
 
     private fun selfHostButton() {
-        val intent = Intent(this, ServerSetup::class.java)
-        startActivity(intent)
-        finish()
+        startActivityServerSetup()
     }
 
     private fun ByteArray.toHexString(): String {
@@ -94,10 +90,8 @@ class Signup : BaseActivity() {
 
                 // If API is success switch to email screen
                 if (posts.success) {
-                    val intent = Intent(this@Signup, EmailVerification::class.java)
-                    intent.putExtra("EMAIL_KEY", email)
-                    startActivity(intent)
-                    finish()
+                    EmailManager.setEmail(email)
+                    startActivityEmailVerification()
                 } else {
                     // Enable button
                     enableButtons()

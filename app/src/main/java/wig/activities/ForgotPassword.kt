@@ -1,9 +1,9 @@
 package wig.activities
 
-import android.content.Intent
 import android.os.Bundle
 import wig.R
 import wig.databinding.ForgotPasswordBinding
+import wig.utils.EmailManager
 
 class ForgotPassword : BaseActivity() {
     private lateinit var binding: ForgotPasswordBinding
@@ -18,7 +18,7 @@ class ForgotPassword : BaseActivity() {
 
     private fun setOnClickListeners() {
         binding.send.setOnClickListener { sendClick() }
-        binding.icExit.setOnClickListener { exitClick() }
+        binding.icExit.setOnClickListener { startActivityLogin() }
     }
 
     private fun setKeyBindings(){
@@ -27,20 +27,12 @@ class ForgotPassword : BaseActivity() {
         setContentView(view)
     }
 
-    private fun exitClick() {
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-        finish()
-    }
-
     private fun sendClick() {
         // TODO add backend call functionality
         val email = binding.email.text.toString()
         if(email != "") {
-            val intent = Intent(this, ResetPassword::class.java)
-            intent.putExtra("EMAIL_KEY", email)
-            startActivity(intent)
-            finish()
+            EmailManager.setEmail(email)
+            startActivityResetPassword()
         } else {
             binding.error.text = getString(R.string.required_fields)
         }

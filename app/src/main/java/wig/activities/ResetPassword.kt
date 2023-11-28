@@ -1,9 +1,9 @@
 package wig.activities
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import wig.databinding.ResetPasswordBinding
+import wig.utils.EmailManager
 
 class ResetPassword : BaseActivity() {
     private lateinit var binding: ResetPasswordBinding
@@ -19,7 +19,7 @@ class ResetPassword : BaseActivity() {
     }
 
     private fun setOnClickListeners() {
-        binding.icExit.setOnClickListener { exitClick() }
+        binding.icExit.setOnClickListener { startActivityLogin() }
 
     }
 
@@ -30,13 +30,7 @@ class ResetPassword : BaseActivity() {
     }
 
     private fun appendEmailToPage() {
-        val email = intent.getStringExtra("EMAIL_KEY")
+        val email = EmailManager.getEmail()
         binding.email.text = email
-    }
-
-    private fun exitClick() {
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-        finish()
     }
 }

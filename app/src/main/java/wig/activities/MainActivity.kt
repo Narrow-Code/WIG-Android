@@ -1,8 +1,6 @@
 package wig.activities
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import wig.api.UserService
 import wig.utils.StoreToken
@@ -19,7 +17,7 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disableBackPress()
-         checkStoredDataAndCall()
+        checkStoredDataAndCall()
     }
 
     private fun checkStoredDataAndCall() {
@@ -32,9 +30,7 @@ class MainActivity : BaseActivity() {
                     TokenManager.setToken(token)
                     apiCall()
                 } else {
-                    val intent = Intent(this@MainActivity, Login::class.java)
-                    startActivity(intent)
-                    finish()
+                    startActivityLogin()
                 }
             }
         }
@@ -50,17 +46,13 @@ class MainActivity : BaseActivity() {
                 }
 
                 if (getLogin.success) {
-                    val intent = Intent(this@MainActivity, Scanner::class.java)
-                    startActivity(intent)
-                    finish()
+                    startActivityScanner()
                 } else {
                     // TODO make else IF TOKEN IS NOT ACTIVE
                     val storeToken = StoreToken(this@MainActivity)
                     storeToken.saveToken("")
 
-                    val intent = Intent(this@MainActivity, Login::class.java)
-                    startActivity(intent)
-                    finish()
+                    startActivityLogin()
                 }
             } catch (e: Exception) {
                 // TODO handle exception, maybe network issue popup?

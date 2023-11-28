@@ -2,7 +2,6 @@ package wig.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -147,9 +146,7 @@ class Scanner : BaseActivity() {
             val storeToken = StoreToken(this@Scanner)
             storeToken.saveToken("")
         }
-        val intent = Intent(this@Scanner, Login::class.java)
-        startActivity(intent)
-        finish()
+        startActivityLogin()
     }
 
     private fun switchToBinsView() {

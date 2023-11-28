@@ -1,7 +1,6 @@
 package wig.activities
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import wig.R
 import wig.databinding.ServerSetupBinding
@@ -20,7 +19,7 @@ class ServerSetup : BaseActivity() {
 
     private fun setOnClickListeners() {
         binding.connectButton.setOnClickListener { connectClick() }
-        binding.icExit.setOnClickListener { exitClick() }
+        binding.icExit.setOnClickListener { startActivityLogin() }
     }
 
     private fun setKeyBindings() {
@@ -33,18 +32,10 @@ class ServerSetup : BaseActivity() {
         val hostname = binding.hostname.text.toString()
         val portNumber = binding.portNumber.text.toString()
         if(hostname == "server" || portNumber == "80") {
-            val intent = Intent(this, Scanner::class.java)
-            startActivity(intent)
-            finish()
+            startActivityScanner()
         } else {
             binding.error.text = getString(R.string.required_fields)
         }
-    }
-
-    private fun exitClick(){
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-        finish()
     }
 
 }

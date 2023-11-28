@@ -1,6 +1,5 @@
 package wig.activities
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
@@ -30,9 +29,9 @@ class Login : BaseActivity() {
 
     private fun setOnClickListeners() {
         binding.loginButton.setOnClickListener { loginButton() }
-        binding.signupButton.setOnClickListener { signupButton() }
-        binding.icSelfHost.setOnClickListener { selfHostedButton() }
-        binding.forgotPassword.setOnClickListener { forgotPasswordButton() }
+        binding.signupButton.setOnClickListener { startActivitySignup() }
+        binding.icSelfHost.setOnClickListener { startActivityServerSetup() }
+        binding.forgotPassword.setOnClickListener { startActivityForgotPassword() }
     }
 
     private fun setKeyBindings(){
@@ -52,24 +51,6 @@ class Login : BaseActivity() {
         if(requirementsCheck(username, password)){
             saltAPICall(username, password)
         }
-    }
-
-    private fun signupButton() {
-        val intent = Intent(this, Signup::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun selfHostedButton() {
-        val intent = Intent(this, ServerSetup::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun forgotPasswordButton() {
-        val intent = Intent(this, ForgotPassword::class.java)
-        startActivity(intent)
-        finish()
     }
 
     private fun saltAPICall(username: String, password: String){
@@ -112,10 +93,7 @@ class Login : BaseActivity() {
                     storeToken.saveToken(posts.token)
                     TokenManager.setToken(posts.token)
 
-                    // Redirect to scanner page
-                    val intent = Intent(this@Login, Scanner::class.java)
-                    startActivity(intent)
-                    finish()
+                    startActivityScanner()
 
                 } else {
                     // Enable button

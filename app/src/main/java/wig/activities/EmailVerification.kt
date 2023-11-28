@@ -1,6 +1,5 @@
 package wig.activities
 
-import android.content.Intent
 import android.os.Bundle
 import wig.databinding.EmailVerificationBinding
 
@@ -17,7 +16,7 @@ class EmailVerification : BaseActivity() {
     }
 
     private fun setOnClickListeners() {
-        binding.icExit.setOnClickListener { exitClick() }
+        binding.icExit.setOnClickListener { startActivityLogin() }
     }
 
     private fun appendEmailToPage() {
@@ -29,12 +28,6 @@ class EmailVerification : BaseActivity() {
         binding = EmailVerificationBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
-    }
-
-    private fun exitClick() {
-        val intent = Intent(this, Login::class.java)
-        startActivity(intent)
-        finish()
     }
 
 }
