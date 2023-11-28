@@ -35,71 +35,41 @@ class Login : BaseActivity() {
     private fun loginButton() {
         val username = loginBinding.username.text.toString()
         val password = loginBinding.password.text.toString()
-
-        // Disable button
         disableButtons()
-
-        // Check if fields are empty
         if(requirementsCheck(username, password)){
-            saltAPICall(username, password)
-        }
-    }
-
-    private fun saltAPICall(username: String, password: String){
-        lifecycleScope.launch {
-            try {
-                val posts = withContext(Dispatchers.IO) {
-                    service.getSalt(SaltRequest(username))
-                }
-                    if(posts.success){
-                        val hash = SaltAndHash().generateHash(password, posts.salt)
-
-
-                        // Call Login API
-                        loginAPICall(username, hash)
-
-                    } else {
-                        // Enable button
-                        enableButtons()
-
-                        // Set error message
-                        loginBinding.error.text = posts.message
-                    }
-
-            } catch(e: Exception) {
-                // TODO handle exception, maybe network issue popup?
+            lifecycleScope.launch {
+                val salt = getSalt(username)
+                val hash = SaltAndHash().generateHash(password, salt)
+                login(username, hash)
             }
-
         }
     }
 
-    private fun loginAPICall(username: String, hash: String) {
-        lifecycleScope.launch {
-            try {
-                val posts = withContext(Dispatchers.IO) {
-                    service.login(LoginRequest(username, hash))
-                }
+    private suspend fun getSalt(username: String): String =
+        withContext(Dispatchers.IO) {
+            val posts = service.getSalt(SaltRequest(username))
+            if(posts.success){
+                posts.salt
+            } else {
+                enableButtons()
+                loginBinding.error.text = posts.message
+                ""
+            }
+        }
+
+    private suspend fun login(username: String, hash: String) =
+        withContext(Dispatchers.IO) {
+            val posts = service.login(LoginRequest(username, hash))
                 if(posts.success){
-                    // Save token & UID
                     val storeToken = StoreToken(this@Login)
                     storeToken.saveToken(posts.token)
                     TokenManager.setToken(posts.token)
-
                     startActivityScanner()
-
                 } else {
-                    // Enable button
                     enableButtons()
-
-                    // Set error message
                     loginBinding.error.text = posts.message
                 }
-
-            } catch(e: Exception) {
-                // TODO handle exception, maybe network issue popup?
-            }
         }
-    }
 
     private fun requirementsCheck(username: String, password: String): Boolean {
         if(username == "" || password == ""){
