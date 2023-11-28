@@ -13,7 +13,6 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import wig.databinding.MainScannerBinding
 import wig.api.ScannerService
 import wig.api.dto.ScanResponse
 import wig.utils.StoreToken

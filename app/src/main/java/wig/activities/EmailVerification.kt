@@ -1,7 +1,6 @@
 package wig.activities
 
 import android.os.Bundle
-import wig.databinding.EmailVerificationBinding
 import wig.utils.EmailManager
 
 class EmailVerification : BaseActivity() {

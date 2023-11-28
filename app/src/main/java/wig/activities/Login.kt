@@ -13,7 +13,6 @@ import kotlinx.coroutines.withContext
 import wig.R
 import wig.api.UserService
 import wig.api.dto.LoginRequest
-import wig.databinding.LoginBinding
 
 class Login : BaseActivity() {
     private val service = UserService.create()

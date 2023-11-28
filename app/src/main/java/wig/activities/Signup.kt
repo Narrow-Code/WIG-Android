@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import wig.R
-import wig.databinding.SignupBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
