@@ -14,60 +14,60 @@ data class PostScanResponse(
 
 @Serializable
 data class Ownership(
-    val ownership_uid: Int,
-    val item_owner: Int,
-    val item_number: Int,
-    val custom_item_name: String,
-    val custom_item_img: String,
-    val custom_item_description: String,
-    val item_location: Int,
-    val item_qr: String,
-    val item_tags: String,
-    val item_quantity: Int,
-    val item_checked_out: String,
-    val item_borrower: Int,
-    val User: User,
-    val Location: Location,
-    val Item: Item,
-    val Borrower: Borrower
+    val ownershipUID: Int,
+    val itemOwner: Int,
+    val itemNumber: Int,
+    val customItemName: String,
+    val customItemImage: String,
+    val customItemDescription: String,
+    val itemLocation: Int,
+    val itemQR: String,
+    val itemTags: String,
+    val itemQuantity: Int,
+    val itemCheckedOut: String,
+    val itemBorrower: Int,
+    val user: User,
+    val location: Location,
+    val item: Item,
+    val borrower: Borrower
 )
 
 @Serializable
 data class User(
-    val user_uid: Int,
+    val userUID: Int,
     val username: String,
     val email: String,
     val salt: String,
     val hash: String,
-    val email_confirmed: String,
-    val tier_level: String
+    val emailConfirmed: String,
+    val tier: String
 )
 
 @Serializable
 data class Location(
-    val location_uid: Int,
-    val location_owner: Int,
-    val location_name: String,
-    val location_type: String,
-    val location_location: Int,
-    val location_qr: String,
-    val location_tags: String,
-    val location_description: String,
-    val User: User,
-    val Location: Location?
+    val locationUID: Int,
+    val locationOwner: Int,
+    val locationName: String,
+    val locationType: String,
+    val locationParent: Int,
+    val locationQR: String,
+    val locationTags: String,
+    val locationDescription: String,
+    val user: User,
+    val location: Location?
 )
 
 @Serializable
 data class Item(
-    val item_uid: Int,
+    val itemUID: Int,
     val barcode: String,
-    val item_name: String,
-    val item_brand: String,
-    val item_img: String
+    val itemName: String,
+    val itemBrand: String,
+    val itemImage: String
 )
 
 @Serializable
 data class Borrower(
-    val borrower_uid: Int,
-    val borrower_name: String
+    val borrowerUID: Int,
+    val borrowerName: String
 )

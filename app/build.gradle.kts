@@ -58,7 +58,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.runtime:runtime:1.6.0-alpha08")
+    implementation("androidx.compose.runtime:runtime:1.6.0-beta01")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")

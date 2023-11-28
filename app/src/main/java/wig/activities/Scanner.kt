@@ -206,7 +206,7 @@ class Scanner : AppCompatActivity() {
         )
 
         val nameTextView = TextView(this@Scanner)
-        nameTextView.text = postScanResponse.ownership[0].Item.item_name.substring(0 until 20.coerceAtMost(postScanResponse.ownership[0].Item.item_name.length))
+        nameTextView.text = postScanResponse.ownership[0].item.itemName.substring(0 until 20.coerceAtMost(postScanResponse.ownership[0].item.itemName.length))
         nameTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -214,7 +214,7 @@ class Scanner : AppCompatActivity() {
         )
 
         val locationTextView = TextView(this@Scanner)
-        locationTextView.text = postScanResponse.ownership[0].Location.location_name.substring(0 until 18.coerceAtMost(postScanResponse.ownership[0].Location.location_name.length))
+        locationTextView.text = postScanResponse.ownership[0].location.locationName.substring(0 until 18.coerceAtMost(postScanResponse.ownership[0].location.locationName.length))
         locationTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
@@ -223,7 +223,7 @@ class Scanner : AppCompatActivity() {
         locationTextView.gravity = Gravity.CENTER
 
         val quantityTextView = TextView(this@Scanner)
-        quantityTextView.text = postScanResponse.ownership[0].item_quantity.toString()
+        quantityTextView.text = postScanResponse.ownership[0].itemQuantity.toString()
         quantityTextView.layoutParams = TableRow.LayoutParams(
             0,
             TableRow.LayoutParams.WRAP_CONTENT,
