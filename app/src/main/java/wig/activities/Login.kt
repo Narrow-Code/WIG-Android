@@ -60,15 +60,15 @@ class Login : BaseActivity() {
     private suspend fun login(username: String, hash: String) =
         withContext(Dispatchers.IO) {
             val posts = service.login(LoginRequest(username, hash))
-                if(posts.success){
-                    val storeToken = StoreToken(this@Login)
-                    storeToken.saveToken(posts.token)
-                    TokenManager.setToken(posts.token)
-                    startActivityScanner()
-                } else {
-                    enableButtons()
-                    loginBinding.error.text = posts.message
-                }
+            if(posts.success){
+                val storeToken = StoreToken(this@Login)
+                storeToken.saveToken(posts.token)
+                TokenManager.setToken(posts.token)
+                startActivityScanner()
+            } else {
+                enableButtons()
+                loginBinding.error.text = posts.message
+            }
         }
 
     private fun requirementsCheck(username: String, password: String): Boolean {

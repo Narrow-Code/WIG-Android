@@ -7,6 +7,8 @@ import wig.utils.StoreToken
 import wig.utils.TokenManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -17,46 +19,37 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disableBackPress()
-        checkStoredDataAndCall()
+        lifecycleScope.launch {
+            val token = checkForToken()
+            if (token){
+                validate()
+            }
+            startActivityLogin()
+        }
     }
 
-    private fun checkStoredDataAndCall() {
-        lifecycleScope.launch {
-            val storeToken = StoreToken(this@MainActivity)
-            val tokenFlow: Flow<String?> = storeToken.getToken
-
-            tokenFlow.collect { token ->
+    private suspend fun checkForToken(): Boolean = withContext(Dispatchers.IO){
+        val storeToken = StoreToken(this@MainActivity)
+        val tokenFlow: Flow<String?> = storeToken.getToken
+            tokenFlow.map { token ->
                 if (!token.isNullOrBlank()) {
                     TokenManager.setToken(token)
-                    apiCall()
+                    true
                 } else {
-                    startActivityLogin()
+                    false
                 }
-            }
-        }
-
+        }.first()
     }
 
-    private fun apiCall() {
-        lifecycleScope.launch {
+    private suspend fun validate() = withContext(Dispatchers.IO){
+        val getLogin = service.validate()
+        if (getLogin.success) {
+            startActivityScanner()
+        } else {
+            val storeToken = StoreToken(this@MainActivity)
+            storeToken.saveToken("")
 
-            try {
-                val getLogin = withContext(Dispatchers.IO) {
-                    service.validate()
-                }
-
-                if (getLogin.success) {
-                    startActivityScanner()
-                } else {
-                    // TODO make else IF TOKEN IS NOT ACTIVE
-                    val storeToken = StoreToken(this@MainActivity)
-                    storeToken.saveToken("")
-
-                    startActivityLogin()
-                }
-            } catch (e: Exception) {
-                // TODO handle exception, maybe network issue popup?
-            }
+            startActivityLogin()
         }
     }
 
