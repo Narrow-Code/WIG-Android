@@ -14,15 +14,12 @@ import wig.utils.EmailManager
 import wig.utils.SaltAndHash
 
 class Signup : BaseActivity() {
-
-    // Set variables
     private val usernameRegex = Regex("^[a-zA-Z0-9_-]{4,20}$")
     private val passwordRegex =
         Regex("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d\\s!@#\$%^&*()_+={}\\[\\]:;<>,.?~\\\\-]{8,}\$")
     private val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
     private val service = UserService.create()
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disableBackPress()

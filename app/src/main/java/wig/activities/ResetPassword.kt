@@ -5,7 +5,6 @@ import android.os.Bundle
 import wig.utils.EmailManager
 
 class ResetPassword : BaseActivity() {
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disableBackPress()
@@ -17,7 +16,6 @@ class ResetPassword : BaseActivity() {
 
     private fun setOnClickListeners() {
         resetPasswordBinding.icExit.setOnClickListener { startActivityLogin() }
-
     }
 
     private fun appendEmailToPage() {

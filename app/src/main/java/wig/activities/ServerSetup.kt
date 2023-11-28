@@ -6,7 +6,6 @@ import wig.R
 
 class ServerSetup : BaseActivity() {
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disableBackPress()

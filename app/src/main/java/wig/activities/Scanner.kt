@@ -36,7 +36,6 @@ class Scanner : BaseActivity() {
     private val handler = Handler()
     private val service = ScannerService.create()
 
-    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disableBackPress()
