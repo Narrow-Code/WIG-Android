@@ -1,13 +1,13 @@
-package wig.api.users
+package wig.api
 
 import android.util.Log
-import wig.api.users.dto.GetSaltRequest
-import wig.api.users.dto.GetSaltResponse
-import wig.api.users.dto.PostLoginCheckResponse
-import wig.api.users.dto.PostLoginRequest
-import wig.api.users.dto.PostLoginResponse
-import wig.api.users.dto.PostSignupRequest
-import wig.api.users.dto.PostSignupResponse
+import wig.api.dto.SaltRequest
+import wig.api.dto.SaltResponse
+import wig.api.dto.ValidateResponse
+import wig.api.dto.LoginRequest
+import wig.api.dto.LoginResponse
+import wig.api.dto.SignupRequest
+import wig.api.dto.SignupResponse
 import wig.utils.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
@@ -19,7 +19,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import wig.api.HttpRoutes
 
 
 /**
@@ -34,21 +33,21 @@ import wig.api.HttpRoutes
 class UserServiceImpl(
     private val client: HttpClient ) : UserService {
 
-    private val nullPostSignupResponse: PostSignupResponse = PostSignupResponse("fail", false)
-    private val nullGetSaltResponse: GetSaltResponse = GetSaltResponse("fail", false, "")
-    private val nullPostLoginResponse: PostLoginResponse = PostLoginResponse("fail", false,"", 0)
-    private val nullPostLoginCheckResponse: PostLoginCheckResponse = PostLoginCheckResponse("fail", false)
+    private val nullPostSignupResponse: SignupResponse = SignupResponse("fail", false)
+    private val nullGetSaltResponse: SaltResponse = SaltResponse("fail", false, "")
+    private val nullPostLoginResponse: LoginResponse = LoginResponse("fail", false,"", 0)
+    private val nullPostLoginCheckResponse: ValidateResponse = ValidateResponse("fail", false)
 
     /**
-     * Retrieves salt of a user with the provided [getSaltRequest].
+     * Retrieves salt of a user with the provided [saltRequest].
      *
-     * @param getSaltRequest Request object containing user UID for login.
-     * @return [GetSaltResponse] containing the users specific salt value, or null if unsuccessful.
+     * @param saltRequest Request object containing user UID for login.
+     * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
      */
-    override suspend fun getSalt(getSaltRequest: GetSaltRequest): GetSaltResponse {
+    override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse {
         return try {
             client.get {
-                url("${HttpRoutes.SALT}?username=${getSaltRequest.username}")
+                url("${HttpRoutes.SALT}?username=${saltRequest.username}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
             }
@@ -71,18 +70,18 @@ class UserServiceImpl(
     }
 
     /**
-     * Logs in the user with the provided [postLoginRequest].
+     * Logs in the user with the provided [loginRequest].
      *
-     * @param postLoginRequest Request object containing username and hash.
-     * @return [PostLoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     * @param loginRequest Request object containing username and hash.
+     * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    override suspend fun postLogin(postLoginRequest: PostLoginRequest): PostLoginResponse {
+    override suspend fun login(loginRequest: LoginRequest): LoginResponse {
         return try {
             client.post {
                 url(HttpRoutes.LOGIN)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
-                body = postLoginRequest
+                body = loginRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
@@ -105,9 +104,9 @@ class UserServiceImpl(
     /**
      * Authenticates user is still logged in at startup of app.
      *
-     * @return [PostLoginCheckResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     * @return [ValidateResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    override suspend fun postLoginCheck(): PostLoginCheckResponse {
+    override suspend fun validate(): ValidateResponse {
         return try {
             client.post {
                 url(HttpRoutes.LOGIN_CHECK)
@@ -134,18 +133,18 @@ class UserServiceImpl(
     }
 
     /**
-     * Creates a new user with the provided [postSignupRequest].
+     * Creates a new user with the provided [signupRequest].
      *
-     * @param postSignupRequest Request object containing user information for signup.
-     * @return [PostSignupResponse] containing the newly created user's information, or null if unsuccessful.
+     * @param signupRequest Request object containing user information for signup.
+     * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
      */
-    override suspend fun postSignup(postSignupRequest: PostSignupRequest): PostSignupResponse {
+    override suspend fun signup(signupRequest: SignupRequest): SignupResponse {
         return try {
             client.post {
                 url(HttpRoutes.SIGNUP)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
-                body = postSignupRequest
+                body = signupRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses

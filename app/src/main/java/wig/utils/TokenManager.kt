@@ -1,4 +1,4 @@
-package wig.datastore
+package wig.utils
 
 object TokenManager {
     private var token: String = ""

@@ -13,8 +13,8 @@ import wig.databinding.SignupBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import wig.api.users.UserService
-import wig.api.users.dto.PostSignupRequest
+import wig.api.UserService
+import wig.api.dto.SignupRequest
 import wig.utils.SaltAndHash
 
 /**
@@ -136,7 +136,7 @@ class Signup : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.postSignup(PostSignupRequest(username, email, hash, salt.toHexString()))
+                    service.signup(SignupRequest(username, email, hash, salt.toHexString()))
                 }
 
                 // If API is success switch to email screen

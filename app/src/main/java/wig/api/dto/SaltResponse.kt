@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @property salt The salt value
  */
 @Serializable
-data class GetSaltResponse(
+data class SaltResponse(
     val message: String,
     val success: Boolean,
     val salt: String

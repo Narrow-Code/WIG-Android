@@ -1,4 +1,4 @@
-package wig.datastore
+package wig.utils
 
 import android.content.Context
 import androidx.datastore.core.DataStore

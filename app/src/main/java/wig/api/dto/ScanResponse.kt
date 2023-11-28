@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
  * Represents a data class for the response of scanning a barcode.
  */
 @Serializable
-data class PostScanResponse(
+data class ScanResponse(
     val message: String,
     val success: Boolean,
     val ownership: List<Ownership>

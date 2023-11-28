@@ -9,6 +9,6 @@ import kotlinx.serialization.Serializable
  * @property username The username of the user.
  */
 @Serializable
-data class GetSaltRequest(
+data class SaltRequest(
     val username: String
 )

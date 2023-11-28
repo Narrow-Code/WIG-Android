@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @property hash The hashed password of the user.
  */
 @Serializable
-data class PostLoginRequest(
+data class LoginRequest(
     val username: String,
     val hash: String
 )

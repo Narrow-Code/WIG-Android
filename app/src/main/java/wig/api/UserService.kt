@@ -1,12 +1,12 @@
-package wig.api.users
+package wig.api
 
-import wig.api.users.dto.GetSaltRequest
-import wig.api.users.dto.GetSaltResponse
-import wig.api.users.dto.PostLoginCheckResponse
-import wig.api.users.dto.PostLoginRequest
-import wig.api.users.dto.PostLoginResponse
-import wig.api.users.dto.PostSignupRequest
-import wig.api.users.dto.PostSignupResponse
+import wig.api.dto.SaltRequest
+import wig.api.dto.SaltResponse
+import wig.api.dto.ValidateResponse
+import wig.api.dto.LoginRequest
+import wig.api.dto.LoginResponse
+import wig.api.dto.SignupRequest
+import wig.api.dto.SignupResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.json.JsonFeature
@@ -23,34 +23,34 @@ import io.ktor.client.features.logging.Logging
 interface UserService {
 
     /**
-     * Retrieves salt of a user with the provided [getSaltRequest].
+     * Retrieves salt of a user with the provided [saltRequest].
      *
-     * @param getSaltRequest Request object containing user UID for login.
-     * @return [GetSaltResponse] containing the users specific salt value, or null if unsuccessful.
+     * @param saltRequest Request object containing user UID for login.
+     * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
      */
-    suspend fun getSalt(getSaltRequest: GetSaltRequest): GetSaltResponse
+    suspend fun getSalt(saltRequest: SaltRequest): SaltResponse
 
     /**
-     * Logs in the user with the provided [postLoginRequest].
+     * Logs in the user with the provided [loginRequest].
      *
-     * @param postLoginRequest Request object containing username and hash.
-     * @return [PostLoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     * @param loginRequest Request object containing username and hash.
+     * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun postLogin(postLoginRequest: PostLoginRequest): PostLoginResponse
+    suspend fun login(loginRequest: LoginRequest): LoginResponse
 
     /**
-     * @return [PostLoginCheckResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     * @return [ValidateResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun postLoginCheck(): PostLoginCheckResponse
+    suspend fun validate(): ValidateResponse
 
 
         /**
-     * Creates a new user with the provided [postSignupRequest].
+     * Creates a new user with the provided [signupRequest].
      *
-     * @param postSignupRequest Request object containing user information for signup.
-     * @return [PostSignupResponse] containing the newly created user's information, or null if unsuccessful.
+     * @param signupRequest Request object containing user information for signup.
+     * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
      */
-    suspend fun postSignup(postSignupRequest: PostSignupRequest): PostSignupResponse
+    suspend fun signup(signupRequest: SignupRequest): SignupResponse
 
     /**
      * Companion object for creating instances of [UserService].

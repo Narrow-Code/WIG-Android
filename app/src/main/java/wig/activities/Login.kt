@@ -9,16 +9,16 @@ import android.widget.Button
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import wig.api.users.dto.GetSaltRequest
-import wig.datastore.StoreToken
-import wig.datastore.TokenManager
+import wig.api.dto.SaltRequest
+import wig.utils.StoreToken
+import wig.utils.TokenManager
 import wig.utils.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.R
-import wig.api.users.UserService
-import wig.api.users.dto.PostLoginRequest
+import wig.api.UserService
+import wig.api.dto.LoginRequest
 import wig.databinding.LoginBinding
 
 
@@ -123,7 +123,7 @@ class Login : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.getSalt(GetSaltRequest(username))
+                    service.getSalt(SaltRequest(username))
                 }
                     if(posts.success){
                         val hash = SaltAndHash().generateHash(password, posts.salt)
@@ -158,7 +158,7 @@ class Login : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    service.postLogin(PostLoginRequest(username, hash))
+                    service.login(LoginRequest(username, hash))
                 }
                 if(posts.success){
                     // Save token & UID

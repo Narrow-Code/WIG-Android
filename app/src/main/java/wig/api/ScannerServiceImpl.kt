@@ -10,19 +10,19 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.Ownership
-import wig.api.dto.PostScanResponse
+import wig.api.dto.ScanResponse
 import wig.utils.TokenManager
 
 
 /**
- * Implementation of [ItemService] interface for handling user-related operations.
+ * Implementation of [ScannerService] interface for handling user-related operations.
  */
-class ItemServiceImpl(private val client: HttpClient ) : ItemService {
+class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
 
     private val nullOwnerships: List<Ownership> = ArrayList()
-    private val nullPostScanResponse: PostScanResponse = PostScanResponse("fail", false, nullOwnerships)
+    private val nullPostScanResponse: ScanResponse = ScanResponse("fail", false, nullOwnerships)
 
-    override suspend fun postScan(barcode: String): PostScanResponse {
+    override suspend fun scan(barcode: String): ScanResponse {
         return try {
             client.post {
                 url("${HttpRoutes.SCAN_ITEM}?barcode=${barcode}")

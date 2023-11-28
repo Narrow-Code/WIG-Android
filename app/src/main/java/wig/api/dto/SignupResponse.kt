@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @property message A message indicating the result of the signup operation.
  */
 @Serializable
-data class PostSignupResponse(
+data class SignupResponse(
     val message: String,
     val success: Boolean
 )

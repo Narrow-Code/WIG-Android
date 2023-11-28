@@ -6,9 +6,9 @@ import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import wig.api.users.UserService
-import wig.datastore.StoreToken
-import wig.datastore.TokenManager
+import wig.api.UserService
+import wig.utils.StoreToken
+import wig.utils.TokenManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
             try {
                 val getLogin = withContext(Dispatchers.IO) {
-                    service.postLoginCheck()
+                    service.validate()
                 }
 
                 if (getLogin.success) {

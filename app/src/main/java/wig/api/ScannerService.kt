@@ -6,7 +6,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import wig.api.dto.PostScanResponse
+import wig.api.dto.ScanResponse
 
 
 /**
@@ -14,21 +14,21 @@ import wig.api.dto.PostScanResponse
  *
  * @author Matthew McCaughey
  */
-interface ItemService {
+interface ScannerService {
 
-    suspend fun postScan(barcode: String): PostScanResponse
+    suspend fun scan(barcode: String): ScanResponse
 
     /**
-     * Companion object for creating instances of [ItemService].
+     * Companion object for creating instances of [ScannerService].
      */
     companion object {
         /**
-         * Factory method for creating an instance of [ItemService].
+         * Factory method for creating an instance of [ScannerService].
          *
-         * @return A new instance of [ItemServiceImpl].
+         * @return A new instance of [ScannerServiceImpl].
          */
-        fun create(): ItemService {
-            return ItemServiceImpl(
+        fun create(): ScannerService {
+            return ScannerServiceImpl(
                 client = HttpClient(Android) {
                     install(Logging) {
                         level = LogLevel.ALL

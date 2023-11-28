@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @property message A message indicating the result of the login verification.
  */
 @Serializable
-data class PostValidateResponse(
+data class ValidateResponse(
     val message: String,
     val success: Boolean
 )

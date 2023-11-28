@@ -19,9 +19,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import wig.databinding.MainScannerBinding
-import wig.api.items.ItemService
-import wig.api.items.dto.PostScanResponse
-import wig.datastore.StoreToken
+import wig.api.ScannerService
+import wig.api.dto.ScanResponse
+import wig.utils.StoreToken
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
@@ -41,7 +41,7 @@ class Scanner : AppCompatActivity() {
     private lateinit var codeScanner: CodeScanner
     private var pageView = "items"
     private val handler = Handler()
-    private val service = ItemService.create()
+    private val service = ScannerService.create()
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -196,7 +196,7 @@ class Scanner : AppCompatActivity() {
         pageView = "shelves"
     }
 
-    private fun populateItems(postScanResponse: PostScanResponse){
+    private fun populateItems(postScanResponse: ScanResponse){
         val tableLayout = binding.itemsTableLayout
         val row = TableRow(this@Scanner)
 
@@ -253,7 +253,7 @@ class Scanner : AppCompatActivity() {
             try {
                 val posts = withContext(Dispatchers.IO) {
                     Log.d("API CALL", "Coroutine started")
-                    service.postScan(barcode)
+                    service.scan(barcode)
                 }
                 if (posts.success) {
                     Log.d("API CALL", "Posts success")
