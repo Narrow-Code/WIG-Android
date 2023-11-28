@@ -1,4 +1,4 @@
-package wig.api.items
+package wig.api
 
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
@@ -9,9 +9,9 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import wig.api.items.dto.Ownership
-import wig.api.items.dto.PostScanResponse
-import wig.datastore.TokenManager
+import wig.api.dto.Ownership
+import wig.api.dto.PostScanResponse
+import wig.utils.TokenManager
 
 
 /**

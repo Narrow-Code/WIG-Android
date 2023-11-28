@@ -1,4 +1,4 @@
-package wig.api.users.dto
+package wig.api.dto
 
 import kotlinx.serialization.Serializable
 
@@ -9,7 +9,7 @@ import kotlinx.serialization.Serializable
  * @property message A message indicating the result of the login verification.
  */
 @Serializable
-data class PostLoginCheckResponse(
+data class PostValidateResponse(
     val message: String,
     val success: Boolean
 )

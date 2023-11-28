@@ -8,7 +8,7 @@ import wig.api.users.dto.PostLoginRequest
 import wig.api.users.dto.PostLoginResponse
 import wig.api.users.dto.PostSignupRequest
 import wig.api.users.dto.PostSignupResponse
-import wig.datastore.TokenManager
+import wig.utils.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
@@ -19,6 +19,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import wig.api.HttpRoutes
 
 
 /**
