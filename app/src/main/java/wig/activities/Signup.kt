@@ -14,15 +14,6 @@ import wig.api.UserService
 import wig.api.dto.SignupRequest
 import wig.utils.SaltAndHash
 
-/**
- * The Signup class controls the functionality on the signup page of the WIG application.
- *
- * @property binding The binding for the Signup page layout.
- * @property usernameRegex Regular expression for username validation.
- * @property passwordRegex Regular expression for password validation.
- * @property emailRegex Regular expression for email validation.
- * @property service An instance of [UserService] for making API calls related to user operations.
- */
 class Signup : BaseActivity() {
 
     // Set variables
@@ -33,13 +24,6 @@ class Signup : BaseActivity() {
     private val emailRegex = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
     private val service = UserService.create()
 
-    /**
-     * Called when the activity is first created.
-     *
-     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then
-     * this Bundle contains the data it most recently supplied in [onSaveInstanceState].
-     * Note: Otherwise it is null.
-     */
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,11 +45,6 @@ class Signup : BaseActivity() {
         setContentView(view)
     }
 
-    /**
-     * Handles the signup button click event.
-     * Retrieves field inputs, checks requirements, generates salt and hash,
-     * and makes an API call to create a new user.
-     */
     private fun signupButton() {
         // Disable button
         disableButtons()
@@ -90,44 +69,22 @@ class Signup : BaseActivity() {
 
     }
 
-    /**
-     * Handles the login button click event.
-     * Starts the [Login] activity.
-     */
     private fun loginButton() {
         val intent = Intent(this, Login::class.java)
         startActivity(intent)
         finish()
     }
 
-    /**
-     * Handles the self-host button click event.
-     * Starts the [ServerSetup] activity.
-     */
     private fun selfHostButton() {
         val intent = Intent(this, ServerSetup::class.java)
         startActivity(intent)
         finish()
     }
 
-    /**
-     * Converts a byte array to its hexadecimal representation.
-     *
-     * @return A string representing the hexadecimal value of the byte array.
-     */
     private fun ByteArray.toHexString(): String {
         return joinToString("") { "%02x".format(it) }
     }
 
-    /**
-     * Makes an API call to create a new user.
-     * Handles API response, enables the signup button on failure, and displays error messages.
-     *
-     * @param username Input from the username field
-     * @param email Input from the email field
-     * @param hash Input from the hash field
-     * @param salt Input from the salt field
-     */
     private fun signupAPICall(username: String, email: String, hash: String, salt: ByteArray) {
         lifecycleScope.launch {
             try {
@@ -155,15 +112,6 @@ class Signup : BaseActivity() {
         }
     }
 
-    /**
-     * Checks the requirements for username, email, and password.
-     *
-     * @param username The username
-     * @param email The email
-     * @param password The password
-     * @param confirmPassword The confirmation password
-     * @return True if all requirements are met, false otherwise.
-     */
     private fun requirementsCheck(username: String, email: String, password: String, confirmPassword: String): Boolean {
 
         // Check null fields
@@ -203,27 +151,18 @@ class Signup : BaseActivity() {
         return true
     }
 
-    /**
-     * Disables all of the buttons on the page.
-     */
     private fun disableButtons() {
         for (i in 0 until binding.root.childCount) {
             val view = binding.root.getChildAt(i)
-            if (view is Button) {
-                view.isEnabled = false
-            }
+            if (view is Button) { view.isEnabled = false }
         }
     }
 
-    /**
-     * Enables all of the buttons on the page.
-     */
     private fun enableButtons() {
         for (i in 0 until binding.root.childCount) {
             val view = binding.root.getChildAt(i)
-            if (view is Button) {
-                view.isEnabled = true
-            }
+            if (view is Button) { view.isEnabled = true }
         }
     }
+
 }

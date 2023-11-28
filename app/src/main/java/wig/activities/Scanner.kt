@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TableRow
@@ -87,11 +86,8 @@ class Scanner : BaseActivity() {
                     }
                 }
             }
-
-
             errorCallback = ErrorCallback {
                 runOnUiThread {
-                    Log.e("Main", "Camera initialization error: ${it.message}")
                 }
             }
         }
@@ -245,11 +241,9 @@ class Scanner : BaseActivity() {
         lifecycleScope.launch {
             try {
                 val posts = withContext(Dispatchers.IO) {
-                    Log.d("API CALL", "Coroutine started")
                     service.scan(barcode)
                 }
                 if (posts.success) {
-                    Log.d("API CALL", "Posts success")
                     populateItems(posts)
                 } else {
                     // TODO handle what else

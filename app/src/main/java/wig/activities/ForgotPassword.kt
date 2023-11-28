@@ -34,7 +34,7 @@ class ForgotPassword : BaseActivity() {
     }
 
     private fun sendClick() {
-        // TODO add functionality
+        // TODO add backend call functionality
         val email = binding.email.text.toString()
         if(email != "") {
             val intent = Intent(this, ResetPassword::class.java)
