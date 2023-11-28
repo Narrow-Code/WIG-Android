@@ -32,7 +32,6 @@ private const val CAMERA_REQUEST_CODE = 101
 @Suppress("DEPRECATION")
 class Scanner : BaseActivity() {
     // Set variables
-    private lateinit var binding: MainScannerBinding
     private lateinit var codeScanner: CodeScanner
     private var pageView = "items"
     private val handler = Handler()
@@ -43,27 +42,21 @@ class Scanner : BaseActivity() {
         super.onCreate(savedInstanceState)
         disableBackPress()
         setScreenOrientation()
-        setKeyBindings()
+        setScannerBindings()
         setupPermissions()
         codeScanner()
         setOnClickListeners()
     }
 
     private fun setOnClickListeners() {
-        binding.binsButton.setOnClickListener{ switchToBinsView() }
-        binding.itemsButton.setOnClickListener{ switchToItemsView() }
-        binding.shelvesButton.setOnClickListener { switchToShelvesView() }
-        binding.icSettings.setOnClickListener{ logout() }
-    }
-
-    private fun setKeyBindings(){
-        binding = MainScannerBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        scannerBinding.binsButton.setOnClickListener{ switchToBinsView() }
+        scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
+        scannerBinding.shelvesButton.setOnClickListener { switchToShelvesView() }
+        scannerBinding.icSettings.setOnClickListener{ logout() }
     }
 
     private fun codeScanner() {
-        codeScanner = CodeScanner(this, binding.scannerView)
+        codeScanner = CodeScanner(this, scannerBinding.scannerView)
 
         codeScanner.apply {
             camera = CodeScanner.CAMERA_BACK
@@ -91,7 +84,7 @@ class Scanner : BaseActivity() {
             }
         }
 
-        binding.scannerView.setOnClickListener {
+        scannerBinding.scannerView.setOnClickListener {
             codeScanner.startPreview()
         }
     }
@@ -150,40 +143,40 @@ class Scanner : BaseActivity() {
     }
 
     private fun switchToBinsView() {
-        binding.tableItemsTitles.visibility = View.INVISIBLE
-        binding.tableShelvesTitles.visibility = View.INVISIBLE
-        binding.itemsTable.visibility = View.INVISIBLE
-        binding.shelvesTable.visibility = View.INVISIBLE
-        binding.tableBinsTitles.visibility = View.VISIBLE
-        binding.binsTable.visibility = View.VISIBLE
+        scannerBinding.tableItemsTitles.visibility = View.INVISIBLE
+        scannerBinding.tableShelvesTitles.visibility = View.INVISIBLE
+        scannerBinding.itemsTable.visibility = View.INVISIBLE
+        scannerBinding.shelvesTable.visibility = View.INVISIBLE
+        scannerBinding.tableBinsTitles.visibility = View.VISIBLE
+        scannerBinding.binsTable.visibility = View.VISIBLE
 
         pageView = "bins"
     }
 
     private fun switchToItemsView() {
-        binding.tableBinsTitles.visibility = View.INVISIBLE
-        binding.tableShelvesTitles.visibility = View.INVISIBLE
-        binding.binsTable.visibility = View.INVISIBLE
-        binding.shelvesTable.visibility = View.INVISIBLE
-        binding.tableItemsTitles.visibility = View.VISIBLE
-        binding.itemsTable.visibility = View.VISIBLE
+        scannerBinding.tableBinsTitles.visibility = View.INVISIBLE
+        scannerBinding.tableShelvesTitles.visibility = View.INVISIBLE
+        scannerBinding.binsTable.visibility = View.INVISIBLE
+        scannerBinding.shelvesTable.visibility = View.INVISIBLE
+        scannerBinding.tableItemsTitles.visibility = View.VISIBLE
+        scannerBinding.itemsTable.visibility = View.VISIBLE
 
         pageView = "items"
     }
 
     private fun switchToShelvesView() {
-        binding.tableItemsTitles.visibility = View.INVISIBLE
-        binding.tableBinsTitles.visibility = View.INVISIBLE
-        binding.binsTable.visibility = View.INVISIBLE
-        binding.itemsTable.visibility = View.INVISIBLE
-        binding.tableShelvesTitles.visibility = View.VISIBLE
-        binding.shelvesTable.visibility = View.VISIBLE
+        scannerBinding.tableItemsTitles.visibility = View.INVISIBLE
+        scannerBinding.tableBinsTitles.visibility = View.INVISIBLE
+        scannerBinding.binsTable.visibility = View.INVISIBLE
+        scannerBinding.itemsTable.visibility = View.INVISIBLE
+        scannerBinding.tableShelvesTitles.visibility = View.VISIBLE
+        scannerBinding.shelvesTable.visibility = View.VISIBLE
 
         pageView = "shelves"
     }
 
     private fun populateItems(postScanResponse: ScanResponse){
-        val tableLayout = binding.itemsTableLayout
+        val tableLayout = scannerBinding.itemsTableLayout
         val row = TableRow(this@Scanner)
 
         val layoutParams = TableRow.LayoutParams(

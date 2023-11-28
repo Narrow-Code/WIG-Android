@@ -17,7 +17,6 @@ import wig.utils.SaltAndHash
 class Signup : BaseActivity() {
 
     // Set variables
-    private lateinit var binding: SignupBinding
     private val usernameRegex = Regex("^[a-zA-Z0-9_-]{4,20}$")
     private val passwordRegex =
         Regex("^(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d\\s!@#\$%^&*()_+={}\\[\\]:;<>,.?~\\\\-]{8,}\$")
@@ -29,20 +28,14 @@ class Signup : BaseActivity() {
         super.onCreate(savedInstanceState)
         disableBackPress()
         setScreenOrientation()
-        setKeyBindings()
+        setSignupBindings()
         setOnClickListeners()
     }
 
     private fun setOnClickListeners(){
-        binding.loginButton.setOnClickListener { loginButton() }
-        binding.signupButton.setOnClickListener { signupButton() }
-        binding.icSelfHost.setOnClickListener { selfHostButton() }
-    }
-
-    private fun setKeyBindings(){
-        binding = SignupBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        signupBinding.loginButton.setOnClickListener { loginButton() }
+        signupBinding.signupButton.setOnClickListener { signupButton() }
+        signupBinding.icSelfHost.setOnClickListener { selfHostButton() }
     }
 
     private fun signupButton() {
@@ -50,10 +43,10 @@ class Signup : BaseActivity() {
         disableButtons()
 
         // Store field inputs as variables
-        val username = binding.username.text.toString()
-        val email = binding.email.text.toString()
-        val password = binding.password.text.toString()
-        val confirmPassword = binding.confirmPassword.text.toString()
+        val username = signupBinding.username.text.toString()
+        val email = signupBinding.email.text.toString()
+        val password = signupBinding.password.text.toString()
+        val confirmPassword = signupBinding.confirmPassword.text.toString()
 
         // Check requirements and pass API
         if (requirementsCheck(username, email, password, confirmPassword)) {
@@ -97,7 +90,7 @@ class Signup : BaseActivity() {
                     enableButtons()
 
                     // Set error message
-                    binding.error.text = posts.message
+                    signupBinding.error.text = posts.message
                 }
 
             } catch (e: Exception) {
@@ -110,35 +103,35 @@ class Signup : BaseActivity() {
 
         // Check null fields
         if (username == "" || email == "" || password == "" || confirmPassword == "") {
-            binding.error.text = getString(R.string.required_fields)
+            signupBinding.error.text = getString(R.string.required_fields)
             enableButtons()
             return false
         }
 
         // Check that passwords match
         else if (password != confirmPassword) {
-            binding.error.text = getString(R.string.password_mismatch)
+            signupBinding.error.text = getString(R.string.password_mismatch)
             enableButtons()
             return false
         }
 
         // Check username requirements
         else if (!usernameRegex.matches(username)) {
-            binding.error.text = getString(R.string.wrong_username_criteria)
+            signupBinding.error.text = getString(R.string.wrong_username_criteria)
             enableButtons()
             return false
         }
 
         // Check Email validity
         else if (!emailRegex.matches(email)) {
-            binding.error.text = getString(R.string.email_not_valid)
+            signupBinding.error.text = getString(R.string.email_not_valid)
             enableButtons()
             return false
         }
 
         // Check password requirements
         else if (!passwordRegex.matches(password)) {
-            binding.error.text = getString(R.string.wrong_password_criteria)
+            signupBinding.error.text = getString(R.string.wrong_password_criteria)
             enableButtons()
             return false
         }
@@ -146,15 +139,15 @@ class Signup : BaseActivity() {
     }
 
     private fun disableButtons() {
-        for (i in 0 until binding.root.childCount) {
-            val view = binding.root.getChildAt(i)
+        for (i in 0 until signupBinding.root.childCount) {
+            val view = signupBinding.root.getChildAt(i)
             if (view is Button) { view.isEnabled = false }
         }
     }
 
     private fun enableButtons() {
-        for (i in 0 until binding.root.childCount) {
-            val view = binding.root.getChildAt(i)
+        for (i in 0 until signupBinding.root.childCount) {
+            val view = signupBinding.root.getChildAt(i)
             if (view is Button) { view.isEnabled = true }
         }
     }

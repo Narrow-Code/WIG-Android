@@ -16,33 +16,26 @@ import wig.api.dto.LoginRequest
 import wig.databinding.LoginBinding
 
 class Login : BaseActivity() {
-    private lateinit var binding: LoginBinding
     private val service = UserService.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
-        setKeyBindings()
+        setLoginBindings()
         disableBackPress()
         setOnClickListeners()
     }
 
     private fun setOnClickListeners() {
-        binding.loginButton.setOnClickListener { loginButton() }
-        binding.signupButton.setOnClickListener { startActivitySignup() }
-        binding.icSelfHost.setOnClickListener { startActivityServerSetup() }
-        binding.forgotPassword.setOnClickListener { startActivityForgotPassword() }
-    }
-
-    private fun setKeyBindings(){
-        binding = LoginBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        loginBinding.loginButton.setOnClickListener { loginButton() }
+        loginBinding.signupButton.setOnClickListener { startActivitySignup() }
+        loginBinding.icSelfHost.setOnClickListener { startActivityServerSetup() }
+        loginBinding.forgotPassword.setOnClickListener { startActivityForgotPassword() }
     }
 
     private fun loginButton() {
-        val username = binding.username.text.toString()
-        val password = binding.password.text.toString()
+        val username = loginBinding.username.text.toString()
+        val password = loginBinding.password.text.toString()
 
         // Disable button
         disableButtons()
@@ -71,7 +64,7 @@ class Login : BaseActivity() {
                         enableButtons()
 
                         // Set error message
-                        binding.error.text = posts.message
+                        loginBinding.error.text = posts.message
                     }
 
             } catch(e: Exception) {
@@ -100,7 +93,7 @@ class Login : BaseActivity() {
                     enableButtons()
 
                     // Set error message
-                    binding.error.text = posts.message
+                    loginBinding.error.text = posts.message
                 }
 
             } catch(e: Exception) {
@@ -111,7 +104,7 @@ class Login : BaseActivity() {
 
     private fun requirementsCheck(username: String, password: String): Boolean {
         if(username == "" || password == ""){
-            binding.error.text = getString(R.string.required_fields)
+            loginBinding.error.text = getString(R.string.required_fields)
             enableButtons()
             return false
         }
@@ -119,8 +112,8 @@ class Login : BaseActivity() {
     }
 
     private fun disableButtons() {
-        for (i in 0 until binding.root.childCount) {
-            val view = binding.root.getChildAt(i)
+        for (i in 0 until loginBinding.root.childCount) {
+            val view = loginBinding.root.getChildAt(i)
             if (view is Button) {
                 view.isEnabled = false
             }
@@ -128,8 +121,8 @@ class Login : BaseActivity() {
     }
 
     private fun enableButtons() {
-        for (i in 0 until binding.root.childCount) {
-            val view = binding.root.getChildAt(i)
+        for (i in 0 until loginBinding.root.childCount) {
+            val view = loginBinding.root.getChildAt(i)
             if (view is Button) {
                 view.isEnabled = true
             }

@@ -6,31 +6,23 @@ import wig.databinding.ResetPasswordBinding
 import wig.utils.EmailManager
 
 class ResetPassword : BaseActivity() {
-    private lateinit var binding: ResetPasswordBinding
-
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         disableBackPress()
         setScreenOrientation()
-        setKeyBindings()
+        setResetPasswordBindings()
         appendEmailToPage()
         setOnClickListeners()
     }
 
     private fun setOnClickListeners() {
-        binding.icExit.setOnClickListener { startActivityLogin() }
+        resetPasswordBinding.icExit.setOnClickListener { startActivityLogin() }
 
-    }
-
-    private fun setKeyBindings(){
-        binding = ResetPasswordBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
     }
 
     private fun appendEmailToPage() {
         val email = EmailManager.getEmail()
-        binding.email.text = email
+        resetPasswordBinding.email.text = email
     }
 }
