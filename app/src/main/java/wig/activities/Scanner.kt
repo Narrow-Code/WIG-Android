@@ -3,8 +3,10 @@ package wig.activities
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TableRow
@@ -25,6 +27,8 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import wig.models.Ownership
+import wig.utils.OwnershipManager
 
 private const val CAMERA_REQUEST_CODE = 101
 
@@ -34,6 +38,7 @@ class Scanner : BaseActivity() {
     private var pageView = "items"
     private val handler = Handler()
     private val service = ScannerService.create()
+    private val ownershipRowMap = mutableMapOf<Int, TableRow>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,52 +62,57 @@ class Scanner : BaseActivity() {
         posts
     }
 
-    private fun populateItems(postScanResponse: ScanResponse){
-        val tableLayout = scannerBinding.itemsTableLayout
+    private fun createRowForOwnership(ownership: Ownership): TableRow {
+        val name = ownership.item.itemName
+        val location = ownership.location.locationName
+        val quantity = ownership.itemQuantity
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT
-        )
+            TableRow.LayoutParams.WRAP_CONTENT)
 
-        val nameTextView = TextView(this)
-        nameTextView.text = postScanResponse.ownership[0].item.itemName.substring(0 until 20.coerceAtMost(postScanResponse.ownership[0].item.itemName.length))
-        nameTextView.layoutParams = TableRow.LayoutParams(
-            0,
-            TableRow.LayoutParams.WRAP_CONTENT,
-            1f
-        )
+        val nameView = TextView(this)
+        nameView.text = name.substring(0 until 20.coerceAtMost(name.length))
+        nameView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
 
-        val locationTextView = TextView(this)
-        locationTextView.text = postScanResponse.ownership[0].location.locationName.substring(0 until 18.coerceAtMost(postScanResponse.ownership[0].location.locationName.length))
-        locationTextView.layoutParams = TableRow.LayoutParams(
-            0,
-            TableRow.LayoutParams.WRAP_CONTENT,
-            1f
-        )
-        locationTextView.gravity = Gravity.CENTER
+        val locationView = TextView(this)
+        locationView.text = location.substring(0 until 18.coerceAtMost(location.length))
+        locationView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+        locationView.gravity = Gravity.CENTER
 
-        val quantityTextView = TextView(this)
-        quantityTextView.text = postScanResponse.ownership[0].itemQuantity.toString()
-        quantityTextView.layoutParams = TableRow.LayoutParams(
-            0,
-            TableRow.LayoutParams.WRAP_CONTENT,
-            1f
-        )
-        quantityTextView.gravity = Gravity.END
+        val quantityView = TextView(this)
+        quantityView.text = quantity.toString()
+        quantityView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+        quantityView.gravity = Gravity.END
 
-        row.addView(nameTextView)
-        row.addView(locationTextView)
-        row.addView(quantityTextView)
-
+        row.addView(nameView)
+        row.addView(locationView)
+        row.addView(quantityView)
         row.layoutParams = layoutParams
+        ownershipRowMap[ownership.ownershipUID] = row
 
-        tableLayout.addView(row)
+        return row
+    }
+
+    private fun populateItems(postScanResponse: ScanResponse){
+        val tableLayout = scannerBinding.itemsTableLayout
+
+        for (ownership in postScanResponse.ownership){
+            if(!ownershipRowMap.containsKey(ownership.ownershipUID)) {
+                OwnershipManager.addOwnership(ownership)
+                val row = createRowForOwnership(ownership)
+
+                tableLayout.addView(row)
+            }
+        }
 
         handler.postDelayed({
             // Enable scanning after 5 seconds
             codeScanner.startPreview()
-        }, 1500)
+        }, 1000)
 
     }
 
@@ -161,8 +171,8 @@ class Scanner : BaseActivity() {
                     codeScanner.stopPreview()
                     if(it.barcodeFormat != BarcodeFormat.QR_CODE){
                         lifecycleScope.launch {
-                            // TODO add items to OwnershipManager
-                            populateItems(scanBarcode(it.text))
+                            val response = scanBarcode(it.text)
+                            populateItems(response)
                         }
                     }
                 }
