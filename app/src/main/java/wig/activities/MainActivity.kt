@@ -20,17 +20,22 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         disableBackPress()
         lifecycleScope.launch {
-            val token = checkForToken()
-            if (token){
-                validate()
+            if (checkForToken()){
+                if(validate()){
+                    startActivityScanner()
+                } else {
+                    val storeToken = StoreToken(this@MainActivity)
+                    storeToken.saveToken("")
+                    startActivityLogin()
+                }
+            }else{
+                startActivityLogin()
             }
-            startActivityLogin()
         }
     }
 
     private suspend fun checkForToken(): Boolean = withContext(Dispatchers.IO){
-        val storeToken = StoreToken(this@MainActivity)
-        val tokenFlow: Flow<String?> = storeToken.getToken
+        val tokenFlow: Flow<String?> = StoreToken(this@MainActivity).getToken
             tokenFlow.map { token ->
                 if (!token.isNullOrBlank()) {
                     TokenManager.setToken(token)
@@ -41,16 +46,8 @@ class MainActivity : BaseActivity() {
         }.first()
     }
 
-    private suspend fun validate() = withContext(Dispatchers.IO){
+    private suspend fun validate(): Boolean = withContext(Dispatchers.IO){
         val getLogin = service.validate()
-        if (getLogin.success) {
-            startActivityScanner()
-        } else {
-            val storeToken = StoreToken(this@MainActivity)
-            storeToken.saveToken("")
-
-            startActivityLogin()
-        }
+        getLogin.success
     }
-
 }

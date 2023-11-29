@@ -52,14 +52,9 @@ class Scanner : BaseActivity() {
         scannerBinding.icSettings.setOnClickListener{ logout() }
     }
 
-    private suspend fun scanBarcode(barcode: String) = withContext(Dispatchers.IO){
+    private suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
         val posts = service.scan(barcode)
-        if (posts.success) {
-            populateItems(posts)
-        } else {
-            // TODO handle what else noise?
-            codeScanner.startPreview()
-        }
+        posts
     }
 
     private fun populateItems(postScanResponse: ScanResponse){
@@ -166,7 +161,7 @@ class Scanner : BaseActivity() {
                     codeScanner.stopPreview()
                     if(it.barcodeFormat != BarcodeFormat.QR_CODE){
                         lifecycleScope.launch {
-                        scanBarcode(it.text)
+                            populateItems(scanBarcode(it.text))
                         }
                     }
                 }
