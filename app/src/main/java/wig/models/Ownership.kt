@@ -1,0 +1,23 @@
+package wig.models
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Ownership(
+    val ownershipUID: Int,
+    val itemOwner: Int,
+    val itemNumber: Int,
+    val customItemName: String,
+    val customItemImage: String,
+    val customItemDescription: String,
+    val itemLocation: Int,
+    val itemQR: String,
+    val itemTags: String,
+    val itemQuantity: Int,
+    val itemCheckedOut: String,
+    val itemBorrower: Int,
+    val user: User,
+    val location: Location,
+    val item: Item,
+    val borrower: Borrower
+)

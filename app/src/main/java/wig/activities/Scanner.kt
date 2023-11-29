@@ -166,10 +166,7 @@ class Scanner : BaseActivity() {
                     }
                 }
             }
-            errorCallback = ErrorCallback {
-                runOnUiThread {
-                }
-            }
+            errorCallback = ErrorCallback { runOnUiThread {} }
         }
         scannerBinding.scannerView.setOnClickListener {
             codeScanner.startPreview()
