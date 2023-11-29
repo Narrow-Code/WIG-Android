@@ -104,7 +104,7 @@ class Scanner : BaseActivity() {
             if(!ownershipRowMap.containsKey(ownership.ownershipUID)) {
                 OwnershipManager.addOwnership(ownership)
                 val row = createRowForOwnership(ownership)
-
+                setColorForRow(row, tableLayout.childCount)
                 tableLayout.addView(row)
             }
         }
@@ -113,7 +113,15 @@ class Scanner : BaseActivity() {
             // Enable scanning after 5 seconds
             codeScanner.startPreview()
         }, 1000)
+    }
 
+    private fun setColorForRow(row: TableRow, position: Int){
+        val backgroundColor = if(position % 2 == 0){
+            Color.BLACK
+        } else {
+            Color.DKGRAY
+        }
+        row.setBackgroundColor(backgroundColor)
     }
 
     private fun switchToBinsView() {
