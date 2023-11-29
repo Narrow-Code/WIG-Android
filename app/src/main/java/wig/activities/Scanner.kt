@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TableRow
@@ -93,6 +92,8 @@ class Scanner : BaseActivity() {
         row.addView(quantityView)
         row.layoutParams = layoutParams
         ownershipRowMap[ownership.ownershipUID] = row
+
+        // TODO set onclick listener to row
 
         return row
     }
