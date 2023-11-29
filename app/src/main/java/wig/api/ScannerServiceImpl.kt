@@ -19,7 +19,7 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
     override suspend fun scan(barcode: String): ScanResponse {
         return try {
             client.post {
-                url("${HttpRoutes.SCAN_ITEM}?barcode=${barcode}")
+                url("${HttpRoutes.SCAN_BARCODE}?barcode=${barcode}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())

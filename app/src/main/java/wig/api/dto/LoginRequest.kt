@@ -2,13 +2,6 @@ package wig.api.dto
 
 import kotlinx.serialization.Serializable
 
-/**
- * Represents a data class for the request of login step two, password verification.
- *
- * @author Matthew McCaughey
- * @property username The username of the user.
- * @property hash The hashed password of the user.
- */
 @Serializable
 data class LoginRequest(
     val username: String,
