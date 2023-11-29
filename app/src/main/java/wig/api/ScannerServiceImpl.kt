@@ -9,8 +9,8 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import wig.api.dto.Ownership
 import wig.api.dto.ScanResponse
+import wig.models.Ownership
 import wig.utils.TokenManager
 
 

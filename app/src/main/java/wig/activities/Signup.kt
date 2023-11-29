@@ -77,7 +77,7 @@ class Signup : BaseActivity() {
             signupBinding.error.text = getString(R.string.email_not_valid)
             enableButtons()
             return false
-        } else if (!RequirementsManager.getEmailRegex().matches(password)) {
+        } else if (!RequirementsManager.getPasswordRegex().matches(password)) {
             signupBinding.error.text = getString(R.string.wrong_password_criteria)
             enableButtons()
             return false

@@ -161,6 +161,7 @@ class Scanner : BaseActivity() {
                     codeScanner.stopPreview()
                     if(it.barcodeFormat != BarcodeFormat.QR_CODE){
                         lifecycleScope.launch {
+                            // TODO add items to OwnershipManager
                             populateItems(scanBarcode(it.text))
                         }
                     }
