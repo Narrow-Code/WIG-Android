@@ -97,6 +97,16 @@ class Scanner : BaseActivity() {
         return row
     }
 
+    private fun removeOwnershipRow(uid: Int) {
+        val tableLayout = scannerBinding.itemsTableLayout
+        val rowToRemove = ownershipRowMap[uid]
+        rowToRemove?.let {
+            tableLayout.removeView(it)
+            ownershipRowMap.remove(uid)
+            OwnershipManager.removeOwnership(uid)
+        }
+    }
+
     private fun populateItems(postScanResponse: ScanResponse){
         val tableLayout = scannerBinding.itemsTableLayout
 

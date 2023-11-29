@@ -9,8 +9,9 @@ object OwnershipManager {
         ownerships.add(ownership);
     }
 
-    fun removeOwnership(ownership: Ownership) {
-        ownerships.remove(ownership);
+    fun removeOwnership(uid: Int) {
+        val ownershipToRemove = ownerships.find {it.ownershipUID == uid}
+        ownershipToRemove?.let { ownerships.remove(it)}
     }
 
     fun getAllOwnerships(): List<Ownership> {
