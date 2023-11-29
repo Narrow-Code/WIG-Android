@@ -55,8 +55,10 @@ class Signup : BaseActivity() {
             EmailManager.setEmail(email)
             startActivityEmailVerification()
         } else {
-            enableButtons()
-            signupBinding.error.text = posts.message
+            runOnUiThread {
+                signupBinding.error.text = posts.message
+                enableButtons()
+            }
         }
     }
 

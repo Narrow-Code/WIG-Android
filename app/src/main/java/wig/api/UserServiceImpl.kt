@@ -10,6 +10,7 @@ import wig.api.dto.SignupRequest
 import wig.api.dto.SignupResponse
 import wig.utils.TokenManager
 import io.ktor.client.HttpClient
+import io.ktor.client.call.receive
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
 import io.ktor.client.features.ServerResponseException
@@ -19,31 +20,11 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import wig.utils.JsonParse
 
-
-/**
- * Implementation of [UserService] interface for handling user-related operations.
- *
- * @property client An instance of [HttpClient] used for making HTTP requests.
- * @property nullPostSignupResponse a SignupResponse for failed process
- * @property nullGetSaltResponse a SaltResponse for failed process
- * @property nullPostLoginResponse a LoginResponse for failed process
- * @property nullPostLoginCheckResponse a LoginGetResponse for failed process
- */
 class UserServiceImpl(
     private val client: HttpClient ) : UserService {
 
-    private val nullPostSignupResponse: SignupResponse = SignupResponse("fail", false)
-    private val nullGetSaltResponse: SaltResponse = SaltResponse("fail", false, "")
-    private val nullPostLoginResponse: LoginResponse = LoginResponse("fail", false,"", 0)
-    private val nullPostLoginCheckResponse: ValidateResponse = ValidateResponse("fail", false)
-
-    /**
-     * Retrieves salt of a user with the provided [saltRequest].
-     *
-     * @param saltRequest Request object containing user UID for login.
-     * @return [SaltResponse] containing the users specific salt value, or null if unsuccessful.
-     */
     override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse {
         return try {
             client.get {
@@ -53,28 +34,21 @@ class UserServiceImpl(
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
-            println("Error: ${e.response.status.description}")
-            nullGetSaltResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SaltResponse(errorMessage, false, "")
         } catch(e: ClientRequestException) {
             // 4xx - responses
-            println("Error: ${e.response.status.description}")
-            nullGetSaltResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SaltResponse(errorMessage, false, "")
         } catch(e: ServerResponseException) {
             // 5xx - responses
-            println("Error: ${e.response.status.description}")
-            nullGetSaltResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SaltResponse(errorMessage, false, "")
         } catch(e: Exception) {
-            println("Error: ${e.message}")
-            nullGetSaltResponse
+            SaltResponse(e.message.toString(), false, "")
         }
     }
 
-    /**
-     * Logs in the user with the provided [loginRequest].
-     *
-     * @param loginRequest Request object containing username and hash.
-     * @return [LoginResponse] containing the users specific UID and authentication token, or null if unsuccessful.
-     */
     override suspend fun login(loginRequest: LoginRequest): LoginResponse {
         return try {
             client.post {
@@ -85,27 +59,21 @@ class UserServiceImpl(
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
-            println("Error: ${e.response.status.description}")
-            nullPostLoginResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            LoginResponse(errorMessage, false,"", 0)
         } catch(e: ClientRequestException) {
             // 4xx - responses
-            println("Error: ${e.response.status.description}")
-            nullPostLoginResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            LoginResponse(errorMessage, false,"", 0)
         } catch(e: ServerResponseException) {
             // 5xx - responses
-            println("Error: ${e.response.status.description}")
-            nullPostLoginResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            LoginResponse(errorMessage, false,"", 0)
         } catch(e: Exception) {
-            println("Error: ${e.message}")
-            nullPostLoginResponse
+            LoginResponse(e.message.toString(), false,"", 0)
         }
     }
 
-    /**
-     * Authenticates user is still logged in at startup of app.
-     *
-     * @return [ValidateResponse] containing the users specific UID and authentication token, or null if unsuccessful.
-     */
     override suspend fun validate(): ValidateResponse {
         return try {
             client.post {
@@ -116,28 +84,21 @@ class UserServiceImpl(
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
-            println("Error: ${e.response.status.description}")
-            nullPostLoginCheckResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            ValidateResponse(errorMessage, false)
         } catch(e: ClientRequestException) {
             // 4xx - responses
-            println("Error: ${e.response.status.description}")
-            nullPostLoginCheckResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            ValidateResponse(errorMessage, false)
         } catch(e: ServerResponseException) {
             // 5xx - responses
-            println("Error: ${e.response.status.description}")
-            nullPostLoginCheckResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            ValidateResponse(errorMessage, false)
         } catch(e: Exception) {
-            println("Error: ${e.message}")
-            nullPostLoginCheckResponse
+            ValidateResponse(e.message.toString(), false)
         }
     }
 
-    /**
-     * Creates a new user with the provided [signupRequest].
-     *
-     * @param signupRequest Request object containing user information for signup.
-     * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
-     */
     override suspend fun signup(signupRequest: SignupRequest): SignupResponse {
         return try {
             client.post {
@@ -148,19 +109,18 @@ class UserServiceImpl(
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
-            Log.d("createUser", "Error: ${e.response.status.description}")
-            nullPostSignupResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SignupResponse(errorMessage, false)
         } catch(e: ClientRequestException) {
             // 4xx - responses
-            Log.d("createUser", "Error: ${e.response.status.description}")
-            nullPostSignupResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SignupResponse(errorMessage, false)
         } catch(e: ServerResponseException) {
             // 5xx - responses
-            Log.d("createUser", "Error: ${e.response.status.description}")
-            nullPostSignupResponse
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SignupResponse(errorMessage, false)
         } catch(e: Exception) {
-            Log.d("createUser", "Error: ${e.message}")
-            nullPostSignupResponse
+            SignupResponse(e.message.toString(), false)
         }
     }
 }
