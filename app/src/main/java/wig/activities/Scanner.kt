@@ -117,6 +117,7 @@ class Scanner : BaseActivity() {
     private fun createRowForBin(bin: Location): TableRow {
         val name = bin.locationName
         val location = bin.location?.locationName
+        val type = bin.locationType
 
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
@@ -124,19 +125,26 @@ class Scanner : BaseActivity() {
             TableRow.LayoutParams.WRAP_CONTENT)
 
         val nameView = TextView(this)
-        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
+        nameView.text = name.substring(0 until 20.coerceAtMost(name.length))
         nameView.layoutParams = TableRow.LayoutParams(
             0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
         row.addView(nameView)
 
         if (location != null){
             val locationView = TextView(this)
-            locationView.text = location.substring(0 until 25.coerceAtMost(location.length))
+            locationView.text = location.substring(0 until 18.coerceAtMost(location.length))
             locationView.layoutParams = TableRow.LayoutParams(
                 0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
-            locationView.gravity = Gravity.END
+            locationView.gravity = Gravity.CENTER
             row.addView(locationView)
         }
+
+        val typeView = TextView(this)
+        typeView.text = type.substring(0 until 10.coerceAtMost(type.length))
+        typeView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+        typeView.gravity = Gravity.END
+        row.addView(typeView)
 
         row.layoutParams = layoutParams
         binsRowMap[bin.locationUID] = row

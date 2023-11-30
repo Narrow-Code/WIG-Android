@@ -252,13 +252,23 @@
                 android:text="@string/table_name"/>
 
             <TextView
-                android:id="@+id/table_bin_items"
+                android:id="@+id/table_bin_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@id/table_bin_name"
+                app:layout_constraintRight_toLeftOf="@id/table_bin_type"
+                android:text="@string/table_location"/>
+
+            <TextView
+                android:id="@+id/table_bin_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:text="@string/table_bin_location"
+                android:text="@string/table_bin_type"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <ScrollView
