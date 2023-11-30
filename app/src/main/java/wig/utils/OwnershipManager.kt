@@ -18,4 +18,8 @@ object OwnershipManager {
         return ownerships.toList()
     }
 
+    fun removeAllOwnerships() {
+        ownerships.clear()
+    }
+
 }

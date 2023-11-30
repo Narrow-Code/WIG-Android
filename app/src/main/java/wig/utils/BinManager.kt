@@ -18,4 +18,8 @@ object BinManager {
         return bins.toList()
     }
 
+    fun removeAllBins() {
+        bins.clear()
+    }
+
 }

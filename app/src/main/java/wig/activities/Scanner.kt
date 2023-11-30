@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TableRow
@@ -60,6 +59,7 @@ class Scanner : BaseActivity() {
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
         scannerBinding.shelvesButton.setOnClickListener { switchToShelvesView() }
         scannerBinding.icSettings.setOnClickListener{ logout() }
+        scannerBinding.clear.setOnClickListener { clearButton() }
     }
 
     private suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
@@ -155,7 +155,23 @@ class Scanner : BaseActivity() {
     }
 
     private fun clearButton() {
+        when (pageView) {
+            "items" -> {
+                val tableLayout = scannerBinding.itemsTableLayout
+                tableLayout.removeAllViews()
+                OwnershipManager.removeAllOwnerships()
+                ownershipRowMap.clear()
+            }
+            "bins" -> {
+                val tableLayout = scannerBinding.binsTableLayout
+                tableLayout.removeAllViews()
+                BinManager.removeAllBins()
+                binsRowMap.clear()
+            }
+            "shelves" -> {
 
+            }
+        }
     }
 
     private fun removeOwnershipRow(uid: Int) {
