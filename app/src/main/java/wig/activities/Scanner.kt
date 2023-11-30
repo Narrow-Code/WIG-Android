@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TableRow
@@ -26,6 +27,7 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import wig.api.OwnershipService
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
 import wig.models.Location
@@ -40,7 +42,8 @@ class Scanner : BaseActivity() {
     private lateinit var codeScanner: CodeScanner
     private var pageView = "items"
     private val handler = Handler()
-    private val service = ScannerService.create()
+    private val scannerService = ScannerService.create()
+    private val ownershipService = OwnershipService.create()
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val binsRowMap = mutableMapOf<Int, TableRow>()
 
@@ -60,20 +63,26 @@ class Scanner : BaseActivity() {
         scannerBinding.shelvesButton.setOnClickListener { switchToShelvesView() }
         scannerBinding.icSettings.setOnClickListener{ logout() }
         scannerBinding.clear.setOnClickListener { clearButton() }
+        scannerBinding.placeQueue.setOnClickListener { placeQueueButton() }
     }
 
     private suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
-        val posts = service.scan(barcode)
+        val posts = scannerService.scan(barcode)
         posts
     }
 
     private suspend fun checkQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = service.checkQR(qr)
+        val posts = scannerService.checkQR(qr)
         posts
     }
 
     private suspend fun scanQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
-        val posts = service.scanQRLocation(qr)
+        val posts = scannerService.scanQRLocation(qr)
+        posts
+    }
+
+    private suspend fun setItemLocation(ownershipUID: Int, locationQR: String): CommonResponse = withContext(Dispatchers.IO){
+        val posts = ownershipService.setLocation(ownershipUID, locationQR)
         posts
     }
 
@@ -169,7 +178,38 @@ class Scanner : BaseActivity() {
                 binsRowMap.clear()
             }
             "shelves" -> {
+                // TODO add shelves or remove shelves view
+            }
+        }
+    }
 
+    private fun placeQueueButton() {
+        when (pageView) {
+            "items" -> {
+                if (binsRowMap.size == 1){
+                    Log.d("Scanner", "bin map is 1")
+                    val binQR = BinManager.getAllBins()[0].locationQR
+                    for(ownership in OwnershipManager.getAllOwnerships()) {
+                        lifecycleScope.launch {
+                            val response = ownershipService.setLocation(ownership.ownershipUID, binQR)
+                            if (response.success){
+                                clearButton()
+                            } else{
+                                // TODO handle negative
+                            }
+                        }
+
+                    }
+
+                } else{
+                    // TODO function if more locations
+                }
+            }
+            "bins" -> {
+                // TODO add bins functionality
+            }
+            "shelves" -> {
+                // TODO add shelves or remove shelves view
             }
         }
     }
