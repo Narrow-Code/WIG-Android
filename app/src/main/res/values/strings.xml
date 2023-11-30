@@ -58,7 +58,7 @@
     <string name="table_name">Name</string>
     <string name="table_location">Location</string>
     <string name="table_quantity">Quantity</string>
-    <string name="table_bin_items">Items</string>
+    <string name="table_bin_location">Location</string>
     <string name="password_mismatch">Passwords do not match</string>
     <string name="email_not_valid">Not a valid email address</string>
     <string name="wrong_username_criteria">Username does not match criteria</string>

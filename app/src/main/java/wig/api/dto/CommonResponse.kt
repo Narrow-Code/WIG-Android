@@ -3,7 +3,7 @@ package wig.api.dto
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignupResponse(
+data class CommonResponse(
     val message: String,
     val success: Boolean
 )

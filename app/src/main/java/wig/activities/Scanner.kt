@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TableRow
@@ -26,7 +27,11 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import wig.api.dto.CommonResponse
+import wig.api.dto.LocationResponse
+import wig.models.Location
 import wig.models.Ownership
+import wig.utils.BinManager
 import wig.utils.OwnershipManager
 
 private const val CAMERA_REQUEST_CODE = 101
@@ -38,6 +43,7 @@ class Scanner : BaseActivity() {
     private val handler = Handler()
     private val service = ScannerService.create()
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
+    private val binsRowMap = mutableMapOf<Int, TableRow>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +64,16 @@ class Scanner : BaseActivity() {
 
     private suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
         val posts = service.scan(barcode)
+        posts
+    }
+
+    private suspend fun checkQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
+        val posts = service.checkQR(qr)
+        posts
+    }
+
+    private suspend fun scanQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
+        val posts = service.scanQRLocation(qr)
         posts
     }
 
@@ -98,6 +114,42 @@ class Scanner : BaseActivity() {
         return row
     }
 
+    private fun createRowForBin(bin: Location): TableRow {
+        val name = bin.locationName
+        val location = bin.location?.locationName
+
+        val row = TableRow(this)
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT)
+
+        val nameView = TextView(this)
+        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
+        nameView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+        row.addView(nameView)
+
+        if (location != null){
+            val locationView = TextView(this)
+            locationView.text = location.substring(0 until 25.coerceAtMost(location.length))
+            locationView.layoutParams = TableRow.LayoutParams(
+                0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+            locationView.gravity = Gravity.END
+            row.addView(locationView)
+        }
+
+        row.layoutParams = layoutParams
+        binsRowMap[bin.locationUID] = row
+
+        // TODO set onclick listener to row
+
+        return row
+    }
+
+    private fun clearButton() {
+
+    }
+
     private fun removeOwnershipRow(uid: Int) {
         val tableLayout = scannerBinding.itemsTableLayout
         val rowToRemove = ownershipRowMap[uid]
@@ -105,6 +157,16 @@ class Scanner : BaseActivity() {
             tableLayout.removeView(it)
             ownershipRowMap.remove(uid)
             OwnershipManager.removeOwnership(uid)
+        }
+    }
+
+    private fun removeBinRow(uid: Int) {
+        val tableLayout = scannerBinding.binsTableLayout
+        val rowToRemove = binsRowMap[uid]
+        rowToRemove?.let {
+            tableLayout.removeView(it)
+            binsRowMap.remove(uid)
+            BinManager.removeBin(uid)
         }
     }
 
@@ -121,7 +183,22 @@ class Scanner : BaseActivity() {
         }
 
         handler.postDelayed({
-            // Enable scanning after 5 seconds
+            codeScanner.startPreview()
+        }, 1000)
+    }
+
+    private fun populateBins(locationResponse: LocationResponse){
+        val tableLayout = scannerBinding.binsTableLayout
+        val bin = locationResponse.location
+
+        if(!binsRowMap.containsKey(bin.locationUID)) {
+            BinManager.addBin(bin)
+            val row = createRowForBin(bin)
+            setColorForRow(row, tableLayout.childCount)
+            tableLayout.addView(row)
+        }
+
+        handler.postDelayed({
             codeScanner.startPreview()
         }, 1000)
     }
@@ -192,6 +269,25 @@ class Scanner : BaseActivity() {
                         lifecycleScope.launch {
                             val response = scanBarcode(it.text)
                             populateItems(response)
+                        }
+                    } else {
+                        lifecycleScope.launch {
+                            val response = checkQR(it.text)
+                            when (response.message) {
+                                "NEW" -> {
+                                    // TODO add creation call here
+                                    codeScanner.startPreview()
+                                }
+                                "LOCATION" -> {
+                                    val locationResponse = scanQRLocation(it.text)
+                                    populateBins(locationResponse)
+
+                                }
+                                "ITEM" -> {
+                                    // TODO add item call here
+                                    codeScanner.startPreview()
+                                }
+                            }
                         }
                     }
                 }

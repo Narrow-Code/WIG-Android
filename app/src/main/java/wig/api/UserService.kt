@@ -2,11 +2,10 @@ package wig.api
 
 import wig.api.dto.SaltRequest
 import wig.api.dto.SaltResponse
-import wig.api.dto.ValidateResponse
+import wig.api.dto.CommonResponse
 import wig.api.dto.LoginRequest
 import wig.api.dto.LoginResponse
 import wig.api.dto.SignupRequest
-import wig.api.dto.SignupResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.json.JsonFeature
@@ -39,18 +38,18 @@ interface UserService {
     suspend fun login(loginRequest: LoginRequest): LoginResponse
 
     /**
-     * @return [ValidateResponse] containing the users specific UID and authentication token, or null if unsuccessful.
+     * @return [CommonResponse] containing the users specific UID and authentication token, or null if unsuccessful.
      */
-    suspend fun validate(): ValidateResponse
+    suspend fun validate(): CommonResponse
 
 
         /**
      * Creates a new user with the provided [signupRequest].
      *
      * @param signupRequest Request object containing user information for signup.
-     * @return [SignupResponse] containing the newly created user's information, or null if unsuccessful.
+     * @return [CommonResponse] containing the newly created user's information, or null if unsuccessful.
      */
-    suspend fun signup(signupRequest: SignupRequest): SignupResponse
+    suspend fun signup(signupRequest: SignupRequest): CommonResponse
 
     /**
      * Companion object for creating instances of [UserService].

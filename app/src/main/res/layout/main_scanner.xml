@@ -258,7 +258,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:text="@string/table_bin_items"
+                android:text="@string/table_bin_location"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <ScrollView
@@ -311,7 +311,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:text="@string/table_bin_items"
+                android:text="@string/table_bin_location"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <ScrollView

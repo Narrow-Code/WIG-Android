@@ -6,27 +6,19 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
+import wig.api.dto.CommonResponse
+import wig.api.dto.LocationResponse
 import wig.api.dto.ScanResponse
 
-
-/**
- * Interface for interacting with item-related operations.
- *
- * @author Matthew McCaughey
- */
 interface ScannerService {
 
     suspend fun scan(barcode: String): ScanResponse
 
-    /**
-     * Companion object for creating instances of [ScannerService].
-     */
+    suspend fun checkQR(qr: String): CommonResponse
+
+    suspend fun scanQRLocation(qr: String): LocationResponse
+
     companion object {
-        /**
-         * Factory method for creating an instance of [ScannerService].
-         *
-         * @return A new instance of [ScannerServiceImpl].
-         */
         fun create(): ScannerService {
             return ScannerServiceImpl(
                 client = HttpClient(Android) {

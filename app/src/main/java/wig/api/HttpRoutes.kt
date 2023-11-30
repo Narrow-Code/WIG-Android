@@ -14,4 +14,5 @@ object HttpRoutes {
 
     const val SCAN_BARCODE = "${BASE_URL}/app/scan/barcode"
     const val CHECK_QR = "${BASE_URL}/app/scan/check-qr"
+    const val SCAN_QR_LOCATION = "${BASE_URL}/app/scan/qr/location"
 }

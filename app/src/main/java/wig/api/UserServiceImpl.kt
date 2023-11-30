@@ -1,13 +1,11 @@
 package wig.api
 
-import android.util.Log
 import wig.api.dto.SaltRequest
 import wig.api.dto.SaltResponse
-import wig.api.dto.ValidateResponse
+import wig.api.dto.CommonResponse
 import wig.api.dto.LoginRequest
 import wig.api.dto.LoginResponse
 import wig.api.dto.SignupRequest
-import wig.api.dto.SignupResponse
 import wig.utils.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.call.receive
@@ -74,7 +72,7 @@ class UserServiceImpl(
         }
     }
 
-    override suspend fun validate(): ValidateResponse {
+    override suspend fun validate(): CommonResponse {
         return try {
             client.post {
                 url(HttpRoutes.LOGIN_CHECK)
@@ -85,21 +83,21 @@ class UserServiceImpl(
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            ValidateResponse(errorMessage, false)
+            CommonResponse(errorMessage, false)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            ValidateResponse(errorMessage, false)
+            CommonResponse(errorMessage, false)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            ValidateResponse(errorMessage, false)
+            CommonResponse(errorMessage, false)
         } catch(e: Exception) {
-            ValidateResponse(e.message.toString(), false)
+            CommonResponse(e.message.toString(), false)
         }
     }
 
-    override suspend fun signup(signupRequest: SignupRequest): SignupResponse {
+    override suspend fun signup(signupRequest: SignupRequest): CommonResponse {
         return try {
             client.post {
                 url(HttpRoutes.SIGNUP)
@@ -110,17 +108,17 @@ class UserServiceImpl(
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SignupResponse(errorMessage, false)
+            CommonResponse(errorMessage, false)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SignupResponse(errorMessage, false)
+            CommonResponse(errorMessage, false)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SignupResponse(errorMessage, false)
+            CommonResponse(errorMessage, false)
         } catch(e: Exception) {
-            SignupResponse(e.message.toString(), false)
+            CommonResponse(e.message.toString(), false)
         }
     }
 }
