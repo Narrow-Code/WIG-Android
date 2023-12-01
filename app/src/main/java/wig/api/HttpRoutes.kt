@@ -17,4 +17,5 @@ object HttpRoutes {
     const val SCAN_QR_LOCATION = "${BASE_URL}/app/scan/qr/location"
 
     const val SET_ITEM_LOCATION = "${BASE_URL}/app/ownership/set-location"
+    const val CREATE_LOCATION = "${BASE_URL}/app/location/create/"
 }

@@ -10,6 +10,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TableRow
 import android.widget.TextView
@@ -30,9 +31,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.R
+import wig.api.LocationService
 import wig.api.OwnershipService
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
+import wig.databinding.CreateNewBinding
+import wig.databinding.LoginBinding
+import wig.databinding.SignupBinding
 import wig.models.Location
 import wig.models.Ownership
 import wig.utils.BinManager
@@ -47,6 +52,7 @@ class Scanner : BaseActivity() {
     private val handler = Handler()
     private val scannerService = ScannerService.create()
     private val ownershipService = OwnershipService.create()
+    private val locationService = LocationService.create()
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val binsRowMap = mutableMapOf<Int, TableRow>()
 
@@ -86,6 +92,11 @@ class Scanner : BaseActivity() {
 
     private suspend fun setItemLocation(ownershipUID: Int, locationQR: String): CommonResponse = withContext(Dispatchers.IO){
         val posts = ownershipService.setLocation(ownershipUID, locationQR)
+        posts
+    }
+
+    private suspend fun createNewLocation(type: String, name: String, locationQR: String): CommonResponse = withContext(Dispatchers.IO){
+        val posts = locationService.createLocation(type, name, locationQR)
         posts
     }
 
@@ -188,23 +199,62 @@ class Scanner : BaseActivity() {
 
     private fun newQR(qr: String) {
         codeScanner.stopPreview()
+
+        val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
         val popupDialog = Dialog(this)
-        popupDialog.setContentView(R.layout.create_new)
+        popupDialog.setContentView(createNewBinding.root)
+        createNewBinding.qrCodeEditText.setText(qr)
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
 
-        val qrCodeEditText: EditText? = popupDialog?.findViewById(R.id.qrCodeEditText)
-        qrCodeEditText?.setText(qr)
+        val layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-        popupDialog.setOnDismissListener {
-            codeScanner.startPreview()
-        }
+        createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
+
         popupDialog.show()
+    }
+
+    private fun createNewButton(createNewBinding: CreateNewBinding, popup: Dialog) {
+        val typeSpinner = createNewBinding.typeSpinner
+        val name = createNewBinding.nameEditText.text.toString()
+        val locationQr = createNewBinding.qrCodeEditText.text.toString()
+        lifecycleScope.launch {
+            when (typeSpinner.selectedItem?.toString() ?: "") {
+                "Bin" -> {
+                    val response = createNewLocation("bin", name, locationQr)
+                    if (response.success){
+                        popup.dismiss()
+                    }
+                }
+                "Bag" -> {
+                    val response = createNewLocation("bag", name, locationQr)
+                    if (response.success){
+                        popup.dismiss()
+                    }
+                }
+                "Area" -> {
+                    val response = createNewLocation("area", name, locationQr)
+                    if (response.success){
+                        popup.dismiss()
+                    }
+                }
+                "Item" -> {
+
+                }
+                else -> {
+
+                }
+            }
+        }
     }
 
     private fun placeQueueButton() {
         when (pageView) {
             "items" -> {
                 if (binsRowMap.size == 1){
-                    Log.d("Scanner", "bin map is 1")
                     val binQR = BinManager.getAllBins()[0].locationQR
                     for(ownership in OwnershipManager.getAllOwnerships()) {
                         lifecycleScope.launch {
