@@ -2,6 +2,7 @@ package wig.activities
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -9,6 +10,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.widget.EditText
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
@@ -27,6 +29,7 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import wig.R
 import wig.api.OwnershipService
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
@@ -183,6 +186,20 @@ class Scanner : BaseActivity() {
         }
     }
 
+    private fun newQR(qr: String) {
+        codeScanner.stopPreview()
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(R.layout.create_new)
+
+        val qrCodeEditText: EditText? = popupDialog?.findViewById(R.id.qrCodeEditText)
+        qrCodeEditText?.setText(qr)
+
+        popupDialog.setOnDismissListener {
+            codeScanner.startPreview()
+        }
+        popupDialog.show()
+    }
+
     private fun placeQueueButton() {
         when (pageView) {
             "items" -> {
@@ -191,7 +208,7 @@ class Scanner : BaseActivity() {
                     val binQR = BinManager.getAllBins()[0].locationQR
                     for(ownership in OwnershipManager.getAllOwnerships()) {
                         lifecycleScope.launch {
-                            val response = ownershipService.setLocation(ownership.ownershipUID, binQR)
+                            val response = setItemLocation(ownership.ownershipUID, binQR)
                             if (response.success){
                                 clearButton()
                             } else{
@@ -339,13 +356,11 @@ class Scanner : BaseActivity() {
                             val response = checkQR(it.text)
                             when (response.message) {
                                 "NEW" -> {
-                                    // TODO add creation call here
-                                    codeScanner.startPreview()
+                                    newQR(it.text)
                                 }
                                 "LOCATION" -> {
                                     val locationResponse = scanQRLocation(it.text)
                                     populateBins(locationResponse)
-
                                 }
                                 "ITEM" -> {
                                     // TODO add item call here

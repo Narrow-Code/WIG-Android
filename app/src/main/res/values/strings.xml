@@ -66,4 +66,13 @@
     <string name="wrong_password_criteria">Password does not match criteria</string>
     <!-- Error messages, to be replaced by errors from API -->
 
+    <string name="location_type_prompt">Type</string>
+
+    <string-array name="location_types">
+        <item>Bin</item>
+        <item>Bag</item>
+        <item>Area</item>
+    </string-array>
+
+
 </resources>
