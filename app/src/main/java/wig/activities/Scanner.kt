@@ -7,11 +7,9 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
@@ -30,14 +28,11 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import wig.R
 import wig.api.LocationService
 import wig.api.OwnershipService
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
 import wig.databinding.CreateNewBinding
-import wig.databinding.LoginBinding
-import wig.databinding.SignupBinding
 import wig.models.Location
 import wig.models.Ownership
 import wig.utils.BinManager
@@ -226,6 +221,8 @@ class Scanner : BaseActivity() {
                 "Bin" -> {
                     val response = createNewLocation("bin", name, locationQr)
                     if (response.success){
+                        Toast.makeText(this@Scanner, "Bin created", Toast.LENGTH_SHORT).show()
+
                         popup.dismiss()
                     }
                 }
