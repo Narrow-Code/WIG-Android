@@ -21,7 +21,7 @@ import wig.utils.JsonParse
 import wig.utils.TokenManager
 
 class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
-    private val nullUser = User(0, "", "", "", "", "", "")
+    private val nullUser = User(0, "", "", "", "")
     private val nullItem = Item(0, "", "", "", "")
     private val nullBorrower = Borrower(0, "")
     private val nullLocation = Location(0, 0, "", "", 0, "", "", "", nullUser, null)
