@@ -5,7 +5,7 @@ package wig.api
  */
 object HttpRoutes {
 
-    private const val BASE_URL = "http://34.234.73.177:30001" // SERVER
+    private const val BASE_URL = "http://54.210.64.82:30001" // SERVER
 
     const val SIGNUP = "$BASE_URL/user/signup"
     const val SALT = "$BASE_URL/user/salt"
