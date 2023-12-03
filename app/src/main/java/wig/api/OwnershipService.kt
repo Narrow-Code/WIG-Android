@@ -8,11 +8,14 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
+import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
 
 interface OwnershipService {
 
     suspend fun setLocation(ownershipUID: Int, locationQR: String): CommonResponse
+
+    suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: Int): OwnershipResponse
 
 
     companion object {

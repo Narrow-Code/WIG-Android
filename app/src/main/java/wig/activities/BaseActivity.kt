@@ -5,6 +5,15 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import wig.api.LocationService
+import wig.api.OwnershipService
+import wig.api.ScannerService
+import wig.api.dto.CommonResponse
+import wig.api.dto.LocationResponse
+import wig.api.dto.OwnershipResponse
+import wig.api.dto.ScanResponse
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
 import wig.databinding.LoginBinding
@@ -21,6 +30,10 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var scannerBinding: MainScannerBinding
     protected lateinit var serverSetupBinding: ServerSetupBinding
     protected lateinit var signupBinding: SignupBinding
+
+    private val scannerService = ScannerService.create()
+    private val ownershipService = OwnershipService.create()
+    private val locationService = LocationService.create()
 
 
     protected fun disableBackPress() {
@@ -115,5 +128,37 @@ open class BaseActivity : AppCompatActivity() {
         emailVerificationBinding = EmailVerificationBinding.inflate(layoutInflater)
         val view = emailVerificationBinding.root
         setContentView(view)
+    }
+
+    protected suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
+        val posts = scannerService.scan(barcode)
+        posts
+    }
+
+    protected suspend fun checkQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
+        val posts = scannerService.checkQR(qr)
+        posts
+    }
+
+    protected suspend fun scanQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
+        val posts = scannerService.scanQRLocation(qr)
+        posts
+    }
+
+    protected suspend fun setItemLocation(ownershipUID: Int, locationQR: String): CommonResponse = withContext(
+        Dispatchers.IO){
+        val posts = ownershipService.setLocation(ownershipUID, locationQR)
+        posts
+    }
+
+    protected suspend fun createNewLocation(type: String, name: String, locationQR: String): CommonResponse = withContext(
+        Dispatchers.IO){
+        val posts = locationService.createLocation(type, name, locationQR)
+        posts
+    }
+
+    protected suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: Int): OwnershipResponse = withContext(Dispatchers.IO){
+        val posts = ownershipService.changeQuantity(changeType, amount, ownershipUID)
+        posts
     }
 }

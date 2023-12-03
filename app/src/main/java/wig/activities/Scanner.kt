@@ -10,13 +10,13 @@ import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import wig.api.ScannerService
 import wig.api.dto.ScanResponse
 import wig.utils.StoreToken
 import com.budiyev.android.codescanner.AutoFocusMode
@@ -25,13 +25,10 @@ import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import wig.api.LocationService
-import wig.api.OwnershipService
-import wig.api.dto.CommonResponse
+import wig.R
 import wig.api.dto.LocationResponse
+import wig.api.dto.OwnershipResponse
 import wig.databinding.CreateNewBinding
 import wig.models.Location
 import wig.models.Ownership
@@ -45,9 +42,6 @@ class Scanner : BaseActivity() {
     private lateinit var codeScanner: CodeScanner
     private var pageView = "items"
     private val handler = Handler()
-    private val scannerService = ScannerService.create()
-    private val ownershipService = OwnershipService.create()
-    private val locationService = LocationService.create()
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val binsRowMap = mutableMapOf<Int, TableRow>()
 
@@ -68,31 +62,7 @@ class Scanner : BaseActivity() {
         scannerBinding.icSettings.setOnClickListener{ logout() }
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.placeQueue.setOnClickListener { placeQueueButton() }
-    }
-
-    private suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.scan(barcode)
-        posts
-    }
-
-    private suspend fun checkQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.checkQR(qr)
-        posts
-    }
-
-    private suspend fun scanQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.scanQRLocation(qr)
-        posts
-    }
-
-    private suspend fun setItemLocation(ownershipUID: Int, locationQR: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = ownershipService.setLocation(ownershipUID, locationQR)
-        posts
-    }
-
-    private suspend fun createNewLocation(type: String, name: String, locationQR: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = locationService.createLocation(type, name, locationQR)
-        posts
+        scannerBinding.add.setOnClickListener { newEntry() }
     }
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
@@ -107,12 +77,12 @@ class Scanner : BaseActivity() {
         val nameView = TextView(this)
         nameView.text = name.substring(0 until 20.coerceAtMost(name.length))
         nameView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+            0, TableRow.LayoutParams.MATCH_PARENT, 1f)
 
         val locationView = TextView(this)
         locationView.text = location.substring(0 until 18.coerceAtMost(location.length))
         locationView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+            0, TableRow.LayoutParams.MATCH_PARENT, 1f)
         locationView.gravity = Gravity.CENTER
 
         val quantityView = TextView(this)
@@ -121,9 +91,42 @@ class Scanner : BaseActivity() {
             0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
         quantityView.gravity = Gravity.END
 
+        val buttonLayoutParams = TableRow.LayoutParams()
+        buttonLayoutParams.width = resources.getDimensionPixelSize(R.dimen.button_width)
+        buttonLayoutParams.height = resources.getDimensionPixelSize(R.dimen.button_height)
+
+        val plusButton = Button(this)
+        plusButton.text = "+"
+        plusButton.layoutParams = buttonLayoutParams
+        plusButton.setOnClickListener {
+            lifecycleScope.launch {
+                val response = changeQuantity("increment", 1, ownership.ownershipUID)
+                if (response.success){
+                    ownership.itemQuantity = response.ownership.itemQuantity
+                    quantityView.text = ownership.itemQuantity.toString()
+                }
+            }
+        }
+
+        val minusButton = Button(this)
+        minusButton.text = "-"
+        minusButton.layoutParams = buttonLayoutParams
+        plusButton.gravity = Gravity.CENTER_VERTICAL
+        minusButton.setOnClickListener {
+            lifecycleScope.launch {
+                val response = changeQuantity("decrement", 1, ownership.ownershipUID)
+                if (response.success){
+                    ownership.itemQuantity = response.ownership.itemQuantity
+                    quantityView.text = ownership.itemQuantity.toString()
+                }
+            }
+        }
+
         row.addView(nameView)
         row.addView(locationView)
         row.addView(quantityView)
+        row.addView(minusButton)
+        row.addView(plusButton)
         row.layoutParams = layoutParams
         ownershipRowMap[ownership.ownershipUID] = row
 
@@ -192,7 +195,7 @@ class Scanner : BaseActivity() {
         }
     }
 
-    private fun newQR(qr: String) {
+    private fun newEntry(qr: String) {
         codeScanner.stopPreview()
 
         val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
@@ -208,6 +211,29 @@ class Scanner : BaseActivity() {
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
         createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
+        createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
+        }
+
+        popupDialog.show()
+    }
+
+    private fun newEntry(){
+        codeScanner.stopPreview()
+
+        val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(createNewBinding.root)
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+        val layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+        createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
+        createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
+        }
 
         popupDialog.show()
     }
@@ -222,19 +248,20 @@ class Scanner : BaseActivity() {
                     val response = createNewLocation("bin", name, locationQr)
                     if (response.success){
                         Toast.makeText(this@Scanner, "Bin created", Toast.LENGTH_SHORT).show()
-
                         popup.dismiss()
                     }
                 }
                 "Bag" -> {
                     val response = createNewLocation("bag", name, locationQr)
                     if (response.success){
+                        Toast.makeText(this@Scanner, "Bag created", Toast.LENGTH_SHORT).show()
                         popup.dismiss()
                     }
                 }
                 "Area" -> {
                     val response = createNewLocation("area", name, locationQr)
                     if (response.success){
+                        Toast.makeText(this@Scanner, "Area created", Toast.LENGTH_SHORT).show()
                         popup.dismiss()
                     }
                 }
@@ -298,17 +325,20 @@ class Scanner : BaseActivity() {
         }
     }
 
-    private fun populateItems(postScanResponse: ScanResponse){
+    private fun populateItems(postScanResponse: ScanResponse) {
+
+        runOnUiThread {
         val tableLayout = scannerBinding.itemsTableLayout
 
-        for (ownership in postScanResponse.ownership){
-            if(!ownershipRowMap.containsKey(ownership.ownershipUID)) {
+        for (ownership in postScanResponse.ownership) {
+            if (!ownershipRowMap.containsKey(ownership.ownershipUID)) {
                 OwnershipManager.addOwnership(ownership)
                 val row = createRowForOwnership(ownership)
                 setColorForRow(row, tableLayout.childCount)
                 tableLayout.addView(row)
             }
         }
+    }
 
         handler.postDelayed({
             codeScanner.startPreview()
@@ -403,7 +433,7 @@ class Scanner : BaseActivity() {
                             val response = checkQR(it.text)
                             when (response.message) {
                                 "NEW" -> {
-                                    newQR(it.text)
+                                    newEntry(it.text)
                                 }
                                 "LOCATION" -> {
                                     val locationResponse = scanQRLocation(it.text)
