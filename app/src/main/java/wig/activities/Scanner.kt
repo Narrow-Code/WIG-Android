@@ -78,17 +78,19 @@ class Scanner : BaseActivity() {
         val nameLayout = LinearLayout(this)
         nameLayout.layoutParams = TableRow.LayoutParams(
             0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
+        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
 
         val nameView = TextView(this)
-        nameView.text = name.substring(0 until 20.coerceAtMost(name.length))
+        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
         nameLayout.addView(nameView)
 
         val locationLayout = LinearLayout(this)
         locationLayout.layoutParams = TableRow.LayoutParams(
             0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
+        locationLayout.gravity = Gravity.CENTER or Gravity.CENTER_VERTICAL
 
         val locationView = TextView(this)
-        locationView.text = location.substring(0 until 18.coerceAtMost(location.length))
+        locationView.text = location.substring(0 until 25.coerceAtMost(location.length))
         locationView.gravity = Gravity.CENTER
         locationLayout.addView(locationView)
 
