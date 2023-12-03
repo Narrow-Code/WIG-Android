@@ -39,8 +39,10 @@ class Login : BaseActivity() {
         if(requirementsCheck(username, password)){
             lifecycleScope.launch {
                 val salt = getSalt(username)
-                val hash = SaltAndHash().generateHash(password, salt)
-                login(username, hash)
+                if (salt != ""){
+                    val hash = SaltAndHash().generateHash(password, salt)
+                    login(username, hash)
+                }
             }
         }
     }
@@ -52,7 +54,9 @@ class Login : BaseActivity() {
                 posts.salt
             } else {
                 enableButtons()
-                loginBinding.error.text = posts.message
+                runOnUiThread {
+                    loginBinding.error.text = posts.message
+                }
                 ""
             }
         }

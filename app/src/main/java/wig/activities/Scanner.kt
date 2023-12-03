@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
@@ -74,21 +75,30 @@ class Scanner : BaseActivity() {
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT)
 
+        val nameLayout = LinearLayout(this)
+        nameLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
+
         val nameView = TextView(this)
         nameView.text = name.substring(0 until 20.coerceAtMost(name.length))
-        nameView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 1f)
+        nameLayout.addView(nameView)
+
+        val locationLayout = LinearLayout(this)
+        locationLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
 
         val locationView = TextView(this)
         locationView.text = location.substring(0 until 18.coerceAtMost(location.length))
-        locationView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 1f)
         locationView.gravity = Gravity.CENTER
+        locationLayout.addView(locationView)
+
+        val quantityLayout = LinearLayout(this)
+        quantityLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
+        quantityLayout.gravity = Gravity.END or Gravity.CENTER_VERTICAL
 
         val quantityView = TextView(this)
         quantityView.text = quantity.toString()
-        quantityView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
         quantityView.gravity = Gravity.END
 
         val buttonLayoutParams = TableRow.LayoutParams()
@@ -98,6 +108,7 @@ class Scanner : BaseActivity() {
         val plusButton = Button(this)
         plusButton.text = "+"
         plusButton.layoutParams = buttonLayoutParams
+        plusButton.gravity = Gravity.END
         plusButton.setOnClickListener {
             lifecycleScope.launch {
                 val response = changeQuantity("increment", 1, ownership.ownershipUID)
@@ -111,7 +122,7 @@ class Scanner : BaseActivity() {
         val minusButton = Button(this)
         minusButton.text = "-"
         minusButton.layoutParams = buttonLayoutParams
-        plusButton.gravity = Gravity.CENTER_VERTICAL
+        minusButton.gravity = Gravity.END
         minusButton.setOnClickListener {
             lifecycleScope.launch {
                 val response = changeQuantity("decrement", 1, ownership.ownershipUID)
@@ -122,11 +133,12 @@ class Scanner : BaseActivity() {
             }
         }
 
-        row.addView(nameView)
-        row.addView(locationView)
-        row.addView(quantityView)
-        row.addView(minusButton)
-        row.addView(plusButton)
+        row.addView(nameLayout)
+        row.addView(locationLayout)
+        row.addView(quantityLayout)
+        quantityLayout.addView(minusButton)
+        quantityLayout.addView(quantityView)
+        quantityLayout.addView(plusButton)
         row.layoutParams = layoutParams
         ownershipRowMap[ownership.ownershipUID] = row
 
