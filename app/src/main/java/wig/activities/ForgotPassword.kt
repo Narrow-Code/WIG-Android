@@ -2,6 +2,7 @@ package wig.activities
 
 import android.os.Bundle
 import wig.R
+import wig.activities.bases.BaseActivity
 import wig.utils.EmailManager
 
 class ForgotPassword : BaseActivity() {

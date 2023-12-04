@@ -1,7 +1,7 @@
 package wig.activities
 
-import android.annotation.SuppressLint
 import android.os.Bundle
+import wig.activities.bases.BaseActivity
 import wig.utils.EmailManager
 
 class ResetPassword : BaseActivity() {

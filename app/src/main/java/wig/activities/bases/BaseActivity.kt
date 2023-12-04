@@ -1,4 +1,4 @@
-package wig.activities
+package wig.activities.bases
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -7,6 +7,13 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import wig.activities.EmailVerification
+import wig.activities.ForgotPassword
+import wig.activities.Login
+import wig.activities.ResetPassword
+import wig.activities.Scanner
+import wig.activities.ServerSetup
+import wig.activities.Signup
 import wig.api.LocationService
 import wig.api.OwnershipService
 import wig.api.ScannerService
@@ -161,4 +168,6 @@ open class BaseActivity : AppCompatActivity() {
         val posts = ownershipService.changeQuantity(changeType, amount, ownershipUID)
         posts
     }
+
+
 }

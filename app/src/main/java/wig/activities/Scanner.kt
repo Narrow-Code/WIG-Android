@@ -1,9 +1,6 @@
 package wig.activities
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -15,32 +12,21 @@ import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import wig.api.dto.ScanResponse
 import wig.utils.StoreToken
-import com.budiyev.android.codescanner.AutoFocusMode
-import com.budiyev.android.codescanner.CodeScanner
-import com.budiyev.android.codescanner.DecodeCallback
-import com.budiyev.android.codescanner.ErrorCallback
-import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.launch
 import wig.R
+import wig.activities.bases.BaseCamera
 import wig.api.dto.LocationResponse
-import wig.api.dto.OwnershipResponse
 import wig.databinding.CreateNewBinding
 import wig.models.Location
 import wig.models.Ownership
 import wig.utils.BinManager
 import wig.utils.OwnershipManager
 
-private const val CAMERA_REQUEST_CODE = 101
-
-@Suppress("DEPRECATION")
-class Scanner : BaseActivity() {
-    private lateinit var codeScanner: CodeScanner
+class Scanner : BaseCamera() {
     private var pageView = "items"
     private val handler = Handler()
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
@@ -424,84 +410,34 @@ class Scanner : BaseActivity() {
         startActivityLogin()
     }
 
-    private fun codeScanner() {
-        codeScanner = CodeScanner(this, scannerBinding.scannerView)
-
-        codeScanner.apply {
-            camera = CodeScanner.CAMERA_BACK
-            formats = listOf(BarcodeFormat.UPC_A, BarcodeFormat.UPC_E, BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.QR_CODE)
-            autoFocusMode = AutoFocusMode.SAFE
-            scanMode = ScanMode.SINGLE
-            isAutoFocusEnabled = true
-            isFlashEnabled = false
-            decodeCallback = DecodeCallback {
-                runOnUiThread {
-                    codeScanner.stopPreview()
-                    if(it.barcodeFormat != BarcodeFormat.QR_CODE){
-                        lifecycleScope.launch {
-                            val response = scanBarcode(it.text)
-                            populateItems(response)
+    override fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){
+        runOnUiThread {
+            codeScanner.stopPreview()
+            if(barcodeFormat != BarcodeFormat.QR_CODE){
+                lifecycleScope.launch {
+                    val response = scanBarcode(code)
+                    populateItems(response)
+                }
+            } else {
+                lifecycleScope.launch {
+                    val response = checkQR(code)
+                    when (response.message) {
+                        "NEW" -> {
+                            newEntry(code)
                         }
-                    } else {
-                        lifecycleScope.launch {
-                            val response = checkQR(it.text)
-                            when (response.message) {
-                                "NEW" -> {
-                                    newEntry(it.text)
-                                }
-                                "LOCATION" -> {
-                                    val locationResponse = scanQRLocation(it.text)
-                                    populateBins(locationResponse)
-                                }
-                                "ITEM" -> {
-                                    // TODO add item call here
-                                    codeScanner.startPreview()
-                                }
-                            }
+                        "LOCATION" -> {
+                            val locationResponse = scanQRLocation(code)
+                            populateBins(locationResponse)
+                        }
+                        "ITEM" -> {
+                            // TODO add item call here
+                            codeScanner.startPreview()
                         }
                     }
                 }
             }
-            errorCallback = ErrorCallback { runOnUiThread {} }
-        }
-        scannerBinding.scannerView.setOnClickListener {
-            codeScanner.startPreview()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        codeScanner.startPreview()
-    }
-
-    override fun onPause() {
-        codeScanner.releaseResources()
-        super.onPause()
-    }
-
-    private fun setupPermissions() {
-        val permission : Int = ContextCompat.checkSelfPermission(this,
-            Manifest.permission.CAMERA)
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.CAMERA),
-                CAMERA_REQUEST_CODE
-            )
-        }
-    }
-
-    @SuppressLint("MissingSuperCall")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray) {
-        when (requestCode) {
-            CAMERA_REQUEST_CODE -> {
-                if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText(this, "You need the camera permission to be able to use this app!", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
 }
 

@@ -7,6 +7,7 @@ import wig.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import wig.activities.bases.BaseActivity
 import wig.api.UserService
 import wig.api.dto.SignupRequest
 import wig.utils.EmailManager

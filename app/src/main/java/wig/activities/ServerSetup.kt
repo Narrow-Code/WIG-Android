@@ -1,8 +1,8 @@
 package wig.activities
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import wig.R
+import wig.activities.bases.BaseActivity
 
 class ServerSetup : BaseActivity() {
 
