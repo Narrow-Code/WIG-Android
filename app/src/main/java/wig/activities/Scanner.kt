@@ -3,7 +3,6 @@ package wig.activities
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import wig.api.dto.ScanResponse
 import wig.utils.StoreToken
 import com.google.zxing.BarcodeFormat
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
@@ -28,7 +28,6 @@ import wig.utils.OwnershipManager
 
 class Scanner : BaseCamera() {
     private var pageView = "items"
-    private val handler = Handler()
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val binsRowMap = mutableMapOf<Int, TableRow>()
 
@@ -340,9 +339,9 @@ class Scanner : BaseCamera() {
         }
     }
 
-        handler.postDelayed({
+        coroutineScope.launch {delay(1000)
             codeScanner.startPreview()
-        }, 1000)
+        }
     }
 
     private fun populateBins(locationResponse: LocationResponse){
@@ -356,9 +355,9 @@ class Scanner : BaseCamera() {
             tableLayout.addView(row)
         }
 
-        handler.postDelayed({
+        coroutineScope.launch {delay(1000)
             codeScanner.startPreview()
-        }, 1000)
+        }
     }
 
     private fun setColorForRow(row: TableRow, position: Int){

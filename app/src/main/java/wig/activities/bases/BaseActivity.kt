@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import wig.activities.EmailVerification
@@ -37,6 +38,7 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var scannerBinding: MainScannerBinding
     protected lateinit var serverSetupBinding: ServerSetupBinding
     protected lateinit var signupBinding: SignupBinding
+    val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private val scannerService = ScannerService.create()
     private val ownershipService = OwnershipService.create()
