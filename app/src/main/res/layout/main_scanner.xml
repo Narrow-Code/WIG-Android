@@ -116,7 +116,7 @@
         <Button
             android:id="@+id/items_button"
             android:textSize="12sp"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:text="@string/items"
             android:layout_marginStart="5dp"
@@ -126,19 +126,11 @@
         <Button
             android:id="@+id/bins_button"
             android:textSize="12sp"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:text="@string/bins"
+            android:text="@string/locations"
             app:layout_constraintLeft_toRightOf="@id/items_button"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-        <Button
-            android:id="@+id/shelves_button"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/shelves"
-            app:layout_constraintLeft_toRightOf="@id/bins_button"
+            app:layout_constraintRight_toLeftOf="@id/add"
             app:layout_constraintTop_toTopOf="parent"
             />
 
@@ -291,70 +283,6 @@
                 android:layout_height="wrap_content">
             </TableLayout>
         </ScrollView>
-
-        <!-- Shelves -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/table_shelves_titles"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/textbox_background"
-            android:padding="2dp"
-            app:layout_constraintWidth_percent=".96"
-            app:layout_constraintTop_toBottomOf="@id/items_button"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            android:visibility="invisible">
-
-            <TextView
-                android:id="@+id/table_shelves_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:text="@string/table_name"/>
-
-            <TextView
-                android:id="@+id/table_shelves_items"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:text="@string/table_bin_location"
-                />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-        <ScrollView
-            android:id="@+id/shelves_table"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/textbox_background"
-            android:padding="2dp"
-            android:contentDescription="@string/table_description"
-            app:layout_constraintWidth_percent=".96"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/table_items_titles"
-            app:layout_constraintBottom_toTopOf="@id/place_queue"
-            android:visibility="invisible">
-
-            <TableLayout
-                android:id="@+id/shelves_table_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </TableLayout>
-        </ScrollView>
-
-        <!-- Place Queue Menu -->
-        <TableLayout
-            android:id="@+id/place_queue_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorOnPrimary"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/place_queue"
-            android:visibility="invisible">
-        </TableLayout>
 
         <Button
             android:id="@+id/place_queue"

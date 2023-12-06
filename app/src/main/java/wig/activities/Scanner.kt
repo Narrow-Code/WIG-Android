@@ -44,7 +44,6 @@ class Scanner : BaseCamera() {
     private fun setOnClickListeners() {
         scannerBinding.binsButton.setOnClickListener{ switchToBinsView() }
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
-        scannerBinding.shelvesButton.setOnClickListener { switchToShelvesView() }
         scannerBinding.icSettings.setOnClickListener{ logout() }
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.placeQueue.setOnClickListener { placeQueueButton() }
@@ -298,9 +297,6 @@ class Scanner : BaseCamera() {
             "bins" -> {
                 // TODO add bins functionality
             }
-            "shelves" -> {
-                // TODO add shelves or remove shelves view
-            }
         }
     }
 
@@ -325,19 +321,18 @@ class Scanner : BaseCamera() {
     }
 
     private fun populateItems(postScanResponse: ScanResponse) {
-
         runOnUiThread {
-        val tableLayout = scannerBinding.itemsTableLayout
+            val tableLayout = scannerBinding.itemsTableLayout
 
-        for (ownership in postScanResponse.ownership) {
-            if (!ownershipRowMap.containsKey(ownership.ownershipUID)) {
-                OwnershipManager.addOwnership(ownership)
-                val row = createRowForOwnership(ownership)
-                setColorForRow(row, tableLayout.childCount)
-                tableLayout.addView(row)
+            for (ownership in postScanResponse.ownership) {
+                if (!ownershipRowMap.containsKey(ownership.ownershipUID)) {
+                    OwnershipManager.addOwnership(ownership)
+                    val row = createRowForOwnership(ownership)
+                    setColorForRow(row, tableLayout.childCount)
+                    tableLayout.addView(row)
+                }
             }
         }
-    }
 
         coroutineScope.launch {delay(1000)
             codeScanner.startPreview()
@@ -371,9 +366,7 @@ class Scanner : BaseCamera() {
 
     private fun switchToBinsView() {
         scannerBinding.tableItemsTitles.visibility = View.INVISIBLE
-        scannerBinding.tableShelvesTitles.visibility = View.INVISIBLE
         scannerBinding.itemsTable.visibility = View.INVISIBLE
-        scannerBinding.shelvesTable.visibility = View.INVISIBLE
         scannerBinding.tableBinsTitles.visibility = View.VISIBLE
         scannerBinding.binsTable.visibility = View.VISIBLE
         pageView = "bins"
@@ -381,22 +374,10 @@ class Scanner : BaseCamera() {
 
     private fun switchToItemsView() {
         scannerBinding.tableBinsTitles.visibility = View.INVISIBLE
-        scannerBinding.tableShelvesTitles.visibility = View.INVISIBLE
         scannerBinding.binsTable.visibility = View.INVISIBLE
-        scannerBinding.shelvesTable.visibility = View.INVISIBLE
         scannerBinding.tableItemsTitles.visibility = View.VISIBLE
         scannerBinding.itemsTable.visibility = View.VISIBLE
         pageView = "items"
-    }
-
-    private fun switchToShelvesView() {
-        scannerBinding.tableItemsTitles.visibility = View.INVISIBLE
-        scannerBinding.tableBinsTitles.visibility = View.INVISIBLE
-        scannerBinding.binsTable.visibility = View.INVISIBLE
-        scannerBinding.itemsTable.visibility = View.INVISIBLE
-        scannerBinding.tableShelvesTitles.visibility = View.VISIBLE
-        scannerBinding.shelvesTable.visibility = View.VISIBLE
-        pageView = "shelves"
     }
 
     // TODO REMOVE THIS IS FOR TESTING LOG IN AND OUT UNTIL SETTINGS PAGE IS ADDED
@@ -415,6 +396,9 @@ class Scanner : BaseCamera() {
             if(barcodeFormat != BarcodeFormat.QR_CODE){
                 lifecycleScope.launch {
                     val response = scanBarcode(code)
+                    if (response.message == "429") {
+                        Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()
+                    }
                     populateItems(response)
                 }
             } else {

@@ -47,8 +47,7 @@
     <string name="checked_out">Checked Out Items</string>
     <string name="scanner">Scanner</string>
     <string name="items">Items</string>
-    <string name="bins">Bins</string>
-    <string name="shelves">Shelves</string>
+    <string name="locations">Locations</string>
     <!-- Button titles -->
 
     <!-- Error messages, to be replaced by errors from API -->

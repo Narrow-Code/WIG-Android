@@ -38,7 +38,10 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
             ScanResponse(errorMessage, false, ArrayList())
         } catch(e: ClientRequestException) {
             // 4xx - responses
-            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            val errorMessage = when (e.response.status.value) {
+                429 -> "429"
+                else -> JsonParse().parseErrorMessage(e.response.receive<String>())
+            }
             ScanResponse(errorMessage, false, ArrayList())
         } catch(e: ServerResponseException) {
             // 5xx - responses
