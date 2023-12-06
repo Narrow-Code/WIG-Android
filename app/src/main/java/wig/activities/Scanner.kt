@@ -133,9 +133,10 @@ class Scanner : BaseCamera() {
         return row
     }
 
-    private fun createRowForLocation(bin: Location): TableRow {
-        val name = bin.locationName
-        val type = bin.locationType
+    private fun createRowForLocation(location: Location): TableRow {
+        val name = location.locationName
+        val parent = location.location?.locationName
+        val type = location.locationType
 
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
@@ -149,7 +150,11 @@ class Scanner : BaseCamera() {
         row.addView(nameView)
 
         val locationView = TextView(this)
-        locationView.text = name.substring(0 until 18.coerceAtMost(name.length))
+        if (parent != null) {
+            locationView.text = parent.substring(0 until 18.coerceAtMost(parent.length))
+        } else {
+            locationView.text = getString(R.string.no_location)
+        }
         locationView.layoutParams = TableRow.LayoutParams(
             0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
         locationView.gravity = Gravity.CENTER
@@ -163,7 +168,7 @@ class Scanner : BaseCamera() {
         row.addView(typeView)
 
         row.layoutParams = layoutParams
-        locationRowMap[bin.locationUID] = row
+        locationRowMap[location.locationUID] = row
 
         // TODO set onclick listener to row
 
@@ -228,7 +233,6 @@ class Scanner : BaseCamera() {
         createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
         createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
         }
-
         popupDialog.show()
     }
 
@@ -240,23 +244,29 @@ class Scanner : BaseCamera() {
             when (typeSpinner.selectedItem?.toString() ?: "") {
                 "Bin" -> {
                     val response = createNewLocation("bin", name, locationQr)
-                    if (response.success){
+                    if (response.success) {
                         Toast.makeText(this@Scanner, "Bin created", Toast.LENGTH_SHORT).show()
+                        populateBins(response)
                         popup.dismiss()
+                        switchToBinsView()
                     }
                 }
                 "Bag" -> {
                     val response = createNewLocation("bag", name, locationQr)
                     if (response.success){
                         Toast.makeText(this@Scanner, "Bag created", Toast.LENGTH_SHORT).show()
+                        populateBins(response)
                         popup.dismiss()
+                        switchToBinsView()
                     }
                 }
                 "Area" -> {
                     val response = createNewLocation("area", name, locationQr)
                     if (response.success){
                         Toast.makeText(this@Scanner, "Area created", Toast.LENGTH_SHORT).show()
+                        populateBins(response)
                         popup.dismiss()
+                        switchToBinsView()
                     }
                 }
                 "Item" -> {
@@ -367,6 +377,7 @@ class Scanner : BaseCamera() {
             val response = scanBarcode(code)
             if (response.message == "429"){Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()}
             populateItems(response)
+            switchToItemsView()
         } else {
             val response = checkQR(code)
             when (response.message) {
@@ -376,6 +387,7 @@ class Scanner : BaseCamera() {
                 "LOCATION" -> {
                     val locationResponse = scanQRLocation(code)
                     populateBins(locationResponse)
+                    switchToBinsView()
                 }
                 "ITEM" -> {
                     // TODO add item call here

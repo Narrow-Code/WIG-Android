@@ -160,7 +160,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun createNewLocation(type: String, name: String, locationQR: String): CommonResponse = withContext(
+    protected suspend fun createNewLocation(type: String, name: String, locationQR: String): LocationResponse = withContext(
         Dispatchers.IO){
         val posts = locationService.createLocation(type, name, locationQR)
         posts

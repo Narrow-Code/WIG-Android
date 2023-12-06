@@ -66,6 +66,7 @@
     <!-- Error messages, to be replaced by errors from API -->
 
     <string name="location_type_prompt">Type</string>
+    <string name="no_location">No location</string>
 
     <string-array name="location_types">
         <item>Bin</item>
