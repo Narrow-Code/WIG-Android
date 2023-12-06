@@ -29,7 +29,7 @@ import wig.utils.OwnershipManager
 class Scanner : BaseCamera() {
     private var pageView = "items"
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
-    private val binsRowMap = mutableMapOf<Int, TableRow>()
+    private val locationRowMap = mutableMapOf<Int, TableRow>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,9 +133,8 @@ class Scanner : BaseCamera() {
         return row
     }
 
-    private fun createRowForBin(bin: Location): TableRow {
+    private fun createRowForLocation(bin: Location): TableRow {
         val name = bin.locationName
-        val location = bin.location?.locationName
         val type = bin.locationType
 
         val row = TableRow(this)
@@ -149,14 +148,12 @@ class Scanner : BaseCamera() {
             0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
         row.addView(nameView)
 
-        if (location != null){
-            val locationView = TextView(this)
-            locationView.text = location.substring(0 until 18.coerceAtMost(location.length))
-            locationView.layoutParams = TableRow.LayoutParams(
-                0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
-            locationView.gravity = Gravity.CENTER
-            row.addView(locationView)
-        }
+        val locationView = TextView(this)
+        locationView.text = name.substring(0 until 18.coerceAtMost(name.length))
+        locationView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
+        locationView.gravity = Gravity.CENTER
+        row.addView(locationView)
 
         val typeView = TextView(this)
         typeView.text = type.substring(0 until 10.coerceAtMost(type.length))
@@ -166,7 +163,7 @@ class Scanner : BaseCamera() {
         row.addView(typeView)
 
         row.layoutParams = layoutParams
-        binsRowMap[bin.locationUID] = row
+        locationRowMap[bin.locationUID] = row
 
         // TODO set onclick listener to row
 
@@ -185,7 +182,7 @@ class Scanner : BaseCamera() {
                 val tableLayout = scannerBinding.binsTableLayout
                 tableLayout.removeAllViews()
                 BinManager.removeAllBins()
-                binsRowMap.clear()
+                locationRowMap.clear()
             }
             "shelves" -> {
                 // TODO add shelves or remove shelves view
@@ -228,7 +225,6 @@ class Scanner : BaseCamera() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
-
         createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
         createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
         }
@@ -276,12 +272,13 @@ class Scanner : BaseCamera() {
     private fun placeQueueButton() {
         when (pageView) {
             "items" -> {
-                if (binsRowMap.size == 1){
+                if (locationRowMap.size == 1){
                     val binQR = BinManager.getAllBins()[0].locationQR
                     for(ownership in OwnershipManager.getAllOwnerships()) {
                         lifecycleScope.launch {
                             val response = setItemLocation(ownership.ownershipUID, binQR)
                             if (response.success){
+                                // TODO replace clear button with chnage locations
                                 clearButton()
                             } else{
                                 // TODO handle negative
@@ -312,10 +309,10 @@ class Scanner : BaseCamera() {
 
     private fun removeBinRow(uid: Int) {
         val tableLayout = scannerBinding.binsTableLayout
-        val rowToRemove = binsRowMap[uid]
+        val rowToRemove = locationRowMap[uid]
         rowToRemove?.let {
             tableLayout.removeView(it)
-            binsRowMap.remove(uid)
+            locationRowMap.remove(uid)
             BinManager.removeBin(uid)
         }
     }
@@ -343,9 +340,9 @@ class Scanner : BaseCamera() {
         val tableLayout = scannerBinding.binsTableLayout
         val bin = locationResponse.location
 
-        if(!binsRowMap.containsKey(bin.locationUID)) {
+        if(!locationRowMap.containsKey(bin.locationUID)) {
             BinManager.addBin(bin)
-            val row = createRowForBin(bin)
+            val row = createRowForLocation(bin)
             setColorForRow(row, tableLayout.childCount)
             tableLayout.addView(row)
         }
@@ -362,6 +359,30 @@ class Scanner : BaseCamera() {
             Color.DKGRAY
         }
         row.setBackgroundColor(backgroundColor)
+    }
+
+    override suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){
+        codeScanner.stopPreview()
+        if(barcodeFormat != BarcodeFormat.QR_CODE){
+            val response = scanBarcode(code)
+            if (response.message == "429"){Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()}
+            populateItems(response)
+        } else {
+            val response = checkQR(code)
+            when (response.message) {
+                "NEW" -> {
+                    newEntry(code)
+                }
+                "LOCATION" -> {
+                    val locationResponse = scanQRLocation(code)
+                    populateBins(locationResponse)
+                }
+                "ITEM" -> {
+                    // TODO add item call here
+                    codeScanner.startPreview()
+                }
+            }
+        }
     }
 
     private fun switchToBinsView() {
@@ -388,38 +409,6 @@ class Scanner : BaseCamera() {
             storeToken.saveToken("")
         }
         startActivityLogin()
-    }
-
-    override fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){
-        runOnUiThread {
-            codeScanner.stopPreview()
-            if(barcodeFormat != BarcodeFormat.QR_CODE){
-                lifecycleScope.launch {
-                    val response = scanBarcode(code)
-                    if (response.message == "429") {
-                        Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()
-                    }
-                    populateItems(response)
-                }
-            } else {
-                lifecycleScope.launch {
-                    val response = checkQR(code)
-                    when (response.message) {
-                        "NEW" -> {
-                            newEntry(code)
-                        }
-                        "LOCATION" -> {
-                            val locationResponse = scanQRLocation(code)
-                            populateBins(locationResponse)
-                        }
-                        "ITEM" -> {
-                            // TODO add item call here
-                            codeScanner.startPreview()
-                        }
-                    }
-                }
-            }
-        }
     }
 
 }

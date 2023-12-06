@@ -6,19 +6,21 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.DecodeCallback
 import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
+import kotlinx.coroutines.launch
 
 private const val CAMERA_REQUEST_CODE = 101
 
 open class BaseCamera : BaseActivity()  {
     protected lateinit var codeScanner: CodeScanner
 
-    protected open fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){}
+    protected open suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){}
 
     protected fun codeScanner() {
         codeScanner = CodeScanner(this, scannerBinding.scannerView)
@@ -31,7 +33,9 @@ open class BaseCamera : BaseActivity()  {
             isAutoFocusEnabled = true
             isFlashEnabled = false
             decodeCallback = DecodeCallback {
-                scanSuccess(it.text, it.barcodeFormat)
+                lifecycleScope.launch {
+                    scanSuccess(it.text, it.barcodeFormat)
+                }
             }
             errorCallback = ErrorCallback { runOnUiThread {} }
         }
