@@ -24,7 +24,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     private val nullUser = User(0, "", "", "", "")
     private val nullItem = Item(0, "", "", "", "")
     private val nullBorrower = Borrower(0, "")
-    private val nullLocation = Location(0, 0, "", "", 0, "", "", "", nullUser, null)
+    private val nullLocation = Location(0, 0, "", 0, "", "", "", nullUser, null)
     private val nullOwnership = Ownership(0, 0, 0, "", "", "", 0, "", "", 0, "", 0, nullUser, nullLocation, nullItem, nullBorrower)
 
     override suspend fun setLocation(ownershipUID: Int, locationQR: String): CommonResponse {

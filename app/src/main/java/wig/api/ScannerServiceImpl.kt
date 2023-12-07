@@ -22,7 +22,7 @@ import wig.utils.TokenManager
 
 class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
     private val nullUser = User(0, "", "", "", "")
-    private val nullLocation = Location(0, 0, "", "", 0, "", "", "", nullUser, null)
+    private val nullLocation = Location(0, 0, "", 0, "", "", "", nullUser, null)
 
     override suspend fun scan(barcode: String): ScanResponse {
         return try {

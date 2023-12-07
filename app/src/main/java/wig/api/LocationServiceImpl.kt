@@ -20,7 +20,7 @@ import wig.utils.TokenManager
 
 class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullUser = User(0, "", "", "", "")
-    private val nullLocation = Location(0, 0, "", "", 0, "", "", "", nullUser, null)
+    private val nullLocation = Location(0, 0, "", 0, "", "", "", nullUser, null)
 
     override suspend fun createLocation(type: String, name: String, locationQR: String): LocationResponse {
         return try {
