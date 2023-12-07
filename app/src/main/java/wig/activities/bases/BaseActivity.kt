@@ -1,6 +1,7 @@
 package wig.activities.bases
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import androidx.activity.OnBackPressedCallback
@@ -43,7 +44,6 @@ open class BaseActivity : AppCompatActivity() {
     private val scannerService = ScannerService.create()
     private val ownershipService = OwnershipService.create()
     private val locationService = LocationService.create()
-
 
     protected fun disableBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -171,5 +171,22 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
+    protected fun deleteConfirmation(name: String, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Confirm Deletion")
+        alertDialogBuilder.setMessage("Are you sure you want to delete $name?")
 
+        alertDialogBuilder.setPositiveButton("DELETE") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
 }

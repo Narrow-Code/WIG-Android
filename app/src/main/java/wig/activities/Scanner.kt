@@ -1,9 +1,9 @@
 package wig.activities
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -129,7 +129,12 @@ class Scanner : BaseCamera() {
         row.layoutParams = layoutParams
         ownershipRowMap[ownership.ownershipUID] = row
 
-        // TODO set onclick listener to row
+        row.setOnLongClickListener {
+            deleteConfirmation(ownership.item.itemName) { shouldDelete ->
+                if (shouldDelete){ removeBinRow(ownership.ownershipUID)}
+            }
+            true
+        }
 
         return row
     }
@@ -171,7 +176,12 @@ class Scanner : BaseCamera() {
         row.layoutParams = layoutParams
         locationRowMap[location.locationUID] = row
 
-        // TODO set onclick listener to row
+        row.setOnLongClickListener {
+            deleteConfirmation(location.locationName) { shouldDelete ->
+                if (shouldDelete){ removeBinRow(location.locationUID)}
+            }
+            true
+        }
 
         return row
     }
@@ -288,14 +298,12 @@ class Scanner : BaseCamera() {
                     for(ownership in OwnershipManager.getAllOwnerships()) {
                         lifecycleScope.launch {
                             val response = setItemLocation(ownership.ownershipUID, location.locationQR)
-                            Log.d("test", response.success.toString())
                             if (response.success){
                                 updateLocationForAllRows(location)
                             } else{
                                 // TODO handle negative
                             }
                         }
-
                     }
 
                 } else{
@@ -324,6 +332,10 @@ class Scanner : BaseCamera() {
             ownershipRowMap.remove(uid)
             OwnershipManager.removeOwnership(uid)
         }
+        for (i in 0 until tableLayout.childCount) {
+            val row = tableLayout.getChildAt(i) as TableRow
+            setColorForRow(row, i)
+        }
     }
 
     private fun removeBinRow(uid: Int) {
@@ -333,6 +345,10 @@ class Scanner : BaseCamera() {
             tableLayout.removeView(it)
             locationRowMap.remove(uid)
             BinManager.removeBin(uid)
+        }
+        for (i in 0 until tableLayout.childCount) {
+            val row = tableLayout.getChildAt(i) as TableRow
+            setColorForRow(row, i)
         }
     }
 
