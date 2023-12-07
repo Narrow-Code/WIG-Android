@@ -1,6 +1,5 @@
 package wig.activities
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
@@ -130,7 +129,7 @@ class Scanner : BaseCamera() {
         ownershipRowMap[ownership.ownershipUID] = row
 
         row.setOnLongClickListener {
-            deleteConfirmation(ownership.item.itemName) { shouldDelete ->
+            removeConfirmation(ownership.item.itemName) { shouldDelete ->
                 if (shouldDelete){ removeBinRow(ownership.ownershipUID)}
             }
             true
@@ -177,7 +176,7 @@ class Scanner : BaseCamera() {
         locationRowMap[location.locationUID] = row
 
         row.setOnLongClickListener {
-            deleteConfirmation(location.locationName) { shouldDelete ->
+            removeConfirmation(location.locationName) { shouldDelete ->
                 if (shouldDelete){ removeBinRow(location.locationUID)}
             }
             true

@@ -171,12 +171,12 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected fun deleteConfirmation(name: String, callback: (Boolean) -> Unit) {
+    protected fun removeConfirmation(name: String, callback: (Boolean) -> Unit) {
         val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle("Confirm Deletion")
-        alertDialogBuilder.setMessage("Are you sure you want to delete $name?")
+        alertDialogBuilder.setTitle("Confirm Remove")
+        alertDialogBuilder.setMessage("Are you sure you want to remove $name from queue?")
 
-        alertDialogBuilder.setPositiveButton("DELETE") { dialog, _ ->
+        alertDialogBuilder.setPositiveButton("REMOVE") { dialog, _ ->
             dialog.dismiss()
             callback(true)
         }
