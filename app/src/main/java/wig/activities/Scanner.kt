@@ -3,6 +3,7 @@ package wig.activities
 import android.app.Dialog
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -283,13 +284,13 @@ class Scanner : BaseCamera() {
         when (pageView) {
             "items" -> {
                 if (locationRowMap.size == 1){
-                    val binQR = BinManager.getAllBins()[0].locationQR
+                    val location = BinManager.getAllBins()[0]
                     for(ownership in OwnershipManager.getAllOwnerships()) {
                         lifecycleScope.launch {
-                            val response = setItemLocation(ownership.ownershipUID, binQR)
+                            val response = setItemLocation(ownership.ownershipUID, location.locationQR)
+                            Log.d("test", response.success.toString())
                             if (response.success){
-                                // TODO replace clear button with chnage locations
-                                clearButton()
+                                updateLocationForAllRows(location)
                             } else{
                                 // TODO handle negative
                             }
@@ -304,6 +305,14 @@ class Scanner : BaseCamera() {
             "bins" -> {
                 // TODO add bins functionality
             }
+        }
+    }
+
+    private fun updateLocationForAllRows(location: Location) {
+        ownershipRowMap.entries.forEach { (ownershipUID, row) ->
+            val locationView = (row.getChildAt(1) as LinearLayout).getChildAt(0) as TextView
+            locationView.text = location.locationName.substring(0 until 25.coerceAtMost(location.locationName.length))
+            OwnershipManager.setOwnershipLocation(ownershipUID, location)
         }
     }
 
@@ -340,7 +349,6 @@ class Scanner : BaseCamera() {
                 }
             }
         }
-
         coroutineScope.launch {delay(1000)
             codeScanner.startPreview()
         }
@@ -356,7 +364,6 @@ class Scanner : BaseCamera() {
             setColorForRow(row, tableLayout.childCount)
             tableLayout.addView(row)
         }
-
         coroutineScope.launch {delay(1000)
             codeScanner.startPreview()
         }

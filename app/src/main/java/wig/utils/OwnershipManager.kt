@@ -1,5 +1,6 @@
 package wig.utils
 
+import wig.models.Location
 import wig.models.Ownership
 
 object OwnershipManager {
@@ -20,6 +21,18 @@ object OwnershipManager {
 
     fun removeAllOwnerships() {
         ownerships.clear()
+    }
+
+    fun getOwnership(uid: Int): Ownership? {
+        return ownerships.find {it.ownershipUID == uid}
+    }
+
+    fun setOwnershipLocation(ownershipUID: Int, location: Location) {
+        val ownership = ownerships.find {it.ownershipUID == ownershipUID}
+        if (ownership != null) {
+            ownership.location = location
+        }
+
     }
 
 }
