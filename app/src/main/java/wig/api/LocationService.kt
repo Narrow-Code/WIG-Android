@@ -12,7 +12,7 @@ import wig.api.dto.ScanResponse
 
 interface LocationService {
 
-    suspend fun createLocation(type: String, name: String, locationQR: String): LocationResponse
+    suspend fun createLocation(name: String, locationQR: String): LocationResponse
 
 
     companion object {

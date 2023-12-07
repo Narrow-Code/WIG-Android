@@ -21,6 +21,7 @@ import wig.api.OwnershipService
 import wig.api.ScannerService
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
+import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
 import wig.databinding.EmailVerificationBinding
@@ -160,9 +161,15 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun createNewLocation(type: String, name: String, locationQR: String): LocationResponse = withContext(
+    protected suspend fun createNewLocation(name: String, locationQR: String): LocationResponse = withContext(
         Dispatchers.IO){
-        val posts = locationService.createLocation(type, name, locationQR)
+        val posts = locationService.createLocation(name, locationQR)
+        posts
+    }
+
+    protected suspend fun createNewOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse = withContext(
+        Dispatchers.IO){
+        val posts = ownershipService.createOwnershipNoItem(newOwnershipRequest)
         posts
     }
 

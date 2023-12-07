@@ -6,11 +6,13 @@ import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
 import io.ktor.client.features.ServerResponseException
 import io.ktor.client.request.header
+import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
+import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.models.Borrower
 import wig.models.Item
@@ -59,6 +61,32 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            OwnershipResponse(errorMessage, false, nullOwnership)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            OwnershipResponse(errorMessage, false, nullOwnership)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            OwnershipResponse(errorMessage, false, nullOwnership)
+        } catch(e: Exception) {
+            OwnershipResponse(e.message.toString(), false, nullOwnership)
+        }
+    }
+
+    override suspend fun createOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse {
+        return try {
+            client.post {
+                url("${HttpRoutes.CREATE_OWNERSHIP}?item_uid=1")
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+                body = newOwnershipRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses

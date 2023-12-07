@@ -22,7 +22,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullUser = User(0, "", "", "", "")
     private val nullLocation = Location(0, 0, "", 0, "", "", "", nullUser, null)
 
-    override suspend fun createLocation(type: String, name: String, locationQR: String): LocationResponse {
+    override suspend fun createLocation(name: String, locationQR: String): LocationResponse {
         return try {
             client.post {
                 url("${HttpRoutes.CREATE_LOCATION}?location_name=${name}&location_qr=${locationQR}")

@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
 import wig.api.dto.LocationResponse
+import wig.api.dto.NewOwnershipRequest
 import wig.databinding.CreateNewBinding
 import wig.models.Location
 import wig.models.Ownership
@@ -51,7 +52,10 @@ class Scanner : BaseCamera() {
     }
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
-        val name = ownership.item.itemName
+        var name = ownership.item.itemName
+        if (ownership.customItemName != ""){
+            name = ownership.customItemName
+        }
         val location = ownership.location.locationName
         val quantity = ownership.itemQuantity
         val row = TableRow(this)
@@ -238,11 +242,14 @@ class Scanner : BaseCamera() {
     private fun createNewButton(createNewBinding: CreateNewBinding, popup: Dialog) {
         val typeSpinner = createNewBinding.typeSpinner
         val name = createNewBinding.nameEditText.text.toString()
-        val locationQr = createNewBinding.qrCodeEditText.text.toString()
+        val qr = createNewBinding.qrCodeEditText.text.toString()
+        if (name == "" || qr == ""){
+            return
+        }
         lifecycleScope.launch {
             when (typeSpinner.selectedItem?.toString() ?: "") {
                 "Location" -> {
-                    val response = createNewLocation("bin", name, locationQr)
+                    val response = createNewLocation(name, qr)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Location created", Toast.LENGTH_SHORT).show()
                         populateLocations(response)
@@ -251,7 +258,14 @@ class Scanner : BaseCamera() {
                     }
                 }
                 "Item" -> {
-                    // TODO add item creation
+                    val request = NewOwnershipRequest(qr, name)
+                    val response = createNewOwnershipNoItem(request)
+                    if (response.success) {
+                        Toast.makeText(this@Scanner, "Ownership created", Toast.LENGTH_SHORT).show()
+                        populateItem(response.ownership)
+                        popup.dismiss()
+                        switchToItemsView()
+                    }
                 }
             }
         }
@@ -321,20 +335,24 @@ class Scanner : BaseCamera() {
 
     private fun populateItems(postScanResponse: ScanResponse) {
         runOnUiThread {
-            val tableLayout = scannerBinding.itemsTableLayout
-
             for (ownership in postScanResponse.ownership) {
                 if (!ownershipRowMap.containsKey(ownership.ownershipUID)) {
-                    OwnershipManager.addOwnership(ownership)
-                    val row = createRowForOwnership(ownership)
-                    setColorForRow(row, tableLayout.childCount)
-                    tableLayout.addView(row)
+                    populateItem(ownership)
                 }
             }
         }
         coroutineScope.launch {delay(1000)
             codeScanner.startPreview()
         }
+    }
+
+    private fun populateItem(ownership: Ownership) {
+        val tableLayout = scannerBinding.itemsTableLayout
+
+        OwnershipManager.addOwnership(ownership)
+        val row = createRowForOwnership(ownership)
+        setColorForRow(row, tableLayout.childCount)
+        tableLayout.addView(row)
     }
 
     private fun populateLocations(locationResponse: LocationResponse){

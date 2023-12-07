@@ -5,8 +5,8 @@ package wig.api
  */
 object HttpRoutes {
 
-    private const val BASE_URL = "http://34.201.123.65:30001" // SERVER
-    // private const val BASE_URL = "http://192.168.0.201:30001" // LOCAL
+    // private const val BASE_URL = "http://34.201.123.65:30001" // SERVER
+    private const val BASE_URL = "http://192.168.0.201:30001" // LOCAL
 
     const val SIGNUP = "$BASE_URL/user/signup"
     const val SALT = "$BASE_URL/user/salt"
@@ -19,7 +19,7 @@ object HttpRoutes {
 
     const val SET_OWNERSHIP_LOCATION = "${BASE_URL}/app/ownership/set-location"
     const val CHANGE_OWNERSHIP_QUANTITY = "${BASE_URL}/app/ownership/quantity/"
-
+    const val CREATE_OWNERSHIP = "${BASE_URL}/app/ownership/create"
 
     const val CREATE_LOCATION = "${BASE_URL}/app/location/create"
 }
