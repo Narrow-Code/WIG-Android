@@ -7,7 +7,6 @@ data class Location(
     val locationUID: Int,
     val locationOwner: Int,
     val locationName: String,
-    val locationType: String,
     val locationParent: Int,
     val locationQR: String,
     val locationTags: String,

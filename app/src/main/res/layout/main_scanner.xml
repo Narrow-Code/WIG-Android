@@ -124,7 +124,7 @@
             app:layout_constraintTop_toTopOf="parent"
             />
         <Button
-            android:id="@+id/bins_button"
+            android:id="@+id/locations_button"
             android:textSize="12sp"
             android:layout_width="130dp"
             android:layout_height="wrap_content"
@@ -221,9 +221,9 @@
             </TableLayout>
         </ScrollView>
 
-        <!-- BINS -->
+        <!-- LOCATIONS -->
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/table_bins_titles"
+            android:id="@+id/table_location_titles"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@drawable/textbox_background"
@@ -235,7 +235,7 @@
             android:visibility="invisible">
 
             <TextView
-                android:id="@+id/table_bin_name"
+                android:id="@+id/table_location_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -244,27 +244,27 @@
                 android:text="@string/table_name"/>
 
             <TextView
-                android:id="@+id/table_bin_location"
+                android:id="@+id/table_location_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/table_bin_name"
-                app:layout_constraintRight_toLeftOf="@id/table_bin_type"
+                app:layout_constraintLeft_toRightOf="@id/table_location_name"
+                app:layout_constraintRight_toLeftOf="@id/table_location_type"
                 android:text="@string/table_location"/>
 
             <TextView
-                android:id="@+id/table_bin_type"
+                android:id="@+id/table_location_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:text="@string/table_bin_type"
+                android:text="@string/table_location_type"
                 />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <ScrollView
-            android:id="@+id/bins_table"
+            android:id="@+id/locations_table"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/textbox_background"
@@ -278,7 +278,7 @@
             android:visibility="invisible">
 
             <TableLayout
-                android:id="@+id/bins_table_layout"
+                android:id="@+id/location_table_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </TableLayout>

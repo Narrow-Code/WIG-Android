@@ -18,7 +18,6 @@
     <string name="add">Add New</string>
     <string name="location">Location</string>
     <string name="shelf">Shelf</string>
-    <string name="bin">Bin</string>
     <string name="bag">Bag</string>
     <string name="item">Item</string>
 
@@ -57,8 +56,8 @@
     <string name="table_name">Name</string>
     <string name="table_location">Location</string>
     <string name="table_quantity">Quantity</string>
-    <string name="table_bin_location">Location</string>
-    <string name="table_bin_type">Type</string>
+    <string name="table_location_parent">Location</string>
+    <string name="table_location_type">Type</string>
     <string name="password_mismatch">Passwords do not match</string>
     <string name="email_not_valid">Not a valid email address</string>
     <string name="wrong_username_criteria">Username does not match criteria</string>
@@ -69,9 +68,7 @@
     <string name="no_location">No location</string>
 
     <string-array name="location_types">
-        <item>Bin</item>
-        <item>Bag</item>
-        <item>Area</item>
+        <item>Location</item>
         <item>Item</item>
     </string-array>
 

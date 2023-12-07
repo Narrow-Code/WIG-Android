@@ -25,7 +25,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     override suspend fun createLocation(type: String, name: String, locationQR: String): LocationResponse {
         return try {
             client.post {
-                url("${HttpRoutes.CREATE_LOCATION}${type}?location_name=${name}&location_qr=${locationQR}")
+                url("${HttpRoutes.CREATE_LOCATION}?location_name=${name}&location_qr=${locationQR}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())

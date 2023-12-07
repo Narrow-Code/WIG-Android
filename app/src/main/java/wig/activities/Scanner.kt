@@ -23,7 +23,7 @@ import wig.api.dto.LocationResponse
 import wig.databinding.CreateNewBinding
 import wig.models.Location
 import wig.models.Ownership
-import wig.utils.BinManager
+import wig.utils.LocationManager
 import wig.utils.OwnershipManager
 
 class Scanner : BaseCamera() {
@@ -42,7 +42,7 @@ class Scanner : BaseCamera() {
     }
 
     private fun setOnClickListeners() {
-        scannerBinding.binsButton.setOnClickListener{ switchToBinsView() }
+        scannerBinding.locationsButton.setOnClickListener{ switchToLocationsView() }
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
         scannerBinding.icSettings.setOnClickListener{ logout() }
         scannerBinding.clear.setOnClickListener { clearButton() }
@@ -130,7 +130,7 @@ class Scanner : BaseCamera() {
 
         row.setOnLongClickListener {
             removeConfirmation(ownership.item.itemName) { shouldDelete ->
-                if (shouldDelete){ removeBinRow(ownership.ownershipUID)}
+                if (shouldDelete){ removeOwnershipRow(ownership.ownershipUID)}
             }
             true
         }
@@ -141,7 +141,6 @@ class Scanner : BaseCamera() {
     private fun createRowForLocation(location: Location): TableRow {
         val name = location.locationName
         val parent = location.location?.locationName
-        val type = location.locationType
 
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
@@ -162,22 +161,15 @@ class Scanner : BaseCamera() {
         }
         locationView.layoutParams = TableRow.LayoutParams(
             0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
-        locationView.gravity = Gravity.CENTER
+        locationView.gravity = Gravity.END
         row.addView(locationView)
-
-        val typeView = TextView(this)
-        typeView.text = type.substring(0 until 10.coerceAtMost(type.length))
-        typeView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
-        typeView.gravity = Gravity.END
-        row.addView(typeView)
 
         row.layoutParams = layoutParams
         locationRowMap[location.locationUID] = row
 
         row.setOnLongClickListener {
             removeConfirmation(location.locationName) { shouldDelete ->
-                if (shouldDelete){ removeBinRow(location.locationUID)}
+                if (shouldDelete){ removeLocationRow(location.locationUID)}
             }
             true
         }
@@ -193,14 +185,11 @@ class Scanner : BaseCamera() {
                 OwnershipManager.removeAllOwnerships()
                 ownershipRowMap.clear()
             }
-            "bins" -> {
-                val tableLayout = scannerBinding.binsTableLayout
+            "locations" -> {
+                val tableLayout = scannerBinding.locationTableLayout
                 tableLayout.removeAllViews()
-                BinManager.removeAllBins()
+                LocationManager.removeAllLocations()
                 locationRowMap.clear()
-            }
-            "shelves" -> {
-                // TODO add shelves or remove shelves view
             }
         }
     }
@@ -252,38 +241,17 @@ class Scanner : BaseCamera() {
         val locationQr = createNewBinding.qrCodeEditText.text.toString()
         lifecycleScope.launch {
             when (typeSpinner.selectedItem?.toString() ?: "") {
-                "Bin" -> {
+                "Location" -> {
                     val response = createNewLocation("bin", name, locationQr)
                     if (response.success) {
-                        Toast.makeText(this@Scanner, "Bin created", Toast.LENGTH_SHORT).show()
-                        populateBins(response)
+                        Toast.makeText(this@Scanner, "Location created", Toast.LENGTH_SHORT).show()
+                        populateLocations(response)
                         popup.dismiss()
-                        switchToBinsView()
-                    }
-                }
-                "Bag" -> {
-                    val response = createNewLocation("bag", name, locationQr)
-                    if (response.success){
-                        Toast.makeText(this@Scanner, "Bag created", Toast.LENGTH_SHORT).show()
-                        populateBins(response)
-                        popup.dismiss()
-                        switchToBinsView()
-                    }
-                }
-                "Area" -> {
-                    val response = createNewLocation("area", name, locationQr)
-                    if (response.success){
-                        Toast.makeText(this@Scanner, "Area created", Toast.LENGTH_SHORT).show()
-                        populateBins(response)
-                        popup.dismiss()
-                        switchToBinsView()
+                        switchToLocationsView()
                     }
                 }
                 "Item" -> {
-
-                }
-                else -> {
-
+                    // TODO add item creation
                 }
             }
         }
@@ -293,7 +261,7 @@ class Scanner : BaseCamera() {
         when (pageView) {
             "items" -> {
                 if (locationRowMap.size == 1){
-                    val location = BinManager.getAllBins()[0]
+                    val location = LocationManager.getAllLocations()[0]
                     for(ownership in OwnershipManager.getAllOwnerships()) {
                         lifecycleScope.launch {
                             val response = setItemLocation(ownership.ownershipUID, location.locationQR)
@@ -309,8 +277,8 @@ class Scanner : BaseCamera() {
                     // TODO function if more locations
                 }
             }
-            "bins" -> {
-                // TODO add bins functionality
+            "locations" -> {
+                // TODO add locations functionality
             }
         }
     }
@@ -337,13 +305,13 @@ class Scanner : BaseCamera() {
         }
     }
 
-    private fun removeBinRow(uid: Int) {
-        val tableLayout = scannerBinding.binsTableLayout
+    private fun removeLocationRow(uid: Int) {
+        val tableLayout = scannerBinding.locationTableLayout
         val rowToRemove = locationRowMap[uid]
         rowToRemove?.let {
             tableLayout.removeView(it)
             locationRowMap.remove(uid)
-            BinManager.removeBin(uid)
+            LocationManager.removeLocation(uid)
         }
         for (i in 0 until tableLayout.childCount) {
             val row = tableLayout.getChildAt(i) as TableRow
@@ -369,13 +337,13 @@ class Scanner : BaseCamera() {
         }
     }
 
-    private fun populateBins(locationResponse: LocationResponse){
-        val tableLayout = scannerBinding.binsTableLayout
-        val bin = locationResponse.location
+    private fun populateLocations(locationResponse: LocationResponse){
+        val tableLayout = scannerBinding.locationTableLayout
+        val location = locationResponse.location
 
-        if(!locationRowMap.containsKey(bin.locationUID)) {
-            BinManager.addBin(bin)
-            val row = createRowForLocation(bin)
+        if(!locationRowMap.containsKey(location.locationUID)) {
+            LocationManager.addLocation(location)
+            val row = createRowForLocation(location)
             setColorForRow(row, tableLayout.childCount)
             tableLayout.addView(row)
         }
@@ -408,8 +376,8 @@ class Scanner : BaseCamera() {
                 }
                 "LOCATION" -> {
                     val locationResponse = scanQRLocation(code)
-                    populateBins(locationResponse)
-                    switchToBinsView()
+                    populateLocations(locationResponse)
+                    switchToLocationsView()
                 }
                 "ITEM" -> {
                     // TODO add item call here
@@ -419,17 +387,17 @@ class Scanner : BaseCamera() {
         }
     }
 
-    private fun switchToBinsView() {
+    private fun switchToLocationsView() {
         scannerBinding.tableItemsTitles.visibility = View.INVISIBLE
         scannerBinding.itemsTable.visibility = View.INVISIBLE
-        scannerBinding.tableBinsTitles.visibility = View.VISIBLE
-        scannerBinding.binsTable.visibility = View.VISIBLE
-        pageView = "bins"
+        scannerBinding.tableLocationTitles.visibility = View.VISIBLE
+        scannerBinding.locationsTable.visibility = View.VISIBLE
+        pageView = "locations"
     }
 
     private fun switchToItemsView() {
-        scannerBinding.tableBinsTitles.visibility = View.INVISIBLE
-        scannerBinding.binsTable.visibility = View.INVISIBLE
+        scannerBinding.tableLocationTitles.visibility = View.INVISIBLE
+        scannerBinding.locationsTable.visibility = View.INVISIBLE
         scannerBinding.tableItemsTitles.visibility = View.VISIBLE
         scannerBinding.itemsTable.visibility = View.VISIBLE
         pageView = "items"
