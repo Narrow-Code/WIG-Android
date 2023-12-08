@@ -52,7 +52,7 @@ class Scanner : BaseCamera() {
     }
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
-        var name = ownership.item.itemName
+        var name = ownership.customItemName
         if (ownership.customItemName != ""){
             name = ownership.customItemName
         }
@@ -133,7 +133,7 @@ class Scanner : BaseCamera() {
         ownershipRowMap[ownership.ownershipUID] = row
 
         row.setOnLongClickListener {
-            removeConfirmation(ownership.item.itemName) { shouldDelete ->
+            removeConfirmation(ownership.customItemName) { shouldDelete ->
                 if (shouldDelete){ removeOwnershipRow(ownership.ownershipUID)}
             }
             true
