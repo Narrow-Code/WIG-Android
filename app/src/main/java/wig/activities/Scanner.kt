@@ -217,6 +217,9 @@ class Scanner : BaseCamera() {
         createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
         }
 
+        val spinnerPosition = if (pageView == "items") 0 else 1
+        createNewBinding.typeSpinner.setSelection(spinnerPosition)
+
         popupDialog.show()
     }
 
@@ -236,6 +239,10 @@ class Scanner : BaseCamera() {
         createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
         createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
         }
+
+        val spinnerPosition = if (pageView == "items") 0 else 1
+        createNewBinding.typeSpinner.setSelection(spinnerPosition)
+
         popupDialog.show()
     }
 
