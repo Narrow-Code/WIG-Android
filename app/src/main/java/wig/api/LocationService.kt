@@ -9,11 +9,13 @@ import io.ktor.client.features.logging.Logging
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.ScanResponse
+import wig.api.dto.UnpackResponse
 
 interface LocationService {
 
     suspend fun createLocation(name: String, locationQR: String): LocationResponse
 
+    suspend fun unpackLocation(locationUID: Int): UnpackResponse
 
     companion object {
         fun create(): LocationService {

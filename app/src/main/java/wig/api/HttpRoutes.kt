@@ -22,4 +22,5 @@ object HttpRoutes {
     const val CREATE_OWNERSHIP = "${BASE_URL}/app/ownership/create"
 
     const val CREATE_LOCATION = "${BASE_URL}/app/location/create"
+    const val UNPACK_LOCATION = "${BASE_URL}/app/location/unpack"
 }
