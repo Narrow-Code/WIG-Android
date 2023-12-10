@@ -19,7 +19,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
-import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.databinding.CreateNewBinding
 import wig.models.Location
@@ -49,6 +48,7 @@ class Scanner : BaseCamera() {
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.placeQueue.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
+        scannerBinding.unpack.setOnClickListener {unpackButton()}
     }
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
@@ -198,6 +198,20 @@ class Scanner : BaseCamera() {
         }
     }
 
+    private fun unpackButton() {
+        for(location in LocationManager.getAllLocations()) {
+            lifecycleScope.launch {
+                val unpacked = unpackLocation(location.locationUID)
+                for(ownership in unpacked.ownerships){
+                    populateItem(ownership)
+                }
+                for(loc in unpacked.locations){
+                    populateLocations(loc)
+                }
+            }
+        }
+    }
+
     private fun newEntry(qr: String) {
         codeScanner.stopPreview()
 
@@ -259,7 +273,7 @@ class Scanner : BaseCamera() {
                     val response = createNewLocation(name, qr)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Location created", Toast.LENGTH_SHORT).show()
-                        populateLocations(response)
+                        populateLocations(response.location)
                         popup.dismiss()
                         switchToLocationsView()
                     }
@@ -362,9 +376,8 @@ class Scanner : BaseCamera() {
         tableLayout.addView(row)
     }
 
-    private fun populateLocations(locationResponse: LocationResponse){
+    private fun populateLocations(location: Location){
         val tableLayout = scannerBinding.locationTableLayout
-        val location = locationResponse.location
 
         if(!locationRowMap.containsKey(location.locationUID)) {
             LocationManager.addLocation(location)
@@ -401,7 +414,7 @@ class Scanner : BaseCamera() {
                 }
                 "LOCATION" -> {
                     val locationResponse = scanQRLocation(code)
-                    populateLocations(locationResponse)
+                    populateLocations(locationResponse.location)
                     switchToLocationsView()
                 }
                 "ITEM" -> {
@@ -417,6 +430,8 @@ class Scanner : BaseCamera() {
         scannerBinding.itemsTable.visibility = View.INVISIBLE
         scannerBinding.tableLocationTitles.visibility = View.VISIBLE
         scannerBinding.locationsTable.visibility = View.VISIBLE
+        scannerBinding.placeQueue.visibility = View.INVISIBLE
+        scannerBinding.unpack.visibility = View.VISIBLE
         pageView = "locations"
     }
 
@@ -425,6 +440,8 @@ class Scanner : BaseCamera() {
         scannerBinding.locationsTable.visibility = View.INVISIBLE
         scannerBinding.tableItemsTitles.visibility = View.VISIBLE
         scannerBinding.itemsTable.visibility = View.VISIBLE
+        scannerBinding.placeQueue.visibility = View.VISIBLE
+        scannerBinding.unpack.visibility = View.INVISIBLE
         pageView = "items"
     }
 

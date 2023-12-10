@@ -23,8 +23,8 @@ import wig.utils.TokenManager
 class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullUser = User(0, "", "", "", "")
     private val nullLocation = Location(0, 0, "", 0, "", "", "", nullUser, null)
-    val nullLocationList: List<Location> = listOf()
-    val nullOwnershipList: List<Ownership> = listOf()
+    private val nullLocationList: List<Location> = listOf()
+    private val nullOwnershipList: List<Ownership> = listOf()
 
     override suspend fun createLocation(name: String, locationQR: String): LocationResponse {
         return try {
@@ -54,7 +54,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     override suspend fun unpackLocation(locationUID: Int): UnpackResponse {
         return try {
             client.post {
-                url("${HttpRoutes.CREATE_LOCATION}?location_uid=${locationUID}")
+                url("${HttpRoutes.UNPACK_LOCATION}?locationUID=${locationUID}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())

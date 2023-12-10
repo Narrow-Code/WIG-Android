@@ -285,6 +285,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             />
         <Button
+            android:id="@+id/unpack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/unpack"
+            android:textSize="13sp"
+            app:layout_constraintRight_toLeftOf="@id/check_out"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:visibility="invisible"
+            />
+        <Button
             android:id="@+id/check_out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

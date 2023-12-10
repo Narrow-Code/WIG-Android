@@ -24,6 +24,7 @@ import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
+import wig.api.dto.UnpackResponse
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
 import wig.databinding.LoginBinding
@@ -175,6 +176,11 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: Int): OwnershipResponse = withContext(Dispatchers.IO){
         val posts = ownershipService.changeQuantity(changeType, amount, ownershipUID)
+        posts
+    }
+
+    protected suspend fun unpackLocation(locationUID: Int): UnpackResponse = withContext(Dispatchers.IO){
+        val posts = locationService.unpackLocation(locationUID)
         posts
     }
 
