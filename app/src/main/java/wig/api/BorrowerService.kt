@@ -6,11 +6,14 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
+import wig.api.dto.CreateBorrowerResponse
 import wig.api.dto.GetBorrowersResponse
 
 interface BorrowerService {
 
     suspend fun getBorrowers(): GetBorrowersResponse
+
+    suspend fun createBorrower(name: String): CreateBorrowerResponse
 
     companion object {
         fun create(): BorrowerService {

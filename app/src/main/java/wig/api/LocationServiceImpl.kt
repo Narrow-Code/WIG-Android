@@ -26,6 +26,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullLocationList: List<Location> = listOf()
     private val nullOwnershipList: List<Ownership> = listOf()
 
+
     override suspend fun createLocation(name: String, locationQR: String): LocationResponse {
         return try {
             client.post {
