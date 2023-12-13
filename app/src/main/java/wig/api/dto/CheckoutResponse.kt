@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 import wig.models.Borrower
 
 @Serializable
-data class GetBorrowersResponse(
+data class CheckoutResponse(
     val message: String,
     val success: Boolean,
-    val borrowers: List<Borrower>
+    val borrowers: List<Int>
 )
