@@ -17,7 +17,9 @@ interface BorrowerService {
 
     suspend fun createBorrower(name: String): CreateBorrowerResponse
 
-    suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse
+    suspend fun checkout(borrowerUID: Int, ownerships: CheckoutRequest): CheckoutResponse
+
+    suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse
 
     companion object {
         fun create(): BorrowerService {
@@ -32,8 +34,4 @@ interface BorrowerService {
                 }
             )
         }
-    }
-
-
-    suspend fun checkin(ownerships: CheckoutRequest): CheckoutResponse
-}
+    } }

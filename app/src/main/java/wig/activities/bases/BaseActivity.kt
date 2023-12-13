@@ -16,10 +16,15 @@ import wig.activities.ResetPassword
 import wig.activities.Scanner
 import wig.activities.ServerSetup
 import wig.activities.Signup
+import wig.api.BorrowerService
 import wig.api.LocationService
 import wig.api.OwnershipService
 import wig.api.ScannerService
+import wig.api.dto.CheckoutRequest
+import wig.api.dto.CheckoutResponse
 import wig.api.dto.CommonResponse
+import wig.api.dto.CreateBorrowerResponse
+import wig.api.dto.GetBorrowersResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
@@ -46,6 +51,7 @@ open class BaseActivity : AppCompatActivity() {
     private val scannerService = ScannerService.create()
     private val ownershipService = OwnershipService.create()
     private val locationService = LocationService.create()
+    private val borrowerService = BorrowerService.create()
 
     protected fun disableBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -181,6 +187,26 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun unpackLocation(locationUID: Int): UnpackResponse = withContext(Dispatchers.IO){
         val posts = locationService.unpackLocation(locationUID)
+        posts
+    }
+
+    protected suspend fun getBorrowers(): GetBorrowersResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.getBorrowers()
+        posts
+    }
+
+    protected suspend fun createBorrowers(name: String): CreateBorrowerResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.createBorrower(name)
+        posts
+    }
+
+    protected suspend fun checkout(borrowerUID: Int, ownerships: CheckoutRequest): CheckoutResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.checkout(borrowerUID,ownerships)
+        posts
+    }
+
+    protected suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.checkIn(ownerships)
         posts
     }
 

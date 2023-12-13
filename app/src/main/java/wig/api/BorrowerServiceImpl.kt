@@ -75,7 +75,7 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         }
     }
 
-    override suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse {
+    override suspend fun checkout(borrowerUID: Int, ownerships: CheckoutRequest): CheckoutResponse {
         return try {
             client.post{
                 url("${HttpRoutes.CHECKOUT}?borrowerUID=${borrowerUID}")
@@ -101,7 +101,7 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         }
     }
 
-    override suspend fun checkin(ownerships: CheckoutRequest): CheckoutResponse {
+    override suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse {
         return try {
             client.post{
                 url(HttpRoutes.CHECK_IN)
