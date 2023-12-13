@@ -1,12 +1,16 @@
 package wig.activities
 
+import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -19,6 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
+import wig.api.dto.CheckoutRequest
 import wig.api.dto.NewOwnershipRequest
 import wig.databinding.CreateNewBinding
 import wig.models.Location
@@ -46,9 +51,98 @@ class Scanner : BaseCamera() {
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
         scannerBinding.icSettings.setOnClickListener{ logout() }
         scannerBinding.clear.setOnClickListener { clearButton() }
-        scannerBinding.placeQueue.setOnClickListener { placeQueueButton() }
+        scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
         scannerBinding.unpack.setOnClickListener {unpackButton()}
+        scannerBinding.checkOut.setOnClickListener {checkoutButton()}
+    }
+
+    private fun checkoutButton() {
+        codeScanner.stopPreview()
+        lifecycleScope.launch {
+                // Assuming getBorrowers is a suspend function
+                val borrowers = getBorrowers()
+
+                var borrowerNames = borrowers.borrowers.map { it.borrowerName }.toTypedArray()
+                borrowerNames = arrayOf("Self") + borrowerNames + "New"
+
+                val dialogBuilder = AlertDialog.Builder(this@Scanner)
+                dialogBuilder.setTitle("Checkout to:")
+
+                dialogBuilder.setSingleChoiceItems(
+                    ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, borrowerNames),
+                    -1
+                ) { dialog, which ->
+
+                    when (val borrower = borrowerNames[which]) {
+                        "New" -> {
+                            showNewBorrowerDialog(this@Scanner) { borrowerName ->
+                                lifecycleScope.launch {
+                                    val response = createBorrowers(borrowerName)
+                                    if (response.success) {
+                                        Toast.makeText(
+                                            this@Scanner,
+                                            "Created: $borrowerName",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                    checkoutButton()
+                                }
+                            }
+                        }
+                        "Self" -> {
+                            val ownerships: MutableList<Int> = mutableListOf()
+                            for (ownership in OwnershipManager.getAllOwnerships()){
+                                ownerships.add(ownership.ownershipUID)
+                            }
+                            val request = CheckoutRequest(ownerships)
+                            lifecycleScope.launch {
+                                val response = checkout(1, request)
+                                // TODO handle response
+                            }
+                        }
+                        else -> {
+                            // TODO handle selected borrower
+                            var selectedBorrower = borrowers.borrowers[which - 1]
+                            Toast.makeText(
+                                this@Scanner,
+                                "Checked out to: $borrower",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                    // Dismiss the dialog
+                    dialog.dismiss()
+                }
+
+                // Create and show the AlertDialog
+                val dialog = dialogBuilder.create()
+                dialog.show()
+        }
+    }
+
+    private fun showNewBorrowerDialog(context: Context, onPositiveButtonClick: (String) -> Unit) {
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.setTitle("New Borrower")
+
+        val inputEditText = EditText(context)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        inputEditText.layoutParams = layoutParams
+        alertDialog.setView(inputEditText)
+
+        alertDialog.setPositiveButton("Create") { _, _ ->
+            val borrowerName = inputEditText.text.toString()
+            onPositiveButtonClick.invoke(borrowerName)
+        }
+
+        alertDialog.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
+        }
+
+        alertDialog.show()
     }
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
@@ -430,7 +524,7 @@ class Scanner : BaseCamera() {
         scannerBinding.itemsTable.visibility = View.INVISIBLE
         scannerBinding.tableLocationTitles.visibility = View.VISIBLE
         scannerBinding.locationsTable.visibility = View.VISIBLE
-        scannerBinding.placeQueue.visibility = View.INVISIBLE
+        scannerBinding.place.visibility = View.INVISIBLE
         scannerBinding.unpack.visibility = View.VISIBLE
         pageView = "locations"
     }
@@ -440,7 +534,7 @@ class Scanner : BaseCamera() {
         scannerBinding.locationsTable.visibility = View.INVISIBLE
         scannerBinding.tableItemsTitles.visibility = View.VISIBLE
         scannerBinding.itemsTable.visibility = View.VISIBLE
-        scannerBinding.placeQueue.visibility = View.VISIBLE
+        scannerBinding.place.visibility = View.VISIBLE
         scannerBinding.unpack.visibility = View.INVISIBLE
         pageView = "items"
     }

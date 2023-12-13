@@ -33,8 +33,8 @@ import wig.api.dto.UnpackResponse
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
 import wig.databinding.LoginBinding
-import wig.databinding.MainScannerBinding
 import wig.databinding.ResetPasswordBinding
+import wig.databinding.ScannerBinding
 import wig.databinding.ServerSetupBinding
 import wig.databinding.SignupBinding
 
@@ -43,7 +43,7 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var forgotPasswordBinding: ForgotPasswordBinding
     protected lateinit var loginBinding: LoginBinding
     protected lateinit var resetPasswordBinding: ResetPasswordBinding
-    protected lateinit var scannerBinding: MainScannerBinding
+    protected lateinit var scannerBinding: ScannerBinding
     protected lateinit var serverSetupBinding: ServerSetupBinding
     protected lateinit var signupBinding: SignupBinding
     val coroutineScope = CoroutineScope(Dispatchers.Main)
@@ -118,7 +118,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun setScannerBindings(){
-        scannerBinding = MainScannerBinding.inflate(layoutInflater)
+        scannerBinding = ScannerBinding.inflate(layoutInflater)
         val view = scannerBinding.root
         setContentView(view)
     }

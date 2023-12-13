@@ -38,7 +38,7 @@
     <string name="connect">Connect</string>
     <string name="ic_exit">Exit</string>
     <string name="resend_email">Resend Email</string>
-    <string name="place_queue">Place Queue</string>
+    <string name="place">Place</string>
     <string name="unpack">Unpack</string>
     <string name="check_out">Check Out</string>
     <string name="clear">Clear</string>

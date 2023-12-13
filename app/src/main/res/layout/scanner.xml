@@ -211,7 +211,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/table_items_titles"
-            app:layout_constraintBottom_toTopOf="@id/place_queue"
+            app:layout_constraintBottom_toTopOf="@id/place"
             android:visibility="visible">
 
             <TableLayout
@@ -264,7 +264,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/table_items_titles"
-            app:layout_constraintBottom_toTopOf="@id/place_queue"
+            app:layout_constraintBottom_toTopOf="@id/place"
             android:visibility="invisible">
 
             <TableLayout
@@ -275,10 +275,10 @@
         </ScrollView>
 
         <Button
-            android:id="@+id/place_queue"
+            android:id="@+id/place"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/place_queue"
+            android:text="@string/place"
             android:textSize="13sp"
             app:layout_constraintRight_toLeftOf="@id/check_out"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -303,7 +303,7 @@
             android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toLeftOf="@id/clear"
-            app:layout_constraintLeft_toRightOf="@id/place_queue"
+            app:layout_constraintLeft_toRightOf="@id/place"
             />
         <Button
             android:id="@+id/clear"
@@ -315,8 +315,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toRightOf="@id/check_out"
             />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
