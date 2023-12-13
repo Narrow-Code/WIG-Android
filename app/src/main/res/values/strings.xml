@@ -67,6 +67,7 @@
 
     <string name="location_type_prompt">Type</string>
     <string name="no_location">No location</string>
+    <string name="self">Self</string>
 
     <string-array name="location_types">
         <item>Item</item>

@@ -60,7 +60,6 @@ class Scanner : BaseCamera() {
     private fun checkoutButton() {
         codeScanner.stopPreview()
         lifecycleScope.launch {
-                // Assuming getBorrowers is a suspend function
                 val borrowers = getBorrowers()
 
                 var borrowerNames = borrowers.borrowers.map { it.borrowerName }.toTypedArray()
@@ -73,7 +72,7 @@ class Scanner : BaseCamera() {
                     ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, borrowerNames),
                     -1
                 ) { dialog, which ->
-
+                    var borrowerNum = 1
                     when (val borrower = borrowerNames[which]) {
                         "New" -> {
                             showNewBorrowerDialog(this@Scanner) { borrowerName ->
@@ -91,22 +90,32 @@ class Scanner : BaseCamera() {
                             }
                         }
                         "Self" -> {
-                            val ownerships: MutableList<Int> = mutableListOf()
-                            for (ownership in OwnershipManager.getAllOwnerships()){
-                                ownerships.add(ownership.ownershipUID)
-                            }
-                            val request = CheckoutRequest(ownerships)
-                            lifecycleScope.launch {
-                                val response = checkout(1, request)
-                                // TODO handle response
-                            }
+                            borrowerNum = 2
                         }
                         else -> {
-                            // TODO handle selected borrower
-                            var selectedBorrower = borrowers.borrowers[which - 1]
+                            val selectedBorrower = borrowers.borrowers[which - 1]
+                            borrowerNum = selectedBorrower.borrowerUID
+                        }
+                    }
+                    val ownerships: MutableList<Int> = mutableListOf()
+                    for (ownership in OwnershipManager.getAllOwnerships()){
+                        ownerships.add(ownership.ownershipUID)
+                    }
+                    val request = CheckoutRequest(ownerships)
+                    lifecycleScope.launch {
+                        val response = checkout(borrowerNum, request)
+                        if (response.success){
+                            for (ownershipSuccess in response.ownerships){
+                                ownershipRowMap.entries.forEach { (ownershipUID, row) ->
+                                    if (ownershipUID == ownershipSuccess) {
+                                        val locationView = (row.getChildAt(1) as LinearLayout).getChildAt(0) as TextView
+                                        locationView.text = borrowerNames[which]
+                                    }
+                                }
+                            }
                             Toast.makeText(
                                 this@Scanner,
-                                "Checked out to: $borrower",
+                                "Checked out",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -148,9 +157,13 @@ class Scanner : BaseCamera() {
     private fun createRowForOwnership(ownership: Ownership): TableRow {
         var name = ownership.customItemName
         if (ownership.customItemName != ""){
-            name = ownership.customItemName
+            name = ownership.customItemName + " Checkout"
         }
-        val location = ownership.location.locationName
+        var location = ownership.location.locationName
+        if (ownership.itemBorrower != 1){
+            location = ownership.borrower.borrowerName
+        }
+
         val quantity = ownership.itemQuantity
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
