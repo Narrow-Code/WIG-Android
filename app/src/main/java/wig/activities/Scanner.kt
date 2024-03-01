@@ -122,6 +122,7 @@ class Scanner : BaseCamera() {
                     }
                     // Dismiss the dialog
                     dialog.dismiss()
+                    codeScanner.startPreview()
                 }
 
                 // Create and show the AlertDialog
