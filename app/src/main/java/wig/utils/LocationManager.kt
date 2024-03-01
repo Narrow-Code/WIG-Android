@@ -18,6 +18,14 @@ object LocationManager {
         return locations.toList()
     }
 
+    fun getAllLocationNames(): List<String> {
+        val names = mutableListOf<String>()
+        for (name in locations.toList()) {
+            names.add(name.locationName)
+        }
+        return names
+    }
+
     fun removeAllLocations() {
         locations.clear()
     }

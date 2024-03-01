@@ -73,7 +73,7 @@ class Scanner : BaseCamera() {
                     -1
                 ) { dialog, which ->
                     var borrowerNum = 1
-                    when (val borrower = borrowerNames[which]) {
+                    when (borrowerNames[which]) {
                         "New" -> {
                             showNewBorrowerDialog(this@Scanner) { borrowerName ->
                                 lifecycleScope.launch {
@@ -401,30 +401,43 @@ class Scanner : BaseCamera() {
     }
 
     private fun placeQueueButton() {
-        when (pageView) {
-            "items" -> {
-                if (locationRowMap.size == 1){
-                    val location = LocationManager.getAllLocations()[0]
-                    for(ownership in OwnershipManager.getAllOwnerships()) {
-                        lifecycleScope.launch {
-                            val response = setItemLocation(ownership.ownershipUID, location.locationQR)
-                            if (response.success){
-                                updateLocationForAllRows(location)
-                            } else{
-                                // TODO handle negative
-                            }
-                        }
-                    }
+                if (locationRowMap.isNotEmpty() and ownershipRowMap.isNotEmpty()){
+                    codeScanner.stopPreview()
 
-                } else{
-                    // TODO function if more locations
+                    val dialogBuilder = AlertDialog.Builder(this@Scanner)
+                    dialogBuilder.setTitle("Place Queue in:")
+                    val locations = LocationManager.getAllLocationNames()
+
+                    dialogBuilder.setSingleChoiceItems(
+                        ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, locations), -1)
+                            { dialog, which ->
+                            when (locations[which]) {
+                                else -> {
+                                    val selectedLocation = LocationManager.getAllLocations()[which]
+                                    val qr = selectedLocation.locationQR
+
+                                    for(ownership in OwnershipManager.getAllOwnerships()) {
+                                        lifecycleScope.launch {
+                                            val response = setItemLocation(ownership.ownershipUID, qr)
+                                            if (response.success){
+                                                updateLocationForAllRows(LocationManager.getAllLocations()[which])
+                                            } else{
+                                                // TODO handle negative
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // Dismiss the dialog
+                            dialog.dismiss()
+                            codeScanner.startPreview()
+                        }
+
+                        // Create and show the AlertDialog
+                        val dialog = dialogBuilder.create()
+                        dialog.show()
                 }
-            }
-            "locations" -> {
-                // TODO add locations functionality
-            }
         }
-    }
 
     private fun updateLocationForAllRows(location: Location) {
         ownershipRowMap.entries.forEach { (ownershipUID, row) ->
