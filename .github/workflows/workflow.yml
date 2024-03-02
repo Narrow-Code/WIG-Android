@@ -22,12 +22,9 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
-      - name: Upload APK to Releases
-        uses: actions/upload-release-asset@v1
+      - name: Push to Releases
+        uses: ncipollo/release-action@v1
         with:
-          upload_url: https://github.com/WIGteam/WIG-Android/releases/tag/dev
-          asset_path: ./app/build/outputs/apk/release/app-release-unsigned.apk
-          asset_name: app-release-unsigned.apk
-          asset_content_type: application/vnd.android.package-archive
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          artifacts: "./app/build/outputs/apk/release/app-release-unsigned.apk"
+          tag: v1.0.${{ github.run_number }}
+          token: ${{ secrets.TOKEN }}
