@@ -24,7 +24,7 @@ fun updateVersionName(): Int {
         val matchResult = pattern.find(tagString)
         val patchNumber = matchResult?.value?.toInt() ?: 0
         println("Latest Release Tag: $latestTag")
-        patchNumber
+        patchNumber + 1
     } else {
         println("Failed to retrieve latest release tag. Response code: $responseCode")
         0
