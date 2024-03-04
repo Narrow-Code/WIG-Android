@@ -27,7 +27,7 @@ jobs:
 
       - name: Extract versionName from APK
         id: extract_version_name
-        run: echo "::set-output name=version_name::$(adb shell dumpsys package app/build/outputs/apk/release/app-release-unsigned.apk | grep versionName")"
+        run: echo "::set-output name=version_name::$(adb shell dumpsys package app/build/outputs/apk/release/app-release-unsigned.apk | grep versionName)"
 
 
       - name: Setup build tool version variable
