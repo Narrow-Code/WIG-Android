@@ -27,7 +27,8 @@ jobs:
 
       - name: Extract versionName from APK
         id: extract_version_name
-        run: echo "version_name=$(./gradlew printVersionName)"
+        run: VERSION_NAME=$(./gradlew printVersionName)
+          echo "::set-output name=version_name::$VERSION_NAME"
 
 
       - name: Setup build tool version variable
