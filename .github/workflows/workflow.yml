@@ -26,9 +26,9 @@ jobs:
         name: Sign app APK
         with:
             releaseDirectory: |
-              "./app/build/outputs/apk/release/"
+              ./app/build/outputs/apk/release/
             signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-            output: "./app/build/outputs/apk/release/wig.apk"
+            output: ./app/build/outputs/apk/release/wig.apk
             alias: ${{ secrets.ALIAS }}
             keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
 
