@@ -44,7 +44,7 @@ jobs:
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./app/build/outputs/apk/release/wig.apk
+          artifacts: ./app/build/outputs/apk/release/app-release-unsigned.apk 
           
           tag: v0.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
