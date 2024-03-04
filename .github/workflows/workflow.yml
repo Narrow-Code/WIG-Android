@@ -31,6 +31,7 @@ jobs:
 
       - uses: Tlaster/android-sign@v1.2.2
         name: Sign app APK
+        id: sign_app
         with:
             releaseDirectory: |
               ./app/build/outputs/apk/release/
@@ -44,7 +45,7 @@ jobs:
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ./app/build/outputs/apk/release/app-release-unsigned.apk 
+          artifacts: ${{steps.sign_app.outputs.signedReleaseFile}}
           
           tag: v0.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
