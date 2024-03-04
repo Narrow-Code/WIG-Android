@@ -22,21 +22,15 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
-      - name: Install Android Build Tools
-        run: |
-          # Install Android SDK components (including build tools)
-          # Adjust the version as needed
-          sdkmanager "build-tools;30.0.2"
-
-      - name: Sign app APK
-        run: |
-          # Ensure the zipalign tool is accessible
-          chmod +x /usr/local/lib/android/sdk/build-tools/30.0.2/zipalign
-          # Sign the APK
-          ./gradlew signingReport
-          # Use the signing key and other secrets to sign the APK
-          # Replace the placeholders with actual values
-          # ...
+      - uses: Tlaster/android-sign@v1.2.2
+        name: Sign app APK
+        with:
+            releaseDirectory: |
+              "./app/build/outputs/apk/release/"
+            signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+            output: "./app/build/outputs/apk/release/wig.apk"
+            alias: ${{ secrets.ALIAS }}
+            keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
