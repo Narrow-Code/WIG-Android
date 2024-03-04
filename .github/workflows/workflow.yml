@@ -27,9 +27,7 @@ jobs:
 
       - name: Extract versionName from APK
         id: extract_version_name
-        run: VERSION_NAME=$(./gradlew printVersionName)
-          version_name=$(echo "$version_name" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
-          echo "::set-output name=version_name::$version_name"
+        run: echo "::set-output name=version_name::$(./gradlew printVersionName)"
 
 
       - name: Setup build tool version variable
