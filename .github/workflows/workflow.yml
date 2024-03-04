@@ -27,7 +27,7 @@ jobs:
 
       - name: Extract versionName from APK
         id: extract_version_name
-        run: VERSION_NAME=$(./gradlew printVersionName)
+        run: VERSION_NAME=$(./gradlew printVersionName 2>&1)
           echo "::set-output name=version_name::$VERSION_NAME"
 
 
