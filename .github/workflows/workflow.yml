@@ -25,6 +25,11 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      - name: Extract versionName from APK
+        id: extract_version_name
+        run: echo "::set-output name=version_name::$(aapt dump badging app/build/outputs/apk/release/app-release.apk | grep -oP "versionName='\K[^']*")"
+
+
       - name: Setup build tool version variable
         shell: bash
         run: |
@@ -50,5 +55,5 @@ jobs:
         with:
           artifacts: app/build/outputs/apk/release/app-release-unsigned-signed.apk
           
-          tag: v0.0.${{ github.run_number }}
+          tag: v${{ steps.extract_version_name.outputs.version_name }}
           token: ${{ secrets.TOKEN }}
