@@ -51,13 +51,10 @@ jobs:
         env:
             BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
 
-      - name: Verify Version Name
-        run: echo "Verifying version name $version_name"
-
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           artifacts: app/build/outputs/apk/release/app-release-unsigned-signed.apk
           
-          tag: v${{ steps.extract_version_name.outputs.version_name }}
+          tag: '${{ steps.apk-info.outputs.version-name }}'
           token: ${{ secrets.TOKEN }}
