@@ -1,4 +1,4 @@
-name: Build and Release APK
+name: Build and Release
 
 on:
   push:
@@ -25,27 +25,26 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
-      - name: Get apk info
+      - name: Get APK Info
         id: apk-info
         uses: hkusu/apk-info-action@v1
         with:
           apk-path: app/build/outputs/apk/release/app-release-unsigned.apk
 
-      - name: Setup build tool version variable
+      - name: Get Build Tool Version
         shell: bash
         run: |
           BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
           echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
           echo Last build tool version is: $BUILD_TOOL_VERSION
 
-      - uses: Tlaster/android-sign@v1.2.2
-        name: Sign app APK
+      - name: Sign APK
         id: sign_app
+        uses: Tlaster/android-sign@v1.2.2
         with:
-            releaseDirectory: |
-              ./app/build/outputs/apk/release/
+            releaseDirectory: ./app/build/outputs/apk/release/
             signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
-            output: ./app/build/outputs/apk/release/wig.apk
+            output: ./app/build/outputs/apk/release/
             alias: ${{ secrets.ALIAS }}
             keyStorePassword: ${{ secrets.KEYSTOREPASSWORD }}
         env:
@@ -55,6 +54,5 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: app/build/outputs/apk/release/app-release-unsigned-signed.apk
-          
           tag: '${{ steps.apk-info.outputs.version-name }}'
           token: ${{ secrets.TOKEN }}
