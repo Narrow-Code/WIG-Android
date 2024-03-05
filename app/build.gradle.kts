@@ -109,6 +109,7 @@ dependencies {
     androidTestImplementation ("androidx.test:core-ktx:1.5.0")
     androidTestImplementation ("androidx.test:rules:1.5.0")
     androidTestImplementation ("androidx.test:runner:1.5.2")
+    implementation ("com.github.supersu-man:GitHubAPKUpdater-Library:v1.6")
 
     val ktorVersion = "1.6.3"
     implementation ("io.ktor:ktor-client-core:$ktorVersion")

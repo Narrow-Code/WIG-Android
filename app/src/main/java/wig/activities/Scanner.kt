@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import wig.api.dto.ScanResponse
 import wig.utils.StoreToken
 import com.google.zxing.BarcodeFormat
+import com.supersuman.githubapkupdater.Updater
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
@@ -35,6 +36,7 @@ class Scanner : BaseCamera() {
     private var pageView = "items"
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val locationRowMap = mutableMapOf<Int, TableRow>()
+    private val updater = Updater(this, "https://github.com/WIGteam/WIG-Android")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
