@@ -50,9 +50,14 @@ jobs:
         env:
             BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
 
+      - name: Rename APK
+        run: |
+          mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/wig-${{ steps.apk-info.outputs.version-name }}.apk
+          echo "RELEASE_APK=app/build/outputs/apk/release/wig-${{ steps.apk-info.outputs.version-name }}.apk" >> $GITHUB_ENV
+
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
-          artifacts: app/build/outputs/apk/release/app-release-unsigned-signed.apk
+          artifacts: ${{ env.RELEASE_APK }}
           tag: '${{ steps.apk-info.outputs.version-name }}'
           token: ${{ secrets.TOKEN }}
