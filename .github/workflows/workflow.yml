@@ -14,10 +14,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3 # Updated to v3
+        uses: actions/checkout@v2
 
       - name: Set up JDK
-        uses: actions/setup-java@v3 # Updated to v3
+        uses: actions/setup-java@v2
         with:
           java-version: '17'
           distribution: 'adopt'
@@ -27,7 +27,7 @@ jobs:
 
       - name: Get APK Info
         id: apk-info
-        uses: hkusu/apk-info-action@v2 # Updated to v2
+        uses: hkusu/apk-info-action@v1
         with:
           apk-path: app/build/outputs/apk/release/app-release-unsigned.apk
 
@@ -37,10 +37,9 @@ jobs:
           BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
           echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
           echo Last build tool version is: $BUILD_TOOL_VERSION
-
       - name: Sign APK
         id: sign_app
-        uses: Tlaster/android-sign@v1
+        uses: Tlaster/android-sign@v1.2.2
         with:
             releaseDirectory: ./app/build/outputs/apk/release/
             signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
@@ -54,9 +53,8 @@ jobs:
         run: |
           mv app/build/outputs/apk/release/app-release-unsigned-signed.apk app/build/outputs/apk/release/wig-${{ steps.apk-info.outputs.version-name }}.apk
           echo "RELEASE_APK=app/build/outputs/apk/release/wig-${{ steps.apk-info.outputs.version-name }}.apk" >> $GITHUB_ENV
-
       - name: Push to Releases
-        uses: ncipollo/release-action@v2 # Updated to v2
+        uses: ncipollo/release-action@v1
         with:
           artifacts: ${{ env.RELEASE_APK }}
           tag: '${{ steps.apk-info.outputs.version-name }}'
