@@ -27,10 +27,7 @@ jobs:
 
       - name: Extract versionName from APK
         id: extract_version_name
-        run: echo "::set-output name=version_name::$(./gradlew printVersionName)"
-          echo "::set-output name=random_string::hello world"
-          echo "$version_name"
-
+        run: echo "{version_name}={./gradlew printVersionName}" >> "$GITHUB_ENV"
 
       - name: Setup build tool version variable
         shell: bash
@@ -53,10 +50,7 @@ jobs:
             BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
 
       - name: Verify Version Name
-        run: |
-          version_name=${{ steps.extract_version_name.outputs.version_name }}
-          echo "Verifying version name: $version_name"
-          echo "Verifying random string: $random_string"
+        run: echo "Verifying version name $version_name"
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
