@@ -27,7 +27,7 @@ jobs:
 
       - name: Extract versionName from APK
         id: extract_version_name
-        run: echo "{version_name}={./gradlew printVersionName}" >> "$GITHUB_ENV"
+        run: echo "version_name=./gradlew printVersionName" >> "$GITHUB_ENV"
 
       - name: Setup build tool version variable
         shell: bash
