@@ -40,7 +40,7 @@ jobs:
 
       - name: Sign APK
         id: sign_app
-        uses: Tlaster/android-sign@v2 # Updated to v2
+        uses: Tlaster/android-sign@v1
         with:
             releaseDirectory: ./app/build/outputs/apk/release/
             signingKeyBase64: ${{ secrets.SIGNINGKEYBASE64 }}
