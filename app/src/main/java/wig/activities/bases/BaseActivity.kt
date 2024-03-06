@@ -29,6 +29,8 @@ import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
+import wig.api.dto.SearchOwnershipResponse
+import wig.api.dto.SearchRequest
 import wig.api.dto.UnpackResponse
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
@@ -210,12 +212,36 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
+    protected suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse = withContext(Dispatchers.IO){
+        val posts = ownershipService.searchOwnership(searchRequest)
+        posts
+    }
+
     protected fun removeConfirmation(name: String, callback: (Boolean) -> Unit) {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("Confirm Remove")
         alertDialogBuilder.setMessage("Are you sure you want to remove $name from queue?")
 
         alertDialogBuilder.setPositiveButton("REMOVE") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    protected fun addConfirmation(name: String, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Confirm Add")
+        alertDialogBuilder.setMessage("Are you sure you want to add $name to queue?")
+
+        alertDialogBuilder.setPositiveButton("Add") { dialog, _ ->
             dialog.dismiss()
             callback(true)
         }

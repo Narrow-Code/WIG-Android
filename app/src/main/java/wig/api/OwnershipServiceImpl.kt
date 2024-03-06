@@ -14,6 +14,8 @@ import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
+import wig.api.dto.SearchOwnershipResponse
+import wig.api.dto.SearchRequest
 import wig.models.Borrower
 import wig.models.Item
 import wig.models.Location
@@ -104,6 +106,34 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
             OwnershipResponse(e.message.toString(), false, nullOwnership)
         }
     }
+
+    override suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse {
+        return try {
+            client.post {
+                url(HttpRoutes.SEARCH_OWNERSHIP)
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+                body = searchRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SearchOwnershipResponse(errorMessage, false, ArrayList())
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SearchOwnershipResponse(errorMessage, false, ArrayList())
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SearchOwnershipResponse(errorMessage, false, ArrayList())
+        } catch(e: Exception) {
+            SearchOwnershipResponse(e.message.toString(), false, ArrayList())
+        }
+    }
+
+
 
 
 }

@@ -2,34 +2,40 @@ import groovy.json.JsonSlurper
 import java.net.HttpURLConnection
 import java.net.URL
 
-fun updateVersionName(): Int {
+fun updateVersion(major: Int, minor: Int) : String {
     val organization = "WIGTeam"
     val repository = "WIG-Android"
-    val token = "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"
     val apiUrl = "https://api.github.com/repos/$organization/$repository/releases/latest"
     println(apiUrl)
 
     val connection = URL(apiUrl).openConnection() as HttpURLConnection
     connection.requestMethod = "GET"
-    connection.setRequestProperty("Authorization", "token $token")
 
     val responseCode = connection.responseCode
-    return if (responseCode == HttpURLConnection.HTTP_OK) {
+    if (responseCode == HttpURLConnection.HTTP_OK) {
         val response = connection.inputStream.bufferedReader().use { it.readText() }
         val jsonSlurper = JsonSlurper()
         val jsonResponse = jsonSlurper.parseText(response) as Map<*, *>
         val latestTag = jsonResponse["tag_name"]
         val tagString = latestTag as? String ?: ""
-        val pattern = "\\d+\$".toRegex()
+        val pattern = "(\\d+)\\.(\\d+)\\.(\\d+)".toRegex() // Regex pattern for major.minor.patch
         val matchResult = pattern.find(tagString)
-        val patchNumber = matchResult?.value?.toInt() ?: 0
-        println("Latest Release Tag: $latestTag")
-        patchNumber
+        val majorRelease = matchResult?.groupValues?.getOrNull(1)?.toInt() ?: 0 // Extract major version
+        val minorRelease = matchResult?.groupValues?.getOrNull(2)?.toInt() ?: 0 // Extract minor version
+        val patchRelease = matchResult?.groupValues?.getOrNull(3)?.toInt() ?: 0 // Extract patch version
+        val patch = patchRelease + 1
+        if (major > majorRelease) {
+            return "$major.0.0"
+        } else if (minor > minorRelease) {
+            return "$major.$minor.0"
+        }
+        return "$major.$minor.$patch"
     } else {
         println("Failed to retrieve latest release tag. Response code: $responseCode")
-        0
+        return "Patch version fail"
     }
 }
+
 
 plugins {
     id("com.android.application")
@@ -57,7 +63,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "0.0." + updateVersionName()
+        versionName = updateVersion(0, 0)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
