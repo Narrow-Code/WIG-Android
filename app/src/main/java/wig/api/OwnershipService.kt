@@ -11,6 +11,8 @@ import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
+import wig.api.dto.SearchOwnershipResponse
+import wig.api.dto.SearchRequest
 
 interface OwnershipService {
 
@@ -19,6 +21,8 @@ interface OwnershipService {
     suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: Int): OwnershipResponse
 
     suspend fun createOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse
+
+    suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse
 
 
     companion object {
