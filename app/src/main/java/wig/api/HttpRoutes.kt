@@ -20,6 +20,7 @@ object HttpRoutes {
     const val SET_OWNERSHIP_LOCATION = "${BASE_URL}/app/ownership/set-location"
     const val CHANGE_OWNERSHIP_QUANTITY = "${BASE_URL}/app/ownership/quantity/"
     const val CREATE_OWNERSHIP = "${BASE_URL}/app/ownership/create"
+    const val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
 
     const val CREATE_LOCATION = "${BASE_URL}/app/location/create"
     const val UNPACK_LOCATION = "${BASE_URL}/app/location/unpack"

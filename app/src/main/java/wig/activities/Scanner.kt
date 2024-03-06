@@ -25,7 +25,9 @@ import wig.R
 import wig.activities.bases.BaseCamera
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.NewOwnershipRequest
+import wig.api.dto.SearchRequest
 import wig.databinding.CreateNewBinding
+import wig.databinding.SearchBinding
 import wig.models.Location
 import wig.models.Ownership
 import wig.utils.LocationManager
@@ -55,6 +57,7 @@ class Scanner : BaseCamera() {
         scannerBinding.add.setOnClickListener { newEntry() }
         scannerBinding.unpack.setOnClickListener {unpackButton()}
         scannerBinding.checkOut.setOnClickListener {checkoutButton()}
+        scannerBinding.search.setOnClickListener { searchButton() }
     }
 
     private fun checkoutButton() {
@@ -345,6 +348,46 @@ class Scanner : BaseCamera() {
         popupDialog.show()
     }
 
+    private fun searchButton() {
+        codeScanner.stopPreview()
+
+        val searchBinding: SearchBinding = SearchBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(searchBinding.root)
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+        val layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+        searchBinding.searchButton.setOnClickListener {searchOwnershipButton(searchBinding)}
+        searchBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+
+        popupDialog.show()
+    }
+
+    private fun searchOwnershipButton(searchBinding: SearchBinding) {
+        val name = searchBinding.nameSearchText.text.toString()
+        val tags = searchBinding.tagsSearchText.text.toString()
+        if (name == "" && tags == ""){
+            return
+        }
+        lifecycleScope.launch {
+            val response = searchOwnership(SearchRequest(name, tags))
+            if (response.success) {
+                val tableLayout = searchBinding.searchTableLayout
+                for (ownership in response.ownership) {
+                    val row = createRowForOwnership(ownership)
+                    setColorForRow(row, tableLayout.childCount)
+                    tableLayout.addView(row)
+                }
+            }
+        }
+    }
+
+
     private fun newEntry(){
         codeScanner.stopPreview()
 
@@ -359,8 +402,7 @@ class Scanner : BaseCamera() {
         )
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
         createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
-        createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
-        }
+        createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
 
         val spinnerPosition = if (pageView == "items") 0 else 1
         createNewBinding.typeSpinner.setSelection(spinnerPosition)

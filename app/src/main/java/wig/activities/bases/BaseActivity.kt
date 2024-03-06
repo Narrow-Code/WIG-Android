@@ -29,6 +29,8 @@ import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
+import wig.api.dto.SearchOwnershipResponse
+import wig.api.dto.SearchRequest
 import wig.api.dto.UnpackResponse
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
@@ -207,6 +209,11 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse = withContext(Dispatchers.IO){
         val posts = borrowerService.checkIn(ownerships)
+        posts
+    }
+
+    protected suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse = withContext(Dispatchers.IO){
+        val posts = ownershipService.searchOwnership(searchRequest)
         posts
     }
 

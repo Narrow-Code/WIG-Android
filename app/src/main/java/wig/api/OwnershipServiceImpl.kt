@@ -110,7 +110,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     override suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse {
         return try {
             client.post {
-                url("${HttpRoutes.CREATE_OWNERSHIP}?item_uid=1")
+                url(HttpRoutes.SEARCH_OWNERSHIP)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
