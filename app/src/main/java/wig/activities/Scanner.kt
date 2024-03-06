@@ -33,6 +33,7 @@ import wig.models.Location
 import wig.models.Ownership
 import wig.utils.LocationManager
 import wig.utils.OwnershipManager
+import kotlin.concurrent.thread
 
 class Scanner : BaseCamera() {
     private var pageView = "items"
@@ -48,8 +49,10 @@ class Scanner : BaseCamera() {
         setScannerBindings()
         setupPermissions()
         codeScanner()
-        checkForUpdates(updater)
         setOnClickListeners()
+        thread {
+            checkForUpdates(updater)
+        }
     }
 
     private fun setOnClickListeners() {
