@@ -13,6 +13,9 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
+import wig.api.dto.SearchLocationResponse
+import wig.api.dto.SearchOwnershipResponse
+import wig.api.dto.SearchRequest
 import wig.api.dto.UnpackResponse
 import wig.models.Location
 import wig.models.Ownership
@@ -74,6 +77,32 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
             UnpackResponse(errorMessage, false, nullOwnershipList, nullLocationList)
         } catch(e: Exception) {
             UnpackResponse(e.message.toString(), false, nullOwnershipList, nullLocationList)
+        }
+    }
+
+    override suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse {
+        return try {
+            client.post {
+                url("${HttpRoutes.CREATE_OWNERSHIP}?item_uid=1")
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+                body = searchRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SearchLocationResponse(errorMessage, false, ArrayList())
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SearchLocationResponse(errorMessage, false, ArrayList())
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            SearchLocationResponse(errorMessage, false, ArrayList())
+        } catch(e: Exception) {
+            SearchLocationResponse(e.message.toString(), false, ArrayList())
         }
     }
 
