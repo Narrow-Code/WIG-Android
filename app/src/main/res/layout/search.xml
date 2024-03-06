@@ -42,15 +42,6 @@
             />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/searchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Search"
-        android:layout_marginEnd="8dp"
-        style="?android:attr/buttonBarButtonStyle" />
-
     <ScrollView
         android:id="@+id/search_table"
         android:layout_width="300dp"
@@ -85,11 +76,13 @@
             style="?android:attr/buttonBarButtonStyle" />
 
         <Button
-            android:id="@+id/addButton"
+            android:id="@+id/searchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add"
+            android:text="Search"
+            android:layout_marginEnd="8dp"
             style="?android:attr/buttonBarButtonStyle" />
+
     </LinearLayout>
 
 </LinearLayout>

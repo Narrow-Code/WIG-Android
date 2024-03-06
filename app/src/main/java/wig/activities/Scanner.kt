@@ -37,6 +37,7 @@ class Scanner : BaseCamera() {
     private var pageView = "items"
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val locationRowMap = mutableMapOf<Int, TableRow>()
+    private val searchRowMap = mutableMapOf<Int, TableRow>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -371,15 +372,18 @@ class Scanner : BaseCamera() {
     private fun searchOwnershipButton(searchBinding: SearchBinding) {
         val name = searchBinding.nameSearchText.text.toString()
         val tags = searchBinding.tagsSearchText.text.toString()
+        val tableLayout = searchBinding.searchTableLayout
+        tableLayout.removeAllViews()
+        searchRowMap.clear()
         if (name == "" && tags == ""){
+
             return
         }
         lifecycleScope.launch {
             val response = searchOwnership(SearchRequest(name, tags))
             if (response.success) {
-                val tableLayout = searchBinding.searchTableLayout
                 for (ownership in response.ownership) {
-                    val row = createRowForOwnership(ownership)
+                    val row = createRowForOwnershipSearch(ownership)
                     setColorForRow(row, tableLayout.childCount)
                     tableLayout.addView(row)
                 }
@@ -387,6 +391,55 @@ class Scanner : BaseCamera() {
         }
     }
 
+    private fun createRowForOwnershipSearch(ownership: Ownership): TableRow {
+        val name = ownership.customItemName
+
+        var location = ownership.location.locationName
+        if (ownership.itemBorrower != 1){
+            location = ownership.borrower.borrowerName
+        }
+
+        val row = TableRow(this)
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT)
+
+        val nameLayout = LinearLayout(this)
+        nameLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
+        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+
+        val nameView = TextView(this)
+        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
+        nameLayout.addView(nameView)
+
+        val locationLayout = LinearLayout(this)
+        locationLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
+        locationLayout.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+
+        val locationView = TextView(this)
+        locationView.text = location.substring(0 until 25.coerceAtMost(location.length))
+        locationView.gravity = Gravity.CENTER
+        locationLayout.addView(locationView)
+
+        val buttonLayoutParams = TableRow.LayoutParams()
+        buttonLayoutParams.width = resources.getDimensionPixelSize(R.dimen.button_width)
+        buttonLayoutParams.height = resources.getDimensionPixelSize(R.dimen.button_height)
+
+        row.addView(nameLayout)
+        row.addView(locationLayout)
+        row.layoutParams = layoutParams
+        ownershipRowMap[ownership.ownershipUID] = row
+
+        row.setOnClickListener {
+            addConfirmation(ownership.customItemName) { shouldAdd ->
+                if (shouldAdd){ populateItem(ownership)}
+            }
+        }
+
+        return row
+    }
 
     private fun newEntry(){
         codeScanner.stopPreview()

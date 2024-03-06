@@ -235,4 +235,23 @@ open class BaseActivity : AppCompatActivity() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
+
+    protected fun addConfirmation(name: String, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Confirm Add")
+        alertDialogBuilder.setMessage("Are you sure you want to add $name to queue?")
+
+        alertDialogBuilder.setPositiveButton("Add") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
 }
