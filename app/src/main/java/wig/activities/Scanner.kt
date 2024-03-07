@@ -50,9 +50,6 @@ class Scanner : BaseCamera() {
         setupPermissions()
         codeScanner()
         setOnClickListeners()
-        thread {
-            checkForUpdates(updater)
-        }
     }
 
     private fun setOnClickListeners() {
@@ -667,26 +664,6 @@ class Scanner : BaseCamera() {
         scannerBinding.unpack.visibility = View.INVISIBLE
         pageView = "items"
     }
-
-    private fun checkForUpdates(updater: Updater) {
-        if (updater.isInternetConnection()){
-            updater.init()
-            updater.isNewUpdateAvailable {
-                scannerBinding.appName.setTextColor(Color.RED)
-            }
-        }
-    }
-
-    private fun updateButton(updater: Updater) {
-        if (updater.hasPermissionsGranted()){
-            updater.requestDownload()
-        } else{
-            updater.requestMyPermissions {
-                updater.requestDownload()
-            }
-        }
-    }
-
 
     // TODO REMOVE THIS IS FOR TESTING LOG IN AND OUT UNTIL SETTINGS PAGE IS ADDED
     private fun logout() {
