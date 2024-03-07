@@ -5,11 +5,13 @@ import java.net.URL
 fun updateVersion(major: Int, minor: Int) : String {
     val organization = "WIGTeam"
     val repository = "WIG-Android"
+    val token = "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"
     val apiUrl = "https://api.github.com/repos/$organization/$repository/releases/latest"
     println(apiUrl)
 
     val connection = URL(apiUrl).openConnection() as HttpURLConnection
     connection.requestMethod = "GET"
+    connection.setRequestProperty("Authorization", "token $token")
 
     val responseCode = connection.responseCode
     if (responseCode == HttpURLConnection.HTTP_OK) {
