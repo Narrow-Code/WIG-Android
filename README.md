@@ -16,4 +16,3 @@ WIG, short for What I Got, is a selfhosted inventory managment server for the ev
 - Types of items
 	- Consumables - Food, Supplies (household, office), Parts (Car, Moto, Computer)  
 	- Assets - Tools, Appliances, Devices  
-
