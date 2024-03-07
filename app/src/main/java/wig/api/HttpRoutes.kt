@@ -21,6 +21,7 @@ object HttpRoutes {
     const val CHANGE_OWNERSHIP_QUANTITY = "${BASE_URL}/app/ownership/quantity/"
     const val CREATE_OWNERSHIP = "${BASE_URL}/app/ownership/create"
     const val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
+    const val EDIT_OWNERSHIP = "${BASE_URL}/app/ownership/edit"
 
     const val CREATE_LOCATION = "${BASE_URL}/app/location/create"
     const val UNPACK_LOCATION = "${BASE_URL}/app/location/unpack"

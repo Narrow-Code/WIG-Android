@@ -7,6 +7,7 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import wig.api.dto.CommonResponse
+import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
@@ -23,6 +24,8 @@ interface OwnershipService {
     suspend fun createOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse
 
     suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse
+
+    suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest): CommonResponse
 
 
     companion object {

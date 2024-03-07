@@ -12,6 +12,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
+import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.api.dto.SearchOwnershipResponse
@@ -133,7 +134,31 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-
+    override suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest): CommonResponse {
+        return try {
+            client.put {
+                url(HttpRoutes.EDIT_OWNERSHIP)
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+                body = editOwnershipRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: Exception) {
+            CommonResponse(e.message.toString(), false)
+        }
+    }
 
 
 }
