@@ -29,6 +29,7 @@ import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.ScanResponse
 import wig.api.dto.SearchRequest
 import wig.databinding.CreateNewBinding
+import wig.databinding.EditOwnershipBinding
 import wig.databinding.SearchBinding
 import wig.models.Location
 import wig.models.Ownership
@@ -256,6 +257,27 @@ class Scanner : BaseCamera() {
                 if (shouldDelete){ removeOwnershipRow(ownership.ownershipUID)}
             }
             true
+        }
+
+        row.setOnClickListener {
+            codeScanner.stopPreview()
+
+            val editOwnershipBinding: EditOwnershipBinding = EditOwnershipBinding.inflate(layoutInflater)
+            val popupDialog = Dialog(this)
+            popupDialog.setContentView(editOwnershipBinding.root)
+            popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+            val layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            // TODO set text fields
+            popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+            editOwnershipBinding.searchButton.setOnClickListener {} // TODO
+            editOwnershipBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+
+            popupDialog.show()
         }
 
         return row
