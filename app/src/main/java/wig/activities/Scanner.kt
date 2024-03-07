@@ -40,7 +40,6 @@ class Scanner : BaseCamera() {
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val locationRowMap = mutableMapOf<Int, TableRow>()
     private val searchRowMap = mutableMapOf<Int, TableRow>()
-    private val updater = Updater(this, "https://github.com/WIGteam/WIG-Android")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +61,6 @@ class Scanner : BaseCamera() {
         scannerBinding.unpack.setOnClickListener {unpackButton()}
         scannerBinding.checkOut.setOnClickListener {checkoutButton()}
         scannerBinding.search.setOnClickListener { searchButton() }
-        scannerBinding.appName.setOnClickListener { updateButton(updater) }
     }
 
     private fun checkoutButton() {
