@@ -4,7 +4,10 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -16,16 +19,15 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import wig.api.dto.ScanResponse
-import wig.utils.StoreToken
 import com.google.zxing.BarcodeFormat
-import com.supersuman.githubapkupdater.Updater
+import com.supersuman.apkupdater.ApkUpdater
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.NewOwnershipRequest
+import wig.api.dto.ScanResponse
 import wig.api.dto.SearchRequest
 import wig.databinding.CreateNewBinding
 import wig.databinding.SearchBinding
@@ -33,13 +35,14 @@ import wig.models.Location
 import wig.models.Ownership
 import wig.utils.LocationManager
 import wig.utils.OwnershipManager
+import wig.utils.StoreToken
+
 
 class Scanner : BaseCamera() {
     private var pageView = "items"
     private val ownershipRowMap = mutableMapOf<Int, TableRow>()
     private val locationRowMap = mutableMapOf<Int, TableRow>()
     private val searchRowMap = mutableMapOf<Int, TableRow>()
-    private val updater = Updater(this, "https://github.com/WIGteam/WIG-Android")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,9 @@ class Scanner : BaseCamera() {
         setScannerBindings()
         setupPermissions()
         codeScanner()
-        checkForUpdates(updater)
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        checkForUpdates()
         setOnClickListeners()
     }
 
@@ -62,7 +67,6 @@ class Scanner : BaseCamera() {
         scannerBinding.unpack.setOnClickListener {unpackButton()}
         scannerBinding.checkOut.setOnClickListener {checkoutButton()}
         scannerBinding.search.setOnClickListener { searchButton() }
-        scannerBinding.appName.setOnClickListener { updateButton(updater) }
     }
 
     private fun checkoutButton() {
@@ -665,23 +669,19 @@ class Scanner : BaseCamera() {
         pageView = "items"
     }
 
-    private fun checkForUpdates(updater: Updater) {
-        if (updater.isInternetConnection()){
-            updater.init()
-            updater.isNewUpdateAvailable {
+    private fun checkForUpdates() {
+        coroutineScope.launch {
+            val updater = ApkUpdater(this@Scanner, "https://github.com/WIGteam/WIG-Android/releases/latest")
+            updater.threeNumbers = true
+            if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
                 scannerBinding.appName.setTextColor(Color.RED)
+                scannerBinding.appName.setOnClickListener { updateButton(updater) }
             }
         }
     }
 
-    private fun updateButton(updater: Updater) {
-        if (updater.hasPermissionsGranted()){
-            updater.requestDownload()
-        } else{
-            updater.requestMyPermissions {
-                updater.requestDownload()
-            }
-        }
+    private fun updateButton(updater: ApkUpdater) {
+        updater.requestDownload()
     }
 
 
