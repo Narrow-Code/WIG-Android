@@ -5,6 +5,8 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.os.StrictMode
+import android.os.StrictMode.ThreadPolicy
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -16,16 +18,15 @@ import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import wig.api.dto.ScanResponse
-import wig.utils.StoreToken
 import com.google.zxing.BarcodeFormat
-import com.supersuman.githubapkupdater.Updater
+import com.supersuman.apkupdater.ApkUpdater
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.NewOwnershipRequest
+import wig.api.dto.ScanResponse
 import wig.api.dto.SearchRequest
 import wig.databinding.CreateNewBinding
 import wig.databinding.SearchBinding
@@ -33,7 +34,8 @@ import wig.models.Location
 import wig.models.Ownership
 import wig.utils.LocationManager
 import wig.utils.OwnershipManager
-import kotlin.concurrent.thread
+import wig.utils.StoreToken
+
 
 class Scanner : BaseCamera() {
     private var pageView = "items"
@@ -48,6 +50,9 @@ class Scanner : BaseCamera() {
         setScannerBindings()
         setupPermissions()
         codeScanner()
+        val policy = ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        checkForUpdates()
         setOnClickListeners()
     }
 
@@ -661,6 +666,21 @@ class Scanner : BaseCamera() {
         scannerBinding.place.visibility = View.VISIBLE
         scannerBinding.unpack.visibility = View.INVISIBLE
         pageView = "items"
+    }
+
+    private fun checkForUpdates() {
+        coroutineScope.launch {
+            val updater = ApkUpdater(this@Scanner, "https://github.com/WIGteam/WIG-Android/releases/latest")
+            updater.threeNumbers = true
+            if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
+                scannerBinding.appName.setTextColor(Color.RED)
+                scannerBinding.appName.setOnClickListener { updateButton(updater) }
+            }
+        }
+    }
+
+    private fun updateButton(updater: ApkUpdater) {
+        updater.requestDownload()
     }
 
     // TODO REMOVE THIS IS FOR TESTING LOG IN AND OUT UNTIL SETTINGS PAGE IS ADDED
