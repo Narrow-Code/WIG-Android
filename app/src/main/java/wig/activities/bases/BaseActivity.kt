@@ -15,6 +15,7 @@ import wig.activities.Login
 import wig.activities.ResetPassword
 import wig.activities.Scanner
 import wig.activities.ServerSetup
+import wig.activities.Settings
 import wig.activities.Signup
 import wig.api.BorrowerService
 import wig.api.LocationService
@@ -39,6 +40,7 @@ import wig.databinding.LoginBinding
 import wig.databinding.ResetPasswordBinding
 import wig.databinding.ScannerBinding
 import wig.databinding.ServerSetupBinding
+import wig.databinding.SettingsBinding
 import wig.databinding.SignupBinding
 
 open class BaseActivity : AppCompatActivity() {
@@ -49,6 +51,8 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var scannerBinding: ScannerBinding
     protected lateinit var serverSetupBinding: ServerSetupBinding
     protected lateinit var signupBinding: SignupBinding
+    protected lateinit var settingsBinding: SettingsBinding
+
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private val scannerService = ScannerService.create()
@@ -90,6 +94,12 @@ open class BaseActivity : AppCompatActivity() {
         setContentView(view)
     }
 
+    protected fun setSettingsBindings(){
+        settingsBinding = SettingsBinding.inflate(layoutInflater)
+        val view = settingsBinding.root
+        setContentView(view)
+    }
+
     protected fun startActivityServerSetup() {
         val intent = Intent(this, ServerSetup::class.java)
         startActivity(intent)
@@ -116,6 +126,12 @@ open class BaseActivity : AppCompatActivity() {
 
     protected fun startActivityScanner() {
         val intent = Intent(this, Scanner::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    protected fun startActivitySettings() {
+        val intent = Intent(this, Settings::class.java)
         startActivity(intent)
         finish()
     }

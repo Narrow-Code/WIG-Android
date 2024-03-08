@@ -62,7 +62,7 @@ class Scanner : BaseCamera() {
     private fun setOnClickListeners() {
         scannerBinding.locationsButton.setOnClickListener{ switchToLocationsView() }
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
-        scannerBinding.topMenu.icSettings.setOnClickListener{ logout() }
+        scannerBinding.topMenu.icSettings.setOnClickListener{ settings() }
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
@@ -735,14 +735,8 @@ class Scanner : BaseCamera() {
         updater.requestDownload()
     }
 
-    // TODO REMOVE THIS IS FOR TESTING LOG IN AND OUT UNTIL SETTINGS PAGE IS ADDED
-    private fun logout() {
-        // Delete token & UID
-        lifecycleScope.launch {
-            val storeToken = StoreToken(this@Scanner)
-            storeToken.saveToken("")
-        }
-        startActivityLogin()
+    private fun settings() {
+        startActivitySettings()
     }
 
 }

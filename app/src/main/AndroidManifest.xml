@@ -60,5 +60,9 @@
             <!-- Intent filters, etc. -->
         </activity>
 
+        <activity android:name="wig.activities.Settings">
+            <!-- Intent filters, etc. -->
+        </activity>
+
     </application>
 </manifest>
