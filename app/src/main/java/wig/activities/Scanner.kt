@@ -62,7 +62,7 @@ class Scanner : BaseCamera() {
     private fun setOnClickListeners() {
         scannerBinding.locationsButton.setOnClickListener{ switchToLocationsView() }
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
-        scannerBinding.icSettings.setOnClickListener{ logout() }
+        scannerBinding.topMenu.icSettings.setOnClickListener{ logout() }
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
@@ -725,8 +725,8 @@ class Scanner : BaseCamera() {
             val updater = ApkUpdater(this@Scanner, "https://github.com/WIGteam/WIG-Android/releases/latest")
             updater.threeNumbers = true
             if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
-                scannerBinding.appName.setTextColor(Color.RED)
-                scannerBinding.appName.setOnClickListener { updateButton(updater) }
+                scannerBinding.topMenu.appName.setTextColor(Color.RED)
+                scannerBinding.topMenu.appName.setOnClickListener { updateButton(updater) }
             }
         }
     }
