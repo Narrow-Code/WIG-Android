@@ -1,17 +1,25 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="viewModel"
+            type="wig.models.ItemViewModel" />
+    </data>
+
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    >
+
 
     <!-- Title -->
     <TextView
-        android:id="@+id/titleSearchView"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Search"
+        android:text="Edit Ownership"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
@@ -26,7 +34,8 @@
         android:hint="Name"
         android:minHeight="48dp"
         android:inputType="text"
-        android:autofillHints="item name" />
+        android:autofillHints="item name"
+        android:text="@={viewModel.name}"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -40,6 +49,7 @@
             android:layout_marginTop="20dp"
             android:hint="QR"
             tools:ignore="TouchTargetSizeCheck"
+            android:text="@={viewModel.qr}"
             android:inputType="text" />
     <TextView
         android:layout_width="wrap_content"
@@ -53,6 +63,7 @@
         android:layout_marginTop="20dp"
         android:hint="Tags"
         tools:ignore="TouchTargetSizeCheck"
+        android:text="@={viewModel.tags}"
         android:inputType="text" />
 
     <TextView
@@ -66,6 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:hint="Notes/Description"
+        android:text="@={viewModel.description}"
         tools:ignore="TouchTargetSizeCheck"
         android:inputType="text" />
     <TextView
@@ -89,13 +101,14 @@
             style="?android:attr/buttonBarButtonStyle" />
 
         <Button
-            android:id="@+id/searchButton"
+            android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search"
+            android:text="Save"
             android:layout_marginEnd="8dp"
             style="?android:attr/buttonBarButtonStyle" />
 
     </LinearLayout>
 
 </LinearLayout>
+</layout>

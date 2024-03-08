@@ -31,6 +31,7 @@ import wig.api.dto.SearchRequest
 import wig.databinding.CreateNewBinding
 import wig.databinding.EditOwnershipBinding
 import wig.databinding.SearchBinding
+import wig.models.ItemViewModel
 import wig.models.Location
 import wig.models.Ownership
 import wig.utils.LocationManager
@@ -272,9 +273,17 @@ class Scanner : BaseCamera() {
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
             // TODO set text fields
+            val viewModel = ItemViewModel()
+            viewModel.name = ownership.customItemName
+            viewModel.qr = ownership.itemQR
+            viewModel.description = ownership.customItemDescription
+            viewModel.tags = ownership.itemTags
+            editOwnershipBinding.viewModel = viewModel
+
+
             popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-            editOwnershipBinding.searchButton.setOnClickListener {} // TODO
+            editOwnershipBinding.saveButton.setOnClickListener {} // TODO
             editOwnershipBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
 
             popupDialog.show()
