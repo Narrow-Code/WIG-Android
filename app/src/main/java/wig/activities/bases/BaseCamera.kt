@@ -34,6 +34,7 @@ open class BaseCamera : BaseActivity()  {
             isFlashEnabled = false
             decodeCallback = DecodeCallback {
                 performVibration(this@BaseCamera)
+                playScanSound(this@BaseCamera)
                 lifecycleScope.launch {
                     scanSuccess(it.text, it.barcodeFormat)
                 }

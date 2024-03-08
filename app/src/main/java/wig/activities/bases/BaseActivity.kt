@@ -5,10 +5,10 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.os.Build
+import android.media.MediaPlayer.OnCompletionListener
+import android.media.RingtoneManager
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +47,7 @@ import wig.databinding.ScannerBinding
 import wig.databinding.ServerSetupBinding
 import wig.databinding.SettingsBinding
 import wig.databinding.SignupBinding
+
 
 open class BaseActivity : AppCompatActivity() {
     protected lateinit var emailVerificationBinding: EmailVerificationBinding
@@ -288,5 +289,13 @@ open class BaseActivity : AppCompatActivity() {
             ?: run {
                 // handle the case where vibration is not supported
             }
+    }
+
+    fun playScanSound(context: Context) {
+        val ringtone = RingtoneManager.getRingtone(
+            context,
+            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        )
+        ringtone.play()
     }
 }
