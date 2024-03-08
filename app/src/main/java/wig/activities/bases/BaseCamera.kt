@@ -33,6 +33,7 @@ open class BaseCamera : BaseActivity()  {
             isAutoFocusEnabled = true
             isFlashEnabled = false
             decodeCallback = DecodeCallback {
+                performVibration(this@BaseCamera)
                 lifecycleScope.launch {
                     scanSuccess(it.text, it.barcodeFormat)
                 }
