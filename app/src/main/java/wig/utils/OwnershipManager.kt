@@ -32,7 +32,13 @@ object OwnershipManager {
         if (ownership != null) {
             ownership.location = location
         }
+    }
 
+    fun setOwnershipName(ownershipUID: Int, name: String) {
+        val ownership = ownerships.find {it.ownershipUID == ownershipUID}
+        if (ownership != null) {
+            ownership.customItemName = name
+        }
     }
 
 }

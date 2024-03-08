@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.activities.bases.BaseActivity
+import android.util.Log
 
 class MainActivity : BaseActivity() {
 
@@ -40,6 +41,7 @@ class MainActivity : BaseActivity() {
             tokenFlow.map { token ->
                 if (!token.isNullOrBlank()) {
                     TokenManager.setToken(token)
+                    Log.d("Token", TokenManager.getToken().toString())
                     true
                 } else {
                     false

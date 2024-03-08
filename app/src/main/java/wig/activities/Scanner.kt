@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
 import wig.api.dto.CheckoutRequest
+import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.ScanResponse
 import wig.api.dto.SearchRequest
@@ -170,8 +171,8 @@ class Scanner : BaseCamera() {
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
         var name = ownership.customItemName
-        if (ownership.customItemName != ""){
-            name = ownership.customItemName + " Checkout"
+        if (ownership.customItemName == ""){
+            name = ownership.item.itemName
         }
         var location = ownership.location.locationName
         if (ownership.itemBorrower != 1){
@@ -272,7 +273,6 @@ class Scanner : BaseCamera() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-            // TODO set text fields
             val viewModel = ItemViewModel()
             viewModel.name = ownership.customItemName
             viewModel.qr = ownership.itemQR
@@ -280,16 +280,35 @@ class Scanner : BaseCamera() {
             viewModel.tags = ownership.itemTags
             editOwnershipBinding.viewModel = viewModel
 
-
             popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-            editOwnershipBinding.saveButton.setOnClickListener {} // TODO
             editOwnershipBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
-
+            editOwnershipBinding.saveButton.setOnClickListener {
+                val editOwnershipRequest =
+                    EditOwnershipRequest(
+                        editOwnershipBinding.name.text.toString(),
+                        "",
+                        editOwnershipBinding.Note.text.toString(),
+                        editOwnershipBinding.tags.text.toString(),
+                        editOwnershipBinding.qr.text.toString())
+                saveButton(row, ownership.ownershipUID, editOwnershipRequest)
+                popupDialog.dismiss()
+            }
             popupDialog.show()
         }
 
         return row
+    }
+
+    private fun saveButton(row: TableRow, uid: Int, editOwnershipRequest: EditOwnershipRequest) {
+        lifecycleScope.launch {
+            val response = editOwnership(editOwnershipRequest, uid)
+            if (response.success){
+                val ownershipView = (row.getChildAt(0) as LinearLayout).getChildAt(0) as TextView
+                ownershipView.text = editOwnershipRequest.customItemName.substring(0 until 25.coerceAtMost(editOwnershipRequest.customItemName.length))
+                OwnershipManager.setOwnershipName(uid, editOwnershipRequest.customItemName)
+            }
+        }
     }
 
     private fun createRowForLocation(location: Location): TableRow {
@@ -472,7 +491,9 @@ class Scanner : BaseCamera() {
 
         row.setOnClickListener {
             addConfirmation(ownership.customItemName) { shouldAdd ->
-                if (shouldAdd){ populateItem(ownership)}
+                if (shouldAdd){
+                    if (!ownershipRowMap.contains(ownership.ownershipUID)) {
+                        populateItem(ownership)}}
             }
         }
 
