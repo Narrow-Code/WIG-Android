@@ -720,21 +720,6 @@ class Scanner : BaseCamera() {
         pageView = "items"
     }
 
-    private fun checkForUpdates() {
-        coroutineScope.launch {
-            val updater = ApkUpdater(this@Scanner, "https://github.com/WIGteam/WIG-Android/releases/latest")
-            updater.threeNumbers = true
-            if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
-                scannerBinding.topMenu.appName.setTextColor(Color.RED)
-                scannerBinding.topMenu.appName.setOnClickListener { updateButton(updater) }
-            }
-        }
-    }
-
-    private fun updateButton(updater: ApkUpdater) {
-        updater.requestDownload()
-    }
-
     private fun settings() {
         startActivitySettings()
     }

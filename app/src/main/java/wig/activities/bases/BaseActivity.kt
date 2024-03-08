@@ -5,14 +5,17 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.graphics.Color
 import android.media.MediaPlayer.OnCompletionListener
 import android.media.RingtoneManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.supersuman.apkupdater.ApkUpdater
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.activities.EmailVerification
 import wig.activities.ForgotPassword
@@ -297,5 +300,20 @@ open class BaseActivity : AppCompatActivity() {
             RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         )
         ringtone.play()
+    }
+
+    fun checkForUpdates() {
+        coroutineScope.launch {
+            val updater = ApkUpdater(this@BaseActivity, "https://github.com/WIGteam/WIG-Android/releases/latest")
+            updater.threeNumbers = true
+            if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
+                scannerBinding.topMenu.appName.setTextColor(Color.YELLOW)
+                scannerBinding.topMenu.appName.setOnClickListener { updateButton(updater) }
+            }
+        }
+    }
+
+    private fun updateButton(updater: ApkUpdater) {
+        updater.requestDownload()
     }
 }
