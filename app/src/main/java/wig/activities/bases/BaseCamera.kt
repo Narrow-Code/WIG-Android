@@ -14,6 +14,7 @@ import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.launch
+import wig.utils.SettingsManager
 
 private const val CAMERA_REQUEST_CODE = 101
 
@@ -33,8 +34,12 @@ open class BaseCamera : BaseActivity()  {
             isAutoFocusEnabled = true
             isFlashEnabled = false
             decodeCallback = DecodeCallback {
-                performVibration(this@BaseCamera)
-                playScanSound(this@BaseCamera)
+                if(SettingsManager.getIsVibrateEnabled()){
+                    performVibration(this@BaseCamera)
+                }
+                if (SettingsManager.getSoundEnabled()){
+                    playScanSound(this@BaseCamera)
+                }
                 lifecycleScope.launch {
                     scanSuccess(it.text, it.barcodeFormat)
                 }

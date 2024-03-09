@@ -70,10 +70,7 @@ class Login : BaseActivity() {
                 val storeToken = StoreToken(this@Login)
                 storeToken.saveToken(posts.token)
                 TokenManager.setToken(posts.token)
-
-                val storeSettings = StoreSettings(this@Login)
-                // TODO add save settings
-
+                unpackSettings()
                 startActivityScanner()
             } else {
                 enableButtons()
