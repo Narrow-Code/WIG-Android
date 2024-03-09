@@ -17,6 +17,7 @@ class Settings : BaseActivity() {
 
     private fun setOnClickListeners() {
         settingsBinding.logoutButton.setOnClickListener { logout() }
+        settingsBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
     }
 
     private fun logout() {

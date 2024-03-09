@@ -10,11 +10,15 @@ import android.media.MediaPlayer.OnCompletionListener
 import android.media.RingtoneManager
 import android.os.VibrationEffect
 import android.os.Vibrator
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.supersuman.apkupdater.ApkUpdater
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.activities.EmailVerification
@@ -50,6 +54,10 @@ import wig.databinding.ScannerBinding
 import wig.databinding.ServerSetupBinding
 import wig.databinding.SettingsBinding
 import wig.databinding.SignupBinding
+import wig.utils.SettingsManager
+import wig.utils.StoreSettings
+import wig.utils.StoreToken
+import wig.utils.TokenManager
 
 
 open class BaseActivity : AppCompatActivity() {
@@ -315,5 +323,28 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun updateButton(updater: ApkUpdater) {
         updater.requestDownload()
+    }
+
+    suspend fun unpackSettings() = withContext(Dispatchers.IO){
+        val vibrateFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsVibrateEnabled
+        vibrateFlow.map { isVibrateEnabled ->
+            if (isVibrateEnabled != null) {
+                SettingsManager.setIsVibrateEnabled(isVibrateEnabled)
+            }
+        }.first()
+
+        val soundFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsSoundEnabled
+        soundFlow.map { isSoundEnabled ->
+            if (isSoundEnabled != null) {
+                SettingsManager.setIsSoundEnabled(isSoundEnabled)
+            }
+        }.first()
+
+        val startupFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsStartupOnScanner
+        startupFlow.map { isStartupOnScanner ->
+            if (isStartupOnScanner != null) {
+                SettingsManager.setIsStartupOnScanner(isStartupOnScanner)
+            }
+        }.first()
     }
 }

@@ -22,6 +22,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         disableBackPress()
         lifecycleScope.launch {
+            unpackSettings()
             if (checkForToken()){
                 if(validate()){
                     startActivityScanner()

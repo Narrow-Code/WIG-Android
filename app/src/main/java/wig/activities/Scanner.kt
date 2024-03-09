@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isNotEmpty
 import androidx.lifecycle.lifecycleScope
 import com.google.zxing.BarcodeFormat
 import com.supersuman.apkupdater.ApkUpdater
@@ -492,7 +494,7 @@ class Scanner : BaseCamera() {
         row.setOnClickListener {
             addConfirmation(ownership.customItemName) { shouldAdd ->
                 if (shouldAdd){
-                    if (!ownershipRowMap.contains(ownership.ownershipUID)) {
+                    if (!OwnershipManager.ownershipExists(ownership.ownershipUID)){
                         populateItem(ownership)}}
             }
         }
@@ -643,6 +645,7 @@ class Scanner : BaseCamera() {
     }
 
     private fun populateItem(ownership: Ownership) {
+        Log.d("Debuging", "Populate item")
         val tableLayout = scannerBinding.itemsTableLayout
 
         OwnershipManager.addOwnership(ownership)
