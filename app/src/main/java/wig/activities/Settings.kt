@@ -21,6 +21,7 @@ class Settings : BaseActivity() {
     private fun setOnClickListeners() {
         settingsBinding.logoutButton.setOnClickListener { logout() }
         settingsBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
+        settingsBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
         settingsBinding.vibrate.setOnClickListener { setVibrate() }
         settingsBinding.sound.setOnClickListener { setSound() }
         settingsBinding.typeSpinner.onItemClickListener

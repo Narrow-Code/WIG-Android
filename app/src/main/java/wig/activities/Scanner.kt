@@ -64,7 +64,8 @@ class Scanner : BaseCamera() {
     private fun setOnClickListeners() {
         scannerBinding.locationsButton.setOnClickListener{ switchToLocationsView() }
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
-        scannerBinding.topMenu.icSettings.setOnClickListener{ settings() }
+        scannerBinding.topMenu.icSettings.setOnClickListener{ startActivitySettings() }
+        scannerBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
@@ -721,10 +722,6 @@ class Scanner : BaseCamera() {
         scannerBinding.place.visibility = View.VISIBLE
         scannerBinding.unpack.visibility = View.INVISIBLE
         pageView = "items"
-    }
-
-    private fun settings() {
-        startActivitySettings()
     }
 
 }

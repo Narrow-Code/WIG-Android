@@ -64,5 +64,9 @@
             <!-- Intent filters, etc. -->
         </activity>
 
+        <activity
+            android:name="wig.activities.CheckedOut">
+        </activity>
+
     </application>
 </manifest>

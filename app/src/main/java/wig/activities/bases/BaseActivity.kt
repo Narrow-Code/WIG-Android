@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import wig.activities.CheckedOut
 import wig.activities.EmailVerification
 import wig.activities.ForgotPassword
 import wig.activities.Login
@@ -44,6 +45,7 @@ import wig.api.dto.ScanResponse
 import wig.api.dto.SearchOwnershipResponse
 import wig.api.dto.SearchRequest
 import wig.api.dto.UnpackResponse
+import wig.databinding.CheckedOutBinding
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
 import wig.databinding.LoginBinding
@@ -64,6 +66,7 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var serverSetupBinding: ServerSetupBinding
     protected lateinit var signupBinding: SignupBinding
     protected lateinit var settingsBinding: SettingsBinding
+    protected lateinit var checkedOutBinding: CheckedOutBinding
 
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -140,6 +143,9 @@ open class BaseActivity : AppCompatActivity() {
         val settings = Intent(this, Settings::class.java)
         startActivity(settings)
 
+        val checkedOut = Intent(this, CheckedOut::class.java)
+        startActivity(checkedOut)
+
         val scanner = Intent(this, Scanner::class.java)
         startActivity(scanner)
 
@@ -156,6 +162,18 @@ open class BaseActivity : AppCompatActivity() {
         val intent = Intent(this, Settings::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
+    }
+
+    protected fun startActivityCheckedOut() {
+        val intent = Intent(this, CheckedOut::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+        startActivity(intent)
+    }
+
+    protected fun setCheckedOutBindings(){
+        checkedOutBinding = CheckedOutBinding.inflate(layoutInflater)
+        val view = checkedOutBinding.root
+        setContentView(view)
     }
 
     protected fun setScannerBindings(){
