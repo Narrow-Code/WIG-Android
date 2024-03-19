@@ -64,8 +64,10 @@ class Scanner : BaseCamera() {
     private fun setOnClickListeners() {
         scannerBinding.locationsButton.setOnClickListener{ switchToLocationsView() }
         scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
-        scannerBinding.topMenu.icSettings.setOnClickListener{ startActivitySettings() }
+        scannerBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
+        scannerBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
         scannerBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
+        scannerBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }

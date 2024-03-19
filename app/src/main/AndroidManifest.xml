@@ -68,5 +68,9 @@
             android:name="wig.activities.CheckedOut">
         </activity>
 
+        <activity
+            android:name="wig.activities.Inventory">
+        </activity>
+
     </application>
 </manifest>

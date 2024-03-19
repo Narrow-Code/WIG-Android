@@ -22,6 +22,7 @@ import kotlinx.coroutines.withContext
 import wig.activities.CheckedOut
 import wig.activities.EmailVerification
 import wig.activities.ForgotPassword
+import wig.activities.Inventory
 import wig.activities.Login
 import wig.activities.ResetPassword
 import wig.activities.Scanner
@@ -48,6 +49,7 @@ import wig.api.dto.UnpackResponse
 import wig.databinding.CheckedOutBinding
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
+import wig.databinding.InventoryBinding
 import wig.databinding.LoginBinding
 import wig.databinding.ResetPasswordBinding
 import wig.databinding.ScannerBinding
@@ -67,6 +69,7 @@ open class BaseActivity : AppCompatActivity() {
     protected lateinit var signupBinding: SignupBinding
     protected lateinit var settingsBinding: SettingsBinding
     protected lateinit var checkedOutBinding: CheckedOutBinding
+    protected lateinit var inventoryBinding: InventoryBinding
 
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
@@ -143,6 +146,9 @@ open class BaseActivity : AppCompatActivity() {
         val settings = Intent(this, Settings::class.java)
         startActivity(settings)
 
+        val inventory = Intent(this, Inventory::class.java)
+        startActivity(inventory)
+
         val checkedOut = Intent(this, CheckedOut::class.java)
         startActivity(checkedOut)
 
@@ -164,6 +170,12 @@ open class BaseActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    protected fun startActivityInventory() {
+        val intent = Intent(this, Inventory::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+        startActivity(intent)
+    }
+
     protected fun startActivityCheckedOut() {
         val intent = Intent(this, CheckedOut::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
@@ -173,6 +185,12 @@ open class BaseActivity : AppCompatActivity() {
     protected fun setCheckedOutBindings(){
         checkedOutBinding = CheckedOutBinding.inflate(layoutInflater)
         val view = checkedOutBinding.root
+        setContentView(view)
+    }
+
+    protected fun setInventoryBindings(){
+        inventoryBinding = InventoryBinding.inflate(layoutInflater)
+        val view = inventoryBinding.root
         setContentView(view)
     }
 
