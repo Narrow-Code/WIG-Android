@@ -23,7 +23,7 @@ class ServerSetup : BaseActivity() {
         val hostname = serverSetupBinding.hostname.text.toString()
         val portNumber = serverSetupBinding.portNumber.text.toString()
         if(hostname == "server" || portNumber == "80") {
-            startActivityScanner()
+            startActivityScannerLogin()
         } else {
             serverSetupBinding.error.text = getString(R.string.required_fields)
         }

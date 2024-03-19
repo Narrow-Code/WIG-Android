@@ -25,7 +25,7 @@ class MainActivity : BaseActivity() {
             unpackSettings()
             if (checkForToken()){
                 if(validate()){
-                    startActivityScanner()
+                    startActivityScannerLogin()
                 } else {
                     val storeToken = StoreToken(this@MainActivity)
                     storeToken.saveToken("")

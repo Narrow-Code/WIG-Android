@@ -6,11 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.graphics.Color
-import android.media.MediaPlayer.OnCompletionListener
 import android.media.RingtoneManager
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.supersuman.apkupdater.ApkUpdater
@@ -56,9 +54,6 @@ import wig.databinding.SettingsBinding
 import wig.databinding.SignupBinding
 import wig.utils.SettingsManager
 import wig.utils.StoreSettings
-import wig.utils.StoreToken
-import wig.utils.TokenManager
-
 
 open class BaseActivity : AppCompatActivity() {
     protected lateinit var emailVerificationBinding: EmailVerificationBinding
@@ -141,16 +136,26 @@ open class BaseActivity : AppCompatActivity() {
         setContentView(view)
     }
 
+    protected fun startActivityScannerLogin() {
+        val settings = Intent(this, Settings::class.java)
+        startActivity(settings)
+
+        val scanner = Intent(this, Scanner::class.java)
+        startActivity(scanner)
+
+        finish()
+    }
+
     protected fun startActivityScanner() {
         val intent = Intent(this, Scanner::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
-        finish()
     }
 
     protected fun startActivitySettings() {
         val intent = Intent(this, Settings::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
-        finish()
     }
 
     protected fun setScannerBindings(){

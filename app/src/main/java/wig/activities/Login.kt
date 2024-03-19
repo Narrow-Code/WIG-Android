@@ -14,7 +14,6 @@ import wig.R
 import wig.activities.bases.BaseActivity
 import wig.api.UserService
 import wig.api.dto.LoginRequest
-import wig.utils.StoreSettings
 
 class Login : BaseActivity() {
     private val service = UserService.create()
@@ -71,7 +70,7 @@ class Login : BaseActivity() {
                 storeToken.saveToken(posts.token)
                 TokenManager.setToken(posts.token)
                 unpackSettings()
-                startActivityScanner()
+                startActivityScannerLogin()
             } else {
                 enableButtons()
                 loginBinding.error.text = posts.message
