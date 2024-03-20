@@ -6,7 +6,7 @@ import wig.activities.bases.BaseActivity
 class CheckedOut : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableBackPress()
+        //disableBackPress()
         setScreenOrientation()
         setCheckedOutBindings()
         setOnClickListeners()

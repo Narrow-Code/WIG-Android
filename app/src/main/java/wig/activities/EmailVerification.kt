@@ -9,7 +9,7 @@ class EmailVerification : BaseActivity() {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setEmailVerificationBindings()
-        disableBackPress()
+        //disableBackPress()
         appendEmailToPage()
         setOnClickListeners()
     }

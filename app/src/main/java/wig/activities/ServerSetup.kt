@@ -8,7 +8,6 @@ class ServerSetup : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableBackPress()
         setScreenOrientation()
         setServerSetupBindings()
         setOnClickListeners()

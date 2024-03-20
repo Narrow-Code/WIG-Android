@@ -6,7 +6,6 @@ import wig.activities.bases.BaseActivity
 class Inventory : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableBackPress()
         setScreenOrientation()
         setInventoryBindings()
         setOnClickListeners()

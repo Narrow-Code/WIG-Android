@@ -143,15 +143,6 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     protected fun startActivityScannerLogin() {
-        val settings = Intent(this, Settings::class.java)
-        startActivity(settings)
-
-        val inventory = Intent(this, Inventory::class.java)
-        startActivity(inventory)
-
-        val checkedOut = Intent(this, CheckedOut::class.java)
-        startActivity(checkedOut)
-
         val scanner = Intent(this, Scanner::class.java)
         startActivity(scanner)
 

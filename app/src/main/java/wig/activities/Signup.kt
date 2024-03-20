@@ -19,7 +19,6 @@ class Signup : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableBackPress()
         setScreenOrientation()
         setSignupBindings()
         setOnClickListeners()

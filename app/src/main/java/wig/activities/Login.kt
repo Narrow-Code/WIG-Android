@@ -22,7 +22,6 @@ class Login : BaseActivity() {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setLoginBindings()
-        disableBackPress()
         setOnClickListeners()
     }
 

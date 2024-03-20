@@ -50,7 +50,6 @@ class Scanner : BaseCamera() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableBackPress()
         setScreenOrientation()
         setScannerBindings()
         setupPermissions()

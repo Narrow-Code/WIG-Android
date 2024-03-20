@@ -7,7 +7,6 @@ import wig.utils.EmailManager
 class ResetPassword : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableBackPress()
         setScreenOrientation()
         setResetPasswordBindings()
         appendEmailToPage()

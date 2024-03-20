@@ -11,7 +11,6 @@ import wig.utils.StoreToken
 class Settings : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        disableBackPress()
         setScreenOrientation()
         setSettingsBindings()
         setSettings()

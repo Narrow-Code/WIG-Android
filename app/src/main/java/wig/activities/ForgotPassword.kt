@@ -10,7 +10,6 @@ class ForgotPassword : BaseActivity() {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setForgotPasswordBindings()
-        disableBackPress()
         setOnClickListeners()
     }
 
