@@ -10,6 +10,7 @@ import wig.api.dto.CheckoutResponse
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.CreateBorrowerResponse
 import wig.api.dto.GetBorrowersResponse
+import wig.api.dto.GetCheckedOutItemsResponse
 
 interface BorrowerService {
 
@@ -20,6 +21,8 @@ interface BorrowerService {
     suspend fun checkout(borrowerUID: Int, ownerships: CheckoutRequest): CheckoutResponse
 
     suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse
+
+    suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse
 
     companion object {
         fun create(): BorrowerService {

@@ -11,18 +11,21 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import wig.api.dto.Borrowers
 import wig.api.dto.CheckoutResponse
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.CreateBorrowerResponse
 import wig.api.dto.GetBorrowersResponse
+import wig.api.dto.GetCheckedOutItemsResponse
 import wig.models.Borrower
 import wig.utils.JsonParse
 import wig.utils.TokenManager
 
 class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
-    private val nullBorrowersList: List<Borrower> = listOf()
+    private val nullBorrowerList: List<Borrower> = listOf()
     private val nullIntList: List<Int> = listOf()
     private val nullBorrower = Borrower(0, "")
+    private val nullBorrowersList: List<Borrowers> = listOf()
 
     override suspend fun getBorrowers(): GetBorrowersResponse {
         return try {
@@ -31,22 +34,21 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
-
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            GetBorrowersResponse(errorMessage, false, nullBorrowersList)
+            GetBorrowersResponse(errorMessage, false, nullBorrowerList)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            GetBorrowersResponse(errorMessage, false, nullBorrowersList)
+            GetBorrowersResponse(errorMessage, false, nullBorrowerList)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            GetBorrowersResponse(errorMessage, false, nullBorrowersList)
+            GetBorrowersResponse(errorMessage, false, nullBorrowerList)
         } catch(e: Exception) {
-            GetBorrowersResponse(e.message.toString(), false, nullBorrowersList)
+            GetBorrowersResponse(e.message.toString(), false, nullBorrowerList)
         }
     }
 
@@ -126,4 +128,30 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
             CheckoutResponse(e.message.toString(), false, nullIntList)
         }
     }
+
+    override suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse {
+        return try {
+            client.get {
+                url(HttpRoutes.GET_CHECKED_OUT)
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            GetCheckedOutItemsResponse(nullBorrowersList, errorMessage, false)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            GetCheckedOutItemsResponse(nullBorrowersList, errorMessage, false)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            GetCheckedOutItemsResponse(nullBorrowersList, errorMessage, false)
+        } catch(e: Exception) {
+            GetCheckedOutItemsResponse(nullBorrowersList, e.message.toString(), false)
+        }
+    }
+
 }

@@ -30,4 +30,5 @@ object HttpRoutes {
     const val CREATE_BORROWER = "${BASE_URL}/app/borrower/create"
     const val CHECKOUT = "${BASE_URL}/app/borrower/checkout"
     const val CHECK_IN = "${BASE_URL}/app/borrower/check-in"
+    const val GET_CHECKED_OUT = "${BASE_URL}/app/borrower/getcheckedout"
 }
