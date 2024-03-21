@@ -39,6 +39,7 @@ import wig.api.dto.CommonResponse
 import wig.api.dto.CreateBorrowerResponse
 import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.GetBorrowersResponse
+import wig.api.dto.GetCheckedOutItemsResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
@@ -285,6 +286,11 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: Int): CommonResponse = withContext(Dispatchers.IO){
         val posts = ownershipService.editOwnership(editOwnershipRequest, uid)
+        posts
+    }
+
+    protected suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.getCheckedOutItems()
         posts
     }
 

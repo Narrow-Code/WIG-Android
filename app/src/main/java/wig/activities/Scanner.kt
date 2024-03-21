@@ -184,6 +184,7 @@ class Scanner : BaseCamera() {
         }
 
         val quantity = ownership.itemQuantity
+
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
@@ -647,7 +648,6 @@ class Scanner : BaseCamera() {
     }
 
     private fun populateItem(ownership: Ownership) {
-        Log.d("Debuging", "Populate item")
         val tableLayout = scannerBinding.itemsTableLayout
 
         OwnershipManager.addOwnership(ownership)
