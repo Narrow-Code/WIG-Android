@@ -10,12 +10,14 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.bases.BaseActivity
 import wig.api.dto.Borrowers
+import wig.api.dto.CheckoutRequest
 import wig.models.Borrower
 import wig.models.Ownership
 
 class CheckedOut : BaseActivity() {
 
     private val borrowerRowMap = mutableMapOf<Int, TableRow>()
+    private lateinit var borrowers: List<Borrowers>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,13 +32,31 @@ class CheckedOut : BaseActivity() {
         checkedOutBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
         checkedOutBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
         checkedOutBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
+        checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
+    }
+
+    private fun returnAllButton() {
+        for (borrower in borrowers) {
+            val ownerships = mutableListOf<Int>()
+            for (ownership in borrower.ownerships){
+                ownerships.add(ownership.ownershipUID)
+            }
+            val checkOutRequest = CheckoutRequest(ownerships)
+            lifecycleScope.launch {
+                checkIn(checkOutRequest)
+            }
+        }
+        borrowers = emptyList()
+        borrowerRowMap.clear()
+        val tableLayout = checkedOutBinding.searchTableLayout
+        tableLayout.removeAllViews()
     }
 
     private fun getBorrowedItems() {
         lifecycleScope.launch {
             val response = getCheckedOutItems()
             if (response.success) {
-                val borrowers = response.borrowers
+                borrowers = response.borrowers
                 populateTable(borrowers)
             }
         }
