@@ -2,7 +2,6 @@ package wig.activities
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TableRow
@@ -97,23 +96,30 @@ class CheckedOut : BaseActivity() {
         val rowIndex = tableLayout.indexOfChild(clickedRow)
 
         val expand = (clickedRow.getChildAt(0) as LinearLayout).getChildAt(1) as TextView
-        Log.d("TEST", expand.text.toString())
 
         if (expand.text == " >") {
             for (i in borrowers.ownerships) {
-                val newRow = createRowForOwnership(i) // Implement this method to create a new row
+                val newRow = createRowForOwnership(i)
                 setColorForRow(newRow, rowIndex + 1)
-                tableLayout.addView(newRow, rowIndex + 1) // Insert new row at index + 1
+                tableLayout.addView(newRow, rowIndex + 1)
             }
             expand.text = " v"
             resetRowColors(tableLayout)
         }
-
+        else if (expand.text == " v") {
+            for (i in borrowers.ownerships) {
+                val rowToRemove = borrowerRowMap[i.ownershipUID]
+                rowToRemove?.let {
+                    tableLayout.removeView(it)
+                    borrowerRowMap.remove(i.ownershipUID)
+                }
+            }
+            expand.text = " >"
+            resetRowColors(tableLayout)        }
     }
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
         val name = "        " + ownership.customItemName
-
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
