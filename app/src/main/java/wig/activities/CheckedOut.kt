@@ -14,6 +14,8 @@ import wig.api.dto.Borrowers
 import wig.api.dto.CheckoutRequest
 import wig.models.Borrower
 import wig.models.Ownership
+import wig.utils.LocationManager
+import wig.utils.OwnershipManager
 
 class CheckedOut : BaseActivity() {
 
@@ -53,6 +55,29 @@ class CheckedOut : BaseActivity() {
                 borrowerRowMap.clear()
                 val tableLayout = checkedOutBinding.searchTableLayout
                 tableLayout.removeAllViews()
+            }
+        }
+    }
+
+    private fun returnOneItem(ownership: Ownership) {
+        returnSingleConfirmation(ownership) { shouldDelete ->
+            if (shouldDelete) {
+                val ownershipList = mutableListOf<Int>()
+                ownershipList.add(ownership.ownershipUID)
+                // TODO make ownerships list of just single ownership
+
+                val checkOutRequest = CheckoutRequest(ownershipList)
+                lifecycleScope.launch { checkIn(checkOutRequest) }
+
+                borrowers = emptyList()
+                val tableLayout = checkedOutBinding.searchTableLayout
+                val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+                rowToRemove?.let {
+                    tableLayout.removeView(it)
+                    borrowerRowMap.remove(ownership.ownershipUID)
+                    // TODO remove from ownerships list
+                    // TODO if leaves borrower empty remove borrower
+                }
             }
         }
     }
@@ -163,6 +188,8 @@ class CheckedOut : BaseActivity() {
         row.layoutParams = layoutParams
         borrowerRowMap[ownership.ownershipUID] = row
 
+        row.setOnClickListener{returnOneItem(ownership)}
+
         return row
     }
 
@@ -173,10 +200,29 @@ class CheckedOut : BaseActivity() {
         }
     }
 
-    protected fun returnAllConfirmation(callback: (Boolean) -> Unit) {
+    private fun returnAllConfirmation(callback: (Boolean) -> Unit) {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("Confirm Return All")
         alertDialogBuilder.setMessage("Are you sure you want to return all Checked Out items to their original locations??")
+
+        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun returnSingleConfirmation(ownership: Ownership, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Confirm Return All")
+        alertDialogBuilder.setMessage("Are you sure you want to return ${ownership.customItemName} to it's original locations??")
 
         alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
             dialog.dismiss()
