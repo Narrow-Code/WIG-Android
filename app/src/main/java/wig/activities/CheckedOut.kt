@@ -57,6 +57,32 @@ class CheckedOut : BaseActivity() {
         }
     }
 
+    private fun returnAllFromBorrower(borrower: Borrowers) {
+                val ownerships = mutableListOf<Int>()
+                for (ownership in borrower.ownerships) {
+                    ownerships.add(ownership.ownershipUID)
+                }
+                val checkOutRequest = CheckoutRequest(ownerships)
+                lifecycleScope.launch {
+                    val response = checkIn(checkOutRequest)
+                    if (response.success){
+                        for (ownership in ownerships){
+                        val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership }
+                        ownershipToRemove?.let { itRemove ->
+                            borrower.ownerships.remove(itRemove)
+                            val tableLayout = checkedOutBinding.searchTableLayout
+                            val rowToRemove = borrowerRowMap[ownership]
+                            rowToRemove?.let {
+                                tableLayout.removeView(it)
+                                borrowerRowMap.remove(ownership)
+                            }
+                        }
+
+                    }
+            }
+        }
+    }
+
     private fun returnOneItem(ownership: Ownership, borrower: Borrowers) {
         returnSingleConfirmation(ownership) { shouldDelete ->
             if (shouldDelete) {
@@ -98,6 +124,12 @@ class CheckedOut : BaseActivity() {
             val row = createRowForBorrower(borrower.borrower)
             setColorForRow(row, tableLayout.childCount)
             row.setOnClickListener { borrowerClick(it as TableRow, borrower) }
+            row.setOnLongClickListener {
+                returnBorrowerConfirmation(borrower.borrower) { shouldDelete ->
+                    if (shouldDelete){ returnAllFromBorrower(borrower)}
+                }
+                true
+            }
             tableLayout.addView(row)
         }
         resetRowColors(tableLayout)
@@ -222,7 +254,26 @@ class CheckedOut : BaseActivity() {
     private fun returnSingleConfirmation(ownership: Ownership, callback: (Boolean) -> Unit) {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogBuilder.setTitle("Confirm Return All")
-        alertDialogBuilder.setMessage("Are you sure you want to return ${ownership.customItemName} to it's original locations??")
+        alertDialogBuilder.setMessage("Are you sure you want to return ${ownership.customItemName} to it's original locations?")
+
+        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    private fun returnBorrowerConfirmation(borrower: Borrower, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Confirm Return Borrower")
+        alertDialogBuilder.setMessage("Are you sure you want to return all of ${borrower.borrowerName}'s borrowed items to their original locations?")
 
         alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
             dialog.dismiss()
