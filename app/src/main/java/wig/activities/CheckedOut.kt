@@ -1,5 +1,6 @@
 package wig.activities
 
+import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -36,20 +37,24 @@ class CheckedOut : BaseActivity() {
     }
 
     private fun returnAllButton() {
-        for (borrower in borrowers) {
-            val ownerships = mutableListOf<Int>()
-            for (ownership in borrower.ownerships){
-                ownerships.add(ownership.ownershipUID)
-            }
-            val checkOutRequest = CheckoutRequest(ownerships)
-            lifecycleScope.launch {
-                checkIn(checkOutRequest)
+        returnAllConfirmation { shouldDelete ->
+            if (shouldDelete) {
+                for (borrower in borrowers) {
+                    val ownerships = mutableListOf<Int>()
+                    for (ownership in borrower.ownerships) {
+                        ownerships.add(ownership.ownershipUID)
+                    }
+                    val checkOutRequest = CheckoutRequest(ownerships)
+                    lifecycleScope.launch {
+                        checkIn(checkOutRequest)
+                    }
+                }
+                borrowers = emptyList()
+                borrowerRowMap.clear()
+                val tableLayout = checkedOutBinding.searchTableLayout
+                tableLayout.removeAllViews()
             }
         }
-        borrowers = emptyList()
-        borrowerRowMap.clear()
-        val tableLayout = checkedOutBinding.searchTableLayout
-        tableLayout.removeAllViews()
     }
 
     private fun getBorrowedItems() {
@@ -166,6 +171,25 @@ class CheckedOut : BaseActivity() {
             val row = tableLayout.getChildAt(i) as? TableRow
             row?.let { setColorForRow(it, i) }
         }
+    }
+
+    protected fun returnAllConfirmation(callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Confirm Return All")
+        alertDialogBuilder.setMessage("Are you sure you want to return all Checked Out items to their original locations??")
+
+        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
     }
 
 }
