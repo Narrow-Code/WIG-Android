@@ -14,8 +14,6 @@ import wig.api.dto.Borrowers
 import wig.api.dto.CheckoutRequest
 import wig.models.Borrower
 import wig.models.Ownership
-import wig.utils.LocationManager
-import wig.utils.OwnershipManager
 
 class CheckedOut : BaseActivity() {
 
@@ -59,24 +57,26 @@ class CheckedOut : BaseActivity() {
         }
     }
 
-    private fun returnOneItem(ownership: Ownership) {
+    private fun returnOneItem(ownership: Ownership, borrower: Borrowers) {
         returnSingleConfirmation(ownership) { shouldDelete ->
             if (shouldDelete) {
-                val ownershipList = mutableListOf<Int>()
-                ownershipList.add(ownership.ownershipUID)
-                // TODO make ownerships list of just single ownership
-
-                val checkOutRequest = CheckoutRequest(ownershipList)
-                lifecycleScope.launch { checkIn(checkOutRequest) }
-
-                borrowers = emptyList()
-                val tableLayout = checkedOutBinding.searchTableLayout
-                val rowToRemove = borrowerRowMap[ownership.ownershipUID]
-                rowToRemove?.let {
-                    tableLayout.removeView(it)
-                    borrowerRowMap.remove(ownership.ownershipUID)
-                    // TODO remove from ownerships list
-                    // TODO if leaves borrower empty remove borrower
+                val ownerships = mutableListOf<Int>()
+                ownerships.add(ownership.ownershipUID)
+                val checkOutRequest = CheckoutRequest(ownerships)
+                lifecycleScope.launch {
+                    val response = checkIn(checkOutRequest)
+                    if (response.success){
+                        val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
+                        ownershipToRemove?.let { itRemove ->
+                            borrower.ownerships.remove(itRemove)
+                            val tableLayout = checkedOutBinding.searchTableLayout
+                            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+                            rowToRemove?.let {
+                                tableLayout.removeView(it)
+                                borrowerRowMap.remove(ownership.ownershipUID)
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -149,7 +149,7 @@ class CheckedOut : BaseActivity() {
 
         if (expand.text == " >") {
             for (i in borrowers.ownerships) {
-                val newRow = createRowForOwnership(i)
+                val newRow = createRowForOwnership(i, borrowers)
                 setColorForRow(newRow, rowIndex + 1)
                 tableLayout.addView(newRow, rowIndex + 1)
             }
@@ -168,7 +168,7 @@ class CheckedOut : BaseActivity() {
             resetRowColors(tableLayout)        }
     }
 
-    private fun createRowForOwnership(ownership: Ownership): TableRow {
+    private fun createRowForOwnership(ownership: Ownership, borrower: Borrowers): TableRow {
         val name = "        " + ownership.customItemName
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
@@ -188,7 +188,7 @@ class CheckedOut : BaseActivity() {
         row.layoutParams = layoutParams
         borrowerRowMap[ownership.ownershipUID] = row
 
-        row.setOnClickListener{returnOneItem(ownership)}
+        row.setOnClickListener{returnOneItem(ownership, borrower)}
 
         return row
     }

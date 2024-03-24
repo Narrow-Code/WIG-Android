@@ -14,5 +14,5 @@ data class GetCheckedOutItemsResponse(
 @Serializable
 data class Borrowers(
     val borrower: Borrower,
-    val ownerships: List<Ownership>
+    val ownerships: MutableList<Ownership>
 )
