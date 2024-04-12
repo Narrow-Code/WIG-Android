@@ -30,4 +30,13 @@ object LocationManager {
         locations.clear()
     }
 
+    fun locationExists(locationUID: Int): Boolean {
+        for (location in LocationManager.locations) {
+            if (location.locationUID == locationUID) {
+                return true
+            }
+        }
+        return false
+    }
+
 }
