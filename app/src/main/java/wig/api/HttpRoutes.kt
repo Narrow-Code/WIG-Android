@@ -25,6 +25,7 @@ object HttpRoutes {
 
     const val CREATE_LOCATION = "${BASE_URL}/app/location/create"
     const val UNPACK_LOCATION = "${BASE_URL}/app/location/unpack"
+    const val SEARCH_LOCATION = "${BASE_URL}/app/location/search"
 
     const val GET_BORROWERS = "${BASE_URL}/app/borrower/get"
     const val CREATE_BORROWER = "${BASE_URL}/app/borrower/create"
