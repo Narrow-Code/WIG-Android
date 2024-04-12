@@ -18,10 +18,8 @@ import android.widget.LinearLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isNotEmpty
 import androidx.lifecycle.lifecycleScope
 import com.google.zxing.BarcodeFormat
-import com.supersuman.apkupdater.ApkUpdater
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
@@ -39,7 +37,6 @@ import wig.models.Location
 import wig.models.Ownership
 import wig.utils.LocationManager
 import wig.utils.OwnershipManager
-import wig.utils.StoreToken
 
 
 class Scanner : BaseCamera() {
@@ -425,7 +422,12 @@ class Scanner : BaseCamera() {
         )
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-        searchBinding.searchButton.setOnClickListener {searchOwnershipButton(searchBinding)}
+        if(pageView == "items") {
+            searchBinding.searchButton.setOnClickListener { searchOwnershipButton(searchBinding) }
+        } else {
+            searchBinding.searchButton.setOnClickListener { searchLocationButton(searchBinding) }
+
+        }
         searchBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
 
         popupDialog.show()
@@ -446,6 +448,27 @@ class Scanner : BaseCamera() {
             if (response.success) {
                 for (ownership in response.ownership) {
                     val row = createRowForOwnershipSearch(ownership)
+                    setColorForRow(row, tableLayout.childCount)
+                    tableLayout.addView(row)
+                }
+            }
+        }
+    }
+
+    private fun searchLocationButton(searchBinding: SearchBinding) {
+        val name = searchBinding.nameSearchText.text.toString()
+        val tags = searchBinding.tagsSearchText.text.toString()
+        val tableLayout = searchBinding.searchTableLayout
+        tableLayout.removeAllViews()
+        searchRowMap.clear()
+        if (name == "" && tags == ""){
+            return
+        }
+        lifecycleScope.launch {
+            val response = searchLocation(SearchRequest(name, tags))
+            if (response.success) {
+                for (location in response.locations) {
+                    val row = createRowForLocationSearch(location)
                     setColorForRow(row, tableLayout.childCount)
                     tableLayout.addView(row)
                 }
@@ -492,13 +515,64 @@ class Scanner : BaseCamera() {
         row.addView(nameLayout)
         row.addView(locationLayout)
         row.layoutParams = layoutParams
-        ownershipRowMap[ownership.ownershipUID] = row
+        searchRowMap[ownership.ownershipUID] = row
 
         row.setOnClickListener {
             addConfirmation(ownership.customItemName) { shouldAdd ->
                 if (shouldAdd){
                     if (!OwnershipManager.ownershipExists(ownership.ownershipUID)){
                         populateItem(ownership)}}
+            }
+        }
+
+        return row
+    }
+
+    private fun createRowForLocationSearch(location: Location): TableRow {
+        val name = location.locationName
+
+        val parent = location.location?.locationName
+
+        val row = TableRow(this)
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT)
+
+        val nameLayout = LinearLayout(this)
+        nameLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
+        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+
+        val nameView = TextView(this)
+        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
+        nameLayout.addView(nameView)
+
+        val locationLayout = LinearLayout(this)
+        locationLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
+        locationLayout.gravity = Gravity.END or Gravity.CENTER_VERTICAL
+
+        val locationView = TextView(this)
+        if (parent != null) {
+            locationView.text = parent.substring(0 until 25.coerceAtMost(parent.length))
+        }
+        locationView.gravity = Gravity.CENTER
+        locationLayout.addView(locationView)
+
+        val buttonLayoutParams = TableRow.LayoutParams()
+        buttonLayoutParams.width = resources.getDimensionPixelSize(R.dimen.button_width)
+        buttonLayoutParams.height = resources.getDimensionPixelSize(R.dimen.button_height)
+
+        row.addView(nameLayout)
+        row.addView(locationLayout)
+        row.layoutParams = layoutParams
+        searchRowMap[location.locationUID] = row
+
+        row.setOnClickListener {
+            addConfirmation(location.locationName) { shouldAdd ->
+                if (shouldAdd){
+                    if (!LocationManager.locationExists(location.locationUID)){
+                        populateLocations(location)}}
             }
         }
 
