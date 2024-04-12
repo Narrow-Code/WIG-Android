@@ -44,6 +44,7 @@ import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
+import wig.api.dto.SearchLocationResponse
 import wig.api.dto.SearchOwnershipResponse
 import wig.api.dto.SearchRequest
 import wig.api.dto.UnpackResponse
@@ -291,6 +292,11 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse = withContext(Dispatchers.IO){
         val posts = borrowerService.getCheckedOutItems()
+        posts
+    }
+
+    protected suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse = withContext(Dispatchers.IO){
+        val posts = locationService.searchLocation(searchRequest)
         posts
     }
 
