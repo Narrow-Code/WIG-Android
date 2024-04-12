@@ -7,5 +7,5 @@ import wig.models.Location
 data class SearchLocationResponse(
     val message: String,
     val success: Boolean,
-    val ownership: List<Location>
+    val locations: List<Location>
 )
