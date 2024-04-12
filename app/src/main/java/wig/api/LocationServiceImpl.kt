@@ -83,7 +83,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     override suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse {
         return try {
             client.post {
-                url("${HttpRoutes.CREATE_OWNERSHIP}?item_uid=1")
+                url(HttpRoutes.SEARCH_LOCATION)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
