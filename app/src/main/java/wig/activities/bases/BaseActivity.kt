@@ -40,6 +40,7 @@ import wig.api.dto.CreateBorrowerResponse
 import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.GetBorrowersResponse
 import wig.api.dto.GetCheckedOutItemsResponse
+import wig.api.dto.InventoryResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
@@ -297,6 +298,11 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse = withContext(Dispatchers.IO){
         val posts = locationService.searchLocation(searchRequest)
+        posts
+    }
+
+    protected suspend fun returnInventory(): InventoryResponse = withContext(Dispatchers.IO){
+        val posts = locationService.returnInventory()
         posts
     }
 
