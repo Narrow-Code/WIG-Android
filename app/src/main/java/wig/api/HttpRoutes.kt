@@ -32,4 +32,6 @@ object HttpRoutes {
     const val CHECKOUT = "${BASE_URL}/app/borrower/checkout"
     const val CHECK_IN = "${BASE_URL}/app/borrower/checkin"
     const val GET_CHECKED_OUT = "${BASE_URL}/app/borrower/getcheckedout"
+
+    const val RETURN_INVENTORY = "${BASE_URL}/app/inventory"
 }
