@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class EditLocationRequest(
     val locationName: String,
     val locationDescription: String,
-    val locationTags: String
+    val locationTags: String,
+    val qr: String
 )

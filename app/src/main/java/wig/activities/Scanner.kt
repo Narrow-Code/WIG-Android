@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -25,11 +24,13 @@ import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseCamera
 import wig.api.dto.CheckoutRequest
+import wig.api.dto.EditLocationRequest
 import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.ScanResponse
 import wig.api.dto.SearchRequest
 import wig.databinding.CreateNewBinding
+import wig.databinding.EditLocationBinding
 import wig.databinding.EditOwnershipBinding
 import wig.databinding.SearchBinding
 import wig.models.ItemViewModel
@@ -293,7 +294,7 @@ class Scanner : BaseCamera() {
                         editOwnershipBinding.Note.text.toString(),
                         editOwnershipBinding.tags.text.toString(),
                         editOwnershipBinding.qr.text.toString())
-                saveButton(row, ownership.ownershipUID, editOwnershipRequest)
+                saveOwnershipButton(row, ownership.ownershipUID, editOwnershipRequest)
                 popupDialog.dismiss()
             }
             popupDialog.show()
@@ -302,13 +303,24 @@ class Scanner : BaseCamera() {
         return row
     }
 
-    private fun saveButton(row: TableRow, uid: Int, editOwnershipRequest: EditOwnershipRequest) {
+    private fun saveOwnershipButton(row: TableRow, uid: Int, editOwnershipRequest: EditOwnershipRequest) {
         lifecycleScope.launch {
             val response = editOwnership(editOwnershipRequest, uid)
             if (response.success){
                 val ownershipView = (row.getChildAt(0) as LinearLayout).getChildAt(0) as TextView
                 ownershipView.text = editOwnershipRequest.customItemName.substring(0 until 25.coerceAtMost(editOwnershipRequest.customItemName.length))
                 OwnershipManager.setOwnershipName(uid, editOwnershipRequest.customItemName)
+            }
+        }
+    }
+
+    private fun saveLocationButton(row: TableRow, uid: Int, editLocationRequest: EditLocationRequest) {
+        lifecycleScope.launch {
+            val response = locationEdit(editLocationRequest, uid)
+            if (response.success){
+                val locationView = row.getChildAt(0) as TextView
+                locationView.text = editLocationRequest.locationName.substring(0 until 25.coerceAtMost(editLocationRequest.locationName.length))
+                OwnershipManager.setOwnershipName(uid, editLocationRequest.locationName)
             }
         }
     }
@@ -347,6 +359,41 @@ class Scanner : BaseCamera() {
                 if (shouldDelete){ removeLocationRow(location.locationUID)}
             }
             true
+        }
+
+        row.setOnClickListener {
+            codeScanner.stopPreview()
+
+            val editLocationBinding: EditLocationBinding = EditLocationBinding.inflate(layoutInflater)
+            val popupDialog = Dialog(this)
+            popupDialog.setContentView(editLocationBinding.root)
+            popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+            val layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            val viewModel = ItemViewModel()
+            viewModel.name = location.locationName
+            viewModel.qr = location.locationQR
+            viewModel.description = location.locationDescription
+            viewModel.tags = location.locationTags
+            editLocationBinding.viewModel = viewModel
+
+            popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+            editLocationBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+            editLocationBinding.saveButton.setOnClickListener {
+                val editLocationRequest =
+                    EditLocationRequest(
+                        editLocationBinding.name.text.toString(),
+                        editLocationBinding.Note.text.toString(),
+                        editLocationBinding.tags.text.toString(),
+                        editLocationBinding.qr.text.toString())
+                saveLocationButton(row, location.locationUID, editLocationRequest)
+                popupDialog.dismiss()
+            }
+            popupDialog.show() // TODO fix
         }
 
         return row
