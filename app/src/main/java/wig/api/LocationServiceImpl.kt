@@ -5,6 +5,7 @@ import io.ktor.client.call.receive
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
 import io.ktor.client.features.ServerResponseException
+import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -12,6 +13,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
+import wig.api.dto.InventoryResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.SearchLocationResponse
 import wig.api.dto.SearchOwnershipResponse
@@ -106,5 +108,29 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
+    override suspend fun returnInventory(): InventoryResponse {
+        return try {
+            client.get {
+                url(HttpRoutes.RETURN_INVENTORY)
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            InventoryResponse(errorMessage, false, ArrayList())
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            InventoryResponse(errorMessage, false, ArrayList())
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            InventoryResponse(errorMessage, false, ArrayList())
+        } catch(e: Exception) {
+            InventoryResponse(e.message.toString(), false, ArrayList())
+        }
+    }
 
 }

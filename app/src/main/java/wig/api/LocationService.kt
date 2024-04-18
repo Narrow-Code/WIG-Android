@@ -7,6 +7,7 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import wig.api.dto.CommonResponse
+import wig.api.dto.InventoryResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.ScanResponse
 import wig.api.dto.SearchLocationResponse
@@ -21,6 +22,8 @@ interface LocationService {
     suspend fun unpackLocation(locationUID: Int): UnpackResponse
 
     suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse
+
+    suspend fun returnInventory(): InventoryResponse
 
 
     companion object {
