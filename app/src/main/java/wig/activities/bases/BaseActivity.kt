@@ -37,6 +37,7 @@ import wig.api.dto.CheckoutRequest
 import wig.api.dto.CheckoutResponse
 import wig.api.dto.CommonResponse
 import wig.api.dto.CreateBorrowerResponse
+import wig.api.dto.EditLocationRequest
 import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.GetBorrowersResponse
 import wig.api.dto.GetCheckedOutItemsResponse
@@ -298,6 +299,11 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse = withContext(Dispatchers.IO){
         val posts = locationService.searchLocation(searchRequest)
+        posts
+    }
+
+    protected suspend fun locationEdit(editLocationRequest: EditLocationRequest, locationUID: Int): CommonResponse = withContext(Dispatchers.IO){
+        val posts = locationService.locationEdit(editLocationRequest, locationUID)
         posts
     }
 

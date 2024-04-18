@@ -13,11 +13,11 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
+import wig.api.dto.EditLocationRequest
 import wig.api.dto.InventoryDTO
 import wig.api.dto.InventoryResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.SearchLocationResponse
-import wig.api.dto.SearchOwnershipResponse
 import wig.api.dto.SearchRequest
 import wig.api.dto.UnpackResponse
 import wig.models.Location
@@ -132,6 +132,32 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
             InventoryResponse(errorMessage, false, nullInventoryDTO)
         } catch(e: Exception) {
             InventoryResponse(e.message.toString(), false, nullInventoryDTO)
+        }
+    }
+
+    override suspend fun locationEdit(editLocationRequest: EditLocationRequest, uid: Int): CommonResponse {
+        return try {
+            client.put {
+                url("${HttpRoutes.EDIT_LOCATION}?locationUID=${uid}")
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+                body = editLocationRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: Exception) {
+            CommonResponse(e.message.toString(), false)
         }
     }
 
