@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.bases.BaseActivity
 import wig.api.dto.InventoryDTO
-import wig.models.Location
 import wig.models.Ownership
 
 class Inventory : BaseActivity() {
@@ -38,9 +37,10 @@ class Inventory : BaseActivity() {
         lifecycleScope.launch {
             val response = returnInventory()
             if (response.success) {
-                if(response.inventory.locations!!.isNotEmpty())
+                if(response.inventory.locations!!.isNotEmpty()) {
                     inventory = response.inventory.locations
                     populateTable(inventory)
+                }
             }
         }
     }
@@ -48,7 +48,7 @@ class Inventory : BaseActivity() {
     private fun populateTable(inventory: List<InventoryDTO>) {
         val tableLayout = inventoryBinding.searchTableLayout
         for (location in inventory) {
-            val row = createRowForLocation(location.parent)
+            val row = createRowForLocation(location)
             setColorForRow(row, tableLayout.childCount)
             row.setOnClickListener { locationClick(it as TableRow, location) }
             tableLayout.addView(row)
@@ -72,8 +72,8 @@ class Inventory : BaseActivity() {
         }
     }
 
-    private fun createRowForLocation(location: Location): TableRow {
-        val name = location.locationName
+    private fun createRowForLocation(location: InventoryDTO): TableRow {
+        val name = location.parent.locationName
         val expand = " >"
 
         val row = TableRow(this)
@@ -94,9 +94,11 @@ class Inventory : BaseActivity() {
         expandView.text = expand
         nameLayout.addView(expandView)
 
+        row.setOnClickListener { locationClick(it as TableRow, location) }
+
         row.addView(nameLayout)
         row.layoutParams = layoutParams
-        inventoryRowMap["100${location.locationUID}".toInt()] = row
+        inventoryRowMap["100${location.parent.locationUID}".toInt()] = row
 
         return row
     }
@@ -111,7 +113,7 @@ class Inventory : BaseActivity() {
             inventory.locations?.let { locations ->
                 if (locations.isNotEmpty()) {
                     for (i in locations) {
-                        val newRow = createRowForLocation(i.parent)
+                        val newRow = createRowForLocation(i)
                         setColorForRow(newRow, rowIndex + 1)
                         tableLayout.addView(newRow, rowIndex + 1)
                     }
