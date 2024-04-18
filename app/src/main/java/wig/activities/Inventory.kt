@@ -9,9 +9,7 @@ import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.bases.BaseActivity
-import wig.api.dto.Borrowers
 import wig.api.dto.InventoryDTO
-import wig.models.Borrower
 import wig.models.Location
 import wig.models.Ownership
 
@@ -40,7 +38,7 @@ class Inventory : BaseActivity() {
         lifecycleScope.launch {
             val response = returnInventory()
             if (response.success) {
-                if(response.inventory.locations!!.isNotEmpty() == true)
+                if(response.inventory.locations!!.isNotEmpty())
                     inventory = response.inventory.locations
                     populateTable(inventory)
             }
@@ -145,7 +143,7 @@ class Inventory : BaseActivity() {
             }
             inventory.ownerships?.let { ownerships ->
                 if (ownerships.isNotEmpty()) {
-                    for (i in inventory.ownerships!!) {
+                    for (i in inventory.ownerships) {
                         val rowToRemove = inventoryRowMap["200${i.ownershipUID}".toInt()]
                         rowToRemove?.let {
                             tableLayout.removeView(it)
