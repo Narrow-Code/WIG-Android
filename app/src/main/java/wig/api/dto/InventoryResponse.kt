@@ -9,12 +9,12 @@ import wig.models.Ownership
 data class InventoryResponse(
     val message: String,
     val success: Boolean,
-    val inventory: List<InventoryDTO>
+    val inventory: InventoryDTO
 )
 
 @Serializable
 data class InventoryDTO(
     val parent: Location,
-    val locations: List<InventoryDTO>,
-    val ownerships: List<Ownership>
+    val locations: MutableList<InventoryDTO>?,
+    val ownerships: MutableList<Ownership>?
 )

@@ -13,6 +13,7 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
+import wig.api.dto.InventoryDTO
 import wig.api.dto.InventoryResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.SearchLocationResponse
@@ -28,6 +29,7 @@ import wig.utils.TokenManager
 class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullUser = User(0, "", "", "", "")
     private val nullLocation = Location(0, 0, "", 0, "", "", "", nullUser, null)
+    private val nullInventoryDTO = InventoryDTO(nullLocation, ArrayList(), ArrayList())
     private val nullLocationList: List<Location> = listOf()
     private val nullOwnershipList: List<Ownership> = listOf()
 
@@ -119,17 +121,17 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            InventoryResponse(errorMessage, false, ArrayList())
+            InventoryResponse(errorMessage, false, nullInventoryDTO)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            InventoryResponse(errorMessage, false, ArrayList())
+            InventoryResponse(errorMessage, false, nullInventoryDTO)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            InventoryResponse(errorMessage, false, ArrayList())
+            InventoryResponse(errorMessage, false, nullInventoryDTO)
         } catch(e: Exception) {
-            InventoryResponse(e.message.toString(), false, ArrayList())
+            InventoryResponse(e.message.toString(), false, nullInventoryDTO)
         }
     }
 
