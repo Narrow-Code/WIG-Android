@@ -8,6 +8,8 @@ object HttpRoutes {
     private const val BASE_URL = "http://ec2-18-209-15-108.compute-1.amazonaws.com:30001" // SERVER
     //private const val BASE_URL = "http://192.168.0.201:30001" // LOCAL
 
+    const val PING = "$BASE_URL/ping"
+
     const val SIGNUP = "$BASE_URL/user/signup"
     const val SALT = "$BASE_URL/user/salt"
     const val LOGIN = "$BASE_URL/user/login"
