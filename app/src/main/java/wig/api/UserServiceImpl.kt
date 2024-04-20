@@ -121,4 +121,28 @@ class UserServiceImpl(
             CommonResponse(e.message.toString(), false)
         }
     }
+
+    override suspend fun ping(): CommonResponse {
+        return try {
+            client.get {
+                url(HttpRoutes.PING)
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: Exception) {
+            CommonResponse(e.message.toString(), false)
+        }
+    }
 }

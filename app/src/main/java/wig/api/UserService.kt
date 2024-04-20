@@ -50,6 +50,8 @@ interface UserService {
      * @return [CommonResponse] containing the newly created user's information, or null if unsuccessful.
      */
     suspend fun signup(signupRequest: SignupRequest): CommonResponse
+    
+    suspend fun ping(): CommonResponse
 
     /**
      * Companion object for creating instances of [UserService].

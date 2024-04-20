@@ -33,6 +33,7 @@ import wig.api.BorrowerService
 import wig.api.LocationService
 import wig.api.OwnershipService
 import wig.api.ScannerService
+import wig.api.UserService
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.CheckoutResponse
 import wig.api.dto.CommonResponse
@@ -81,6 +82,7 @@ open class BaseActivity : AppCompatActivity() {
     private val ownershipService = OwnershipService.create()
     private val locationService = LocationService.create()
     private val borrowerService = BorrowerService.create()
+    private val userService = UserService.create()
 
     protected fun disableBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -309,6 +311,11 @@ open class BaseActivity : AppCompatActivity() {
 
     protected suspend fun returnInventory(): InventoryResponse = withContext(Dispatchers.IO){
         val posts = locationService.returnInventory()
+        posts
+    }
+
+    protected suspend fun ping(): CommonResponse = withContext(Dispatchers.IO){
+        val posts = userService.ping()
         posts
     }
 
