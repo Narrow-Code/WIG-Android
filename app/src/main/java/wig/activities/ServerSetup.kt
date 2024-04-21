@@ -1,10 +1,15 @@
 package wig.activities
 
 import android.os.Bundle
+import android.view.View
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.bases.BaseActivity
+import wig.utils.SettingsManager
+import wig.utils.StoreSettings
 
 class ServerSetup : BaseActivity() {
 
@@ -13,21 +18,29 @@ class ServerSetup : BaseActivity() {
         setScreenOrientation()
         setServerSetupBindings()
         setOnClickListeners()
+        isHostedCheck()
     }
 
     private fun setOnClickListeners() {
         serverSetupBinding.connectButton.setOnClickListener { connectClick() }
-        // TODO disconnectButton onClicklistener
+        serverSetupBinding.disconnectButton.setOnClickListener { disconnectClick() }
         serverSetupBinding.icExit.setOnClickListener { startActivityLogin() }
     }
 
     private fun isHostedCheck() {
-        // TODO if is hosted
-            // TODO set connectButton invisible
-            // TODO set disconnectButton visible
-        // TODO if is not hosted
-            // TODO set connectButton visible
-            // TODO set disconnectButton isvisible
+        lifecycleScope.launch {
+            if(SettingsManager.getIsHosted()){
+                serverSetupBinding.hostname.hint = SettingsManager.getHostname()
+                serverSetupBinding.portNumber.hint = SettingsManager.getPortNumber()
+                serverSetupBinding.hostname.isEnabled = false
+                serverSetupBinding.portNumber.isEnabled = false
+                serverSetupBinding.connectButton.visibility = View.INVISIBLE
+                serverSetupBinding.disconnectButton.visibility = View.VISIBLE
+            } else {
+                serverSetupBinding.connectButton.visibility = View.VISIBLE
+                serverSetupBinding.disconnectButton.visibility = View.INVISIBLE
+            }
+        }
     }
 
     private fun connectClick() {
@@ -36,18 +49,36 @@ class ServerSetup : BaseActivity() {
         lifecycleScope.launch {
             val response = ping(hostname, portNumber)
             if (response.success) {
-                serverSetupBinding.error.text = "Success" // TODO remove line
-                // TODO save HOSTED_URL string
-                // TODO save IsHosted boolean true
+                    val storeSettings = StoreSettings(this@ServerSetup)
+                    storeSettings.saveIsHosted(true)
+                    SettingsManager.setIsHosted(true)
+                    storeSettings.saveHostname(hostname)
+                    SettingsManager.setHostname(hostname)
+                    storeSettings.savePort(portNumber)
+                    SettingsManager.setPortNumber(portNumber)
+                    serverSetupBinding.connectButton.visibility = View.INVISIBLE
+                    serverSetupBinding.disconnectButton.visibility = View.VISIBLE
+                    serverSetupBinding.hostname.isEnabled = false
+                    serverSetupBinding.portNumber.isEnabled = false
             } else
                 serverSetupBinding.error.text = getString(R.string.wig_server_not_recognized)
         }
     }
 
     private fun disconnectClick() {
-        // TODO save isHosted boolean false
-        // TODO remove HOSTED_URL string
-        // TODO set texts to empty
+        lifecycleScope.launch {
+                val storeSettings = StoreSettings(this@ServerSetup)
+                storeSettings.saveIsHosted(false)
+                SettingsManager.setIsHosted(false)
+                storeSettings.saveHostname("")
+                SettingsManager.setHostname("")
+                storeSettings.savePort("")
+                SettingsManager.setPortNumber("")
+                serverSetupBinding.connectButton.visibility = View.VISIBLE
+                serverSetupBinding.disconnectButton.visibility = View.INVISIBLE
+                serverSetupBinding.hostname.isEnabled = true
+                serverSetupBinding.portNumber.isEnabled = true
+        }
     }
 
 }

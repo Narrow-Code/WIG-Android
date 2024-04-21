@@ -409,5 +409,26 @@ open class BaseActivity : AppCompatActivity() {
                 SettingsManager.setIsStartupOnScanner(isStartupOnScanner)
             }
         }.first()
+
+        val hostedFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsHosted
+        hostedFlow.map { isHosted ->
+            if (isHosted != null) {
+                SettingsManager.setIsHosted(isHosted)
+            }
+        }.first()
+
+        val hostnameFlow: Flow<String?> = StoreSettings(this@BaseActivity).getHostname
+        hostnameFlow.map { hostname ->
+            if (hostname != null) {
+                SettingsManager.setHostname(hostname)
+            }
+        }.first()
+
+        val portNumberFlow: Flow<String?> = StoreSettings(this@BaseActivity).getPort
+        portNumberFlow.map { portNumber ->
+            if (portNumber != null) {
+                SettingsManager.setPortNumber(portNumber)
+            }
+        }.first()
     }
 }
