@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,6 +21,11 @@ import kotlinx.coroutines.flow.map
             val IS_VIBRATE_ENABLED = booleanPreferencesKey("is_vibrate_enabled")
             val IS_SOUND_ENABLED = booleanPreferencesKey("is_sound_enabled")
             val IS_STARTUP_ON_SCANNER = booleanPreferencesKey("is_startup_on_scanner")
+            val IS_HOSTED = booleanPreferencesKey("is_hosted")
+            val HOSTNAME = stringPreferencesKey("hostname")
+            val PORT = stringPreferencesKey("port")
+
+
         }
 
         /**
@@ -84,4 +90,38 @@ import kotlinx.coroutines.flow.map
                 preferences[IS_STARTUP_ON_SCANNER] = isStartupOnScanner
             }
         }
+
+        val getHostname: Flow<String> = context.dataStore.data
+            .map { preferences ->
+                preferences[HOSTNAME] ?: ""
+            }
+
+        suspend fun saveHostname(hostname: String) {
+            context.dataStore.edit { preferences ->
+                preferences[HOSTNAME] = hostname
+            }
+        }
+
+        val getPort: Flow<String> = context.dataStore.data
+            .map { preferences ->
+                preferences[PORT] ?: ""
+            }
+
+        suspend fun savePort(port: String) {
+            context.dataStore.edit { preferences ->
+                preferences[PORT] = port
+            }
+        }
+
+        suspend fun saveIsHosted(isHosted: Boolean) {
+            context.dataStore.edit { preferences ->
+                preferences[IS_HOSTED] = isHosted
+            }
+        }
+
+        val getIsHosted: Flow<Boolean> = context.dataStore.data
+            .map { preferences ->
+                preferences[IS_HOSTED] ?: false
+            }
+
     }

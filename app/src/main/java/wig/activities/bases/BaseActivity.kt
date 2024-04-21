@@ -314,8 +314,8 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun ping(): CommonResponse = withContext(Dispatchers.IO){
-        val posts = userService.ping()
+    protected suspend fun ping(hostname: String, port: String): CommonResponse = withContext(Dispatchers.IO){
+        val posts = userService.ping(hostname, port)
         posts
     }
 

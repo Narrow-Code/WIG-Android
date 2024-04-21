@@ -72,6 +72,7 @@
     <string name="app_opens_to">App Opens To:</string>
     <string name="logout">Logout</string>
     <string name="vibrate_on_scan">Vibrate On Scan</string>
+    <string name="wig_server_not_recognized">WIG Server not recognized</string>
 
     <string-array name="location_types">
         <item>Item</item>
