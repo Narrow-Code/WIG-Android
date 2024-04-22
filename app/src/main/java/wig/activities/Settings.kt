@@ -1,6 +1,8 @@
 package wig.activities
 
 import android.os.Bundle
+import android.view.View
+import android.widget.AdapterView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.bases.BaseActivity
@@ -25,7 +27,25 @@ class Settings : BaseActivity() {
         settingsBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
         settingsBinding.vibrate.setOnClickListener { setVibrate() }
         settingsBinding.sound.setOnClickListener { setSound() }
-        settingsBinding.typeSpinner.onItemClickListener
+        settingsBinding.typeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                lifecycleScope.launch {
+                    val storeSettings = StoreSettings(this@Settings)
+                    when (parent?.getItemAtPosition(position).toString()) {
+                        "Scanner" -> {
+                            storeSettings.saveIsStartupOnScanner(true)
+                            SettingsManager.setIsStartupOnScanner(true)
+                        }
+
+                        "Inventory" -> {
+                            storeSettings.saveIsStartupOnScanner(false)
+                            SettingsManager.setIsStartupOnScanner(false)
+                        }
+                    }
+                }
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
     private fun setVibrate() {

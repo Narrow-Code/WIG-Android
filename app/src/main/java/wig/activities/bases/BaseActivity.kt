@@ -148,11 +148,18 @@ open class BaseActivity : AppCompatActivity() {
         setContentView(view)
     }
 
-    protected fun startActivityScannerLogin() {
-        val scanner = Intent(this, Scanner::class.java)
-        startActivity(scanner)
+    protected fun startActivitySettingsLogin() {
+        if(SettingsManager.getIsStartupOnScanner()) {
+            val scanner = Intent(this, Scanner::class.java)
+            startActivity(scanner)
 
-        finish()
+            finish()
+        } else {
+            val inventory = Intent(this, Inventory::class.java)
+            startActivity(inventory)
+
+            finish()
+        }
     }
 
     protected fun startActivityScanner() {

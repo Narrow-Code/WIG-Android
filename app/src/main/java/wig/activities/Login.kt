@@ -69,7 +69,7 @@ class Login : BaseActivity() {
                 storeToken.saveToken(posts.token)
                 TokenManager.setToken(posts.token)
                 unpackSettings()
-                startActivityScannerLogin()
+                startActivitySettingsLogin()
             } else {
                 enableButtons()
                 loginBinding.error.text = posts.message
