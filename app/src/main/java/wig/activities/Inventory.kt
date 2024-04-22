@@ -37,7 +37,7 @@ class Inventory : BaseActivity() {
         lifecycleScope.launch {
             val response = returnInventory()
             if (response.success) {
-                if(response.inventory.locations!!.isNotEmpty()) {
+                if(response.inventory.locations?.isNotEmpty() == true) {
                     inventory = response.inventory.locations
                     populateTable(inventory)
                 }

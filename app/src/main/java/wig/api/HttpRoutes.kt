@@ -43,7 +43,7 @@ object HttpRoutes {
 
     private fun getBaseUrl(): String {
         return if (SettingsManager.getIsHosted()) {
-            "http://" + SettingsManager.getHostname() + ":" + SettingsManager.getPortNumber()
+            SettingsManager.getHostname() + ":" + SettingsManager.getPortNumber()
         } else {
             DEFAULT_BASE_URL
         }
