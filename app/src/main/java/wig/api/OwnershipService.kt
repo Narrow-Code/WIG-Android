@@ -17,15 +17,15 @@ import wig.api.dto.SearchRequest
 
 interface OwnershipService {
 
-    suspend fun setLocation(ownershipUID: Int, locationQR: String): CommonResponse
+    suspend fun setLocation(ownershipUID: String, locationQR: String): CommonResponse
 
-    suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: Int): OwnershipResponse
+    suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse
 
     suspend fun createOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse
 
     suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse
 
-    suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: Int): CommonResponse
+    suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse
 
 
     companion object {

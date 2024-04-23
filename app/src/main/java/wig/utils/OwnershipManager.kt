@@ -10,7 +10,7 @@ object OwnershipManager {
         ownerships.add(ownership);
     }
 
-    fun removeOwnership(uid: Int) {
+    fun removeOwnership(uid: String) {
         val ownershipToRemove = ownerships.find { it.ownershipUID == uid }
         ownershipToRemove?.let { ownerships.remove(it) }
     }
@@ -23,25 +23,25 @@ object OwnershipManager {
         ownerships.clear()
     }
 
-    fun getOwnership(uid: Int): Ownership? {
+    fun getOwnership(uid: String): Ownership? {
         return ownerships.find { it.ownershipUID == uid }
     }
 
-    fun setOwnershipLocation(ownershipUID: Int, location: Location) {
+    fun setOwnershipLocation(ownershipUID: String, location: Location) {
         val ownership = ownerships.find { it.ownershipUID == ownershipUID }
         if (ownership != null) {
             ownership.location = location
         }
     }
 
-    fun setOwnershipName(ownershipUID: Int, name: String) {
+    fun setOwnershipName(ownershipUID: String, name: String) {
         val ownership = ownerships.find { it.ownershipUID == ownershipUID }
         if (ownership != null) {
             ownership.customItemName = name
         }
     }
 
-    fun ownershipExists(ownershipUID: Int): Boolean {
+    fun ownershipExists(ownershipUID: String): Boolean {
         for (ownership in ownerships) {
             if (ownership.ownershipUID == ownershipUID) {
                 return true

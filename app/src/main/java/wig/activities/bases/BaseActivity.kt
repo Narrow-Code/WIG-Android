@@ -243,7 +243,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun setItemLocation(ownershipUID: Int, locationQR: String): CommonResponse = withContext(
+    protected suspend fun setItemLocation(ownershipUID: String, locationQR: String): CommonResponse = withContext(
         Dispatchers.IO){
         val posts = ownershipService.setLocation(ownershipUID, locationQR)
         posts
@@ -261,7 +261,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: Int): OwnershipResponse = withContext(Dispatchers.IO){
+    protected suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse = withContext(Dispatchers.IO){
         val posts = ownershipService.changeQuantity(changeType, amount, ownershipUID)
         posts
     }
@@ -296,7 +296,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: Int): CommonResponse = withContext(Dispatchers.IO){
+    protected suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse = withContext(Dispatchers.IO){
         val posts = ownershipService.editOwnership(editOwnershipRequest, uid)
         posts
     }

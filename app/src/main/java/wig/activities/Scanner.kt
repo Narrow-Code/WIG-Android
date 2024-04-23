@@ -43,9 +43,9 @@ import wig.utils.OwnershipManager
 
 class Scanner : BaseCamera() {
     private var pageView = "items"
-    private val ownershipRowMap = mutableMapOf<Int, TableRow>()
-    private val locationRowMap = mutableMapOf<Int, TableRow>()
-    private val searchRowMap = mutableMapOf<Int, TableRow>()
+    private val ownershipRowMap = mutableMapOf<String, TableRow>()
+    private val locationRowMap = mutableMapOf<String, TableRow>()
+    private val searchRowMap = mutableMapOf<String, TableRow>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +114,7 @@ class Scanner : BaseCamera() {
                             borrowerUUID = selectedBorrower.borrowerUID
                         }
                     }
-                    val ownerships: MutableList<Int> = mutableListOf()
+                    val ownerships: MutableList<String> = mutableListOf()
                     for (ownership in OwnershipManager.getAllOwnerships()){
                         ownerships.add(ownership.ownershipUID)
                     }
@@ -304,7 +304,7 @@ class Scanner : BaseCamera() {
         return row
     }
 
-    private fun saveOwnershipButton(row: TableRow, uid: Int, editOwnershipRequest: EditOwnershipRequest) {
+    private fun saveOwnershipButton(row: TableRow, uid: String, editOwnershipRequest: EditOwnershipRequest) {
         lifecycleScope.launch {
             val response = editOwnership(editOwnershipRequest, uid)
             if (response.success){
@@ -321,7 +321,7 @@ class Scanner : BaseCamera() {
             if (response.success){
                 val locationView = row.getChildAt(0) as TextView
                 locationView.text = editLocationRequest.locationName.substring(0 until 25.coerceAtMost(editLocationRequest.locationName.length))
-                OwnershipManager.setOwnershipName(uid.toInt(), editLocationRequest.locationName)
+                OwnershipManager.setOwnershipName(uid, editLocationRequest.locationName)
             }
         }
     }
@@ -353,7 +353,7 @@ class Scanner : BaseCamera() {
         row.addView(locationView)
 
         row.layoutParams = layoutParams
-        locationRowMap[location.locationUID.toInt()] = row
+        locationRowMap[location.locationUID] = row
 
         row.setOnLongClickListener {
             removeConfirmation(location.locationName) { shouldDelete ->
@@ -614,7 +614,7 @@ class Scanner : BaseCamera() {
         row.addView(nameLayout)
         row.addView(locationLayout)
         row.layoutParams = layoutParams
-        searchRowMap[location.locationUID.toInt()] = row
+        searchRowMap[location.locationUID] = row
 
         row.setOnClickListener {
             addConfirmation(location.locationName) { shouldAdd ->
@@ -728,7 +728,7 @@ class Scanner : BaseCamera() {
         }
     }
 
-    private fun removeOwnershipRow(uid: Int) {
+    private fun removeOwnershipRow(uid: String) {
         val tableLayout = scannerBinding.itemsTableLayout
         val rowToRemove = ownershipRowMap[uid]
         rowToRemove?.let {
@@ -744,10 +744,10 @@ class Scanner : BaseCamera() {
 
     private fun removeLocationRow(uid: String) {
         val tableLayout = scannerBinding.locationTableLayout
-        val rowToRemove = locationRowMap[uid.toInt()]
+        val rowToRemove = locationRowMap[uid]
         rowToRemove?.let {
             tableLayout.removeView(it)
-            locationRowMap.remove(uid.toInt())
+            locationRowMap.remove(uid)
             LocationManager.removeLocation(uid)
         }
         for (i in 0 until tableLayout.childCount) {
@@ -781,7 +781,7 @@ class Scanner : BaseCamera() {
     private fun populateLocations(location: Location){
         val tableLayout = scannerBinding.locationTableLayout
 
-        if(!locationRowMap.containsKey(location.locationUID.toInt())) {
+        if(!locationRowMap.containsKey(location.locationUID)) {
             LocationManager.addLocation(location)
             val row = createRowForLocation(location)
             setColorForRow(row, tableLayout.childCount)

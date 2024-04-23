@@ -15,7 +15,7 @@ import wig.models.Ownership
 class Inventory : BaseActivity() {
 
     private lateinit var inventory: List<InventoryDTO>
-    private val inventoryRowMap = mutableMapOf<Int, TableRow>()
+    private val inventoryRowMap = mutableMapOf<String, TableRow>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +98,7 @@ class Inventory : BaseActivity() {
 
         row.addView(nameLayout)
         row.layoutParams = layoutParams
-        inventoryRowMap[location.parent.locationUID.toInt()] = row // TODO fix to string
+        inventoryRowMap[location.parent.locationUID] = row
 
         return row
     }
@@ -135,10 +135,10 @@ class Inventory : BaseActivity() {
             inventory.locations?.let { locations ->
                 if (locations.isNotEmpty()) {
                     for (i in inventory.locations) {
-                        val rowToRemove = inventoryRowMap[i.parent.locationUID.toInt()]
+                        val rowToRemove = inventoryRowMap[i.parent.locationUID]
                         rowToRemove?.let {
                             tableLayout.removeView(it)
-                            inventoryRowMap.remove(i.parent.locationUID.toInt())
+                            inventoryRowMap.remove(i.parent.locationUID)
                         }
                     }
                 }

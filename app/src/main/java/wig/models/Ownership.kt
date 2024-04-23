@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Ownership(
-    val ownershipUID: Int,
+    val ownershipUID: String,
     val itemOwner: Int,
     val itemNumber: String,
     var customItemName: String,

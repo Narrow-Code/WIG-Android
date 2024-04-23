@@ -30,9 +30,9 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     private val nullItem = Item("", "", "", "", "")
     private val nullBorrower = Borrower("", "")
     private val nullLocation = Location("", 0, "", "", "", "", "", nullUser, null)
-    private val nullOwnership = Ownership(0, 0, "", "", "", "", "", "", "", 0, "", "", nullUser, nullLocation, nullItem, nullBorrower)
+    private val nullOwnership = Ownership("", 0, "", "", "", "", "", "", "", 0, "", "", nullUser, nullLocation, nullItem, nullBorrower)
 
-    override suspend fun setLocation(ownershipUID: Int, locationQR: String): CommonResponse {
+    override suspend fun setLocation(ownershipUID: String, locationQR: String): CommonResponse {
         return try {
             client.put {
                 url("${HttpRoutes.SET_OWNERSHIP_LOCATION}?ownershipUID=${ownershipUID}&location_qr=${locationQR}")
@@ -57,7 +57,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-    override suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: Int): OwnershipResponse {
+    override suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse {
         return try {
             client.put {
                 url("${HttpRoutes.CHANGE_OWNERSHIP_QUANTITY}${changeType}?ownershipUID=${ownershipUID}&amount=${amount}")
@@ -134,7 +134,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-    override suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: Int): CommonResponse {
+    override suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse {
         return try {
             client.put {
                 url("${HttpRoutes.EDIT_OWNERSHIP}?ownershipUID=${uid}")

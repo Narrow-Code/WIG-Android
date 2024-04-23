@@ -7,5 +7,5 @@ import wig.models.Borrower
 data class CheckoutResponse(
     val message: String,
     val success: Boolean,
-    val ownerships: List<Int>
+    val ownerships: List<String>
 )

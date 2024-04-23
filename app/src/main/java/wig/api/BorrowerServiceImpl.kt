@@ -23,7 +23,7 @@ import wig.utils.TokenManager
 
 class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
     private val nullBorrowerList: List<Borrower> = listOf()
-    private val nullIntList: List<Int> = listOf()
+    private val nullStringList: List<String> = listOf()
     private val nullBorrower = Borrower("", "")
     private val nullBorrowersList: List<Borrowers> = listOf()
 
@@ -89,17 +89,17 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            CheckoutResponse(errorMessage, false, nullIntList)
+            CheckoutResponse(errorMessage, false, nullStringList)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            CheckoutResponse(errorMessage, false, nullIntList)
+            CheckoutResponse(errorMessage, false, nullStringList)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            CheckoutResponse(errorMessage, false, nullIntList)
+            CheckoutResponse(errorMessage, false, nullStringList)
         } catch(e: Exception) {
-            CheckoutResponse(e.message.toString(), false, nullIntList)
+            CheckoutResponse(e.message.toString(), false, nullStringList)
         }
     }
 
@@ -115,17 +115,17 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            CheckoutResponse(errorMessage, false, nullIntList)
+            CheckoutResponse(errorMessage, false, nullStringList)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            CheckoutResponse(errorMessage, false, nullIntList)
+            CheckoutResponse(errorMessage, false, nullStringList)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            CheckoutResponse(errorMessage, false, nullIntList)
+            CheckoutResponse(errorMessage, false, nullStringList)
         } catch(e: Exception) {
-            CheckoutResponse(e.message.toString(), false, nullIntList)
+            CheckoutResponse(e.message.toString(), false, nullStringList)
         }
     }
 

@@ -40,7 +40,7 @@ class CheckedOut : BaseActivity() {
         returnAllConfirmation { shouldDelete ->
             if (shouldDelete) {
                 for (borrower in borrowers) {
-                    val ownerships = mutableListOf<Int>()
+                    val ownerships = mutableListOf<String>()
                     for (ownership in borrower.ownerships) {
                         ownerships.add(ownership.ownershipUID)
                     }
@@ -58,7 +58,7 @@ class CheckedOut : BaseActivity() {
     }
 
     private fun returnAllFromBorrower(borrower: Borrowers) {
-                val ownerships = mutableListOf<Int>()
+                val ownerships = mutableListOf<String>()
                 for (ownership in borrower.ownerships) {
                     ownerships.add(ownership.ownershipUID)
                 }
@@ -71,10 +71,10 @@ class CheckedOut : BaseActivity() {
                         ownershipToRemove?.let { itRemove ->
                             borrower.ownerships.remove(itRemove)
                             val tableLayout = checkedOutBinding.searchTableLayout
-                            val rowToRemove = borrowerRowMap[ownership.toString()] // TODO remove toString when ownership UUID is fixed
+                            val rowToRemove = borrowerRowMap[ownership]
                             rowToRemove?.let {
                                 tableLayout.removeView(it)
-                                borrowerRowMap.remove(ownership.toString()) // TODO remove toString when ownership UUID is fixed
+                                borrowerRowMap.remove(ownership)
                             }
                         }
 
@@ -86,7 +86,7 @@ class CheckedOut : BaseActivity() {
     private fun returnOneItem(ownership: Ownership, borrower: Borrowers) {
         returnSingleConfirmation(ownership) { shouldDelete ->
             if (shouldDelete) {
-                val ownerships = mutableListOf<Int>()
+                val ownerships = mutableListOf<String>()
                 ownerships.add(ownership.ownershipUID)
                 val checkOutRequest = CheckoutRequest(ownerships)
                 lifecycleScope.launch {
@@ -96,10 +96,10 @@ class CheckedOut : BaseActivity() {
                         ownershipToRemove?.let { itRemove ->
                             borrower.ownerships.remove(itRemove)
                             val tableLayout = checkedOutBinding.searchTableLayout
-                            val rowToRemove = borrowerRowMap[ownership.ownershipUID.toString()] // TODO remove toString when ownership UID is fixed
+                            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
                             rowToRemove?.let {
                                 tableLayout.removeView(it)
-                                borrowerRowMap.remove(ownership.ownershipUID.toString()) // TODO remove toString when ownership UID is fixed
+                                borrowerRowMap.remove(ownership.ownershipUID)
                             }
                         }
                     }
@@ -190,10 +190,10 @@ class CheckedOut : BaseActivity() {
         }
         else if (expand.text == " v") {
             for (i in borrowers.ownerships) {
-                val rowToRemove = borrowerRowMap[i.ownershipUID.toString()] // TODO remove toString when ownership UID
+                val rowToRemove = borrowerRowMap[i.ownershipUID]
                 rowToRemove?.let {
                     tableLayout.removeView(it)
-                    borrowerRowMap.remove(i.ownershipUID.toString()) // TODO remove toString when ownership UID
+                    borrowerRowMap.remove(i.ownershipUID)
                 }
             }
             expand.text = " >"
@@ -218,7 +218,7 @@ class CheckedOut : BaseActivity() {
 
         row.addView(nameLayout)
         row.layoutParams = layoutParams
-        borrowerRowMap[ownership.ownershipUID.toString()] = row // TODO remove toString when ownership UID
+        borrowerRowMap[ownership.ownershipUID] = row
 
         row.setOnClickListener{returnOneItem(ownership, borrower)}
 
