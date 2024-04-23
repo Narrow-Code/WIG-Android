@@ -58,17 +58,17 @@ class UserServiceImpl(
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            LoginResponse(errorMessage, false,"", 0)
+            LoginResponse(errorMessage, false,"", "")
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            LoginResponse(errorMessage, false,"", 0)
+            LoginResponse(errorMessage, false,"", "")
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            LoginResponse(errorMessage, false,"", 0)
+            LoginResponse(errorMessage, false,"", "")
         } catch(e: Exception) {
-            LoginResponse(e.message.toString(), false,"", 0)
+            LoginResponse(e.message.toString(), false,"", "")
         }
     }
 

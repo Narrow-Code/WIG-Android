@@ -21,8 +21,8 @@ import wig.utils.JsonParse
 import wig.utils.TokenManager
 
 class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
-    private val nullUser = User(0, "", "", "", "")
-    private val nullLocation = Location("", 0, "", "", "", "", "", nullUser, null)
+    private val nullUser = User("", "", "", "", "")
+    private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
 
     override suspend fun scan(barcode: String): ScanResponse {
         return try {

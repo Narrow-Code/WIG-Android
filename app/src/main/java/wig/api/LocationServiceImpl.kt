@@ -27,8 +27,8 @@ import wig.utils.JsonParse
 import wig.utils.TokenManager
 
 class LocationServiceImpl(private val client: HttpClient ) : LocationService {
-    private val nullUser = User(0, "", "", "", "")
-    private val nullLocation = Location("", 0, "", "", "", "", "", nullUser, null)
+    private val nullUser = User("", "", "", "", "")
+    private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
     private val nullInventoryDTO = InventoryDTO(nullLocation, ArrayList(), ArrayList())
     private val nullLocationList: List<Location> = listOf()
     private val nullOwnershipList: List<Ownership> = listOf()
