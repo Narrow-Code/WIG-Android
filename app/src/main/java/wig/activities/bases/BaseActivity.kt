@@ -281,7 +281,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun checkout(borrowerUID: Int, ownerships: CheckoutRequest): CheckoutResponse = withContext(Dispatchers.IO){
+    protected suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse = withContext(Dispatchers.IO){
         val posts = borrowerService.checkout(borrowerUID,ownerships)
         posts
     }

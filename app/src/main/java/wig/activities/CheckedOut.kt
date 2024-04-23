@@ -17,7 +17,7 @@ import wig.models.Ownership
 
 class CheckedOut : BaseActivity() {
 
-    private val borrowerRowMap = mutableMapOf<Int, TableRow>()
+    private val borrowerRowMap = mutableMapOf<String, TableRow>()
     private lateinit var borrowers: List<Borrowers>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,10 +71,10 @@ class CheckedOut : BaseActivity() {
                         ownershipToRemove?.let { itRemove ->
                             borrower.ownerships.remove(itRemove)
                             val tableLayout = checkedOutBinding.searchTableLayout
-                            val rowToRemove = borrowerRowMap[ownership]
+                            val rowToRemove = borrowerRowMap[ownership.toString()] // TODO remove toString when ownership UUID is fixed
                             rowToRemove?.let {
                                 tableLayout.removeView(it)
-                                borrowerRowMap.remove(ownership)
+                                borrowerRowMap.remove(ownership.toString()) // TODO remove toString when ownership UUID is fixed
                             }
                         }
 
@@ -96,10 +96,10 @@ class CheckedOut : BaseActivity() {
                         ownershipToRemove?.let { itRemove ->
                             borrower.ownerships.remove(itRemove)
                             val tableLayout = checkedOutBinding.searchTableLayout
-                            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+                            val rowToRemove = borrowerRowMap[ownership.ownershipUID.toString()] // TODO remove toString when ownership UID is fixed
                             rowToRemove?.let {
                                 tableLayout.removeView(it)
-                                borrowerRowMap.remove(ownership.ownershipUID)
+                                borrowerRowMap.remove(ownership.ownershipUID.toString()) // TODO remove toString when ownership UID is fixed
                             }
                         }
                     }
@@ -190,10 +190,10 @@ class CheckedOut : BaseActivity() {
         }
         else if (expand.text == " v") {
             for (i in borrowers.ownerships) {
-                val rowToRemove = borrowerRowMap[i.ownershipUID]
+                val rowToRemove = borrowerRowMap[i.ownershipUID.toString()] // TODO remove toString when ownership UID
                 rowToRemove?.let {
                     tableLayout.removeView(it)
-                    borrowerRowMap.remove(i.ownershipUID)
+                    borrowerRowMap.remove(i.ownershipUID.toString()) // TODO remove toString when ownership UID
                 }
             }
             expand.text = " >"
@@ -218,7 +218,7 @@ class CheckedOut : BaseActivity() {
 
         row.addView(nameLayout)
         row.layoutParams = layoutParams
-        borrowerRowMap[ownership.ownershipUID] = row
+        borrowerRowMap[ownership.ownershipUID.toString()] = row // TODO remove toString when ownership UID
 
         row.setOnClickListener{returnOneItem(ownership, borrower)}
 

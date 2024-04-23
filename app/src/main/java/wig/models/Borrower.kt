@@ -4,6 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Borrower(
-    val borrowerUID: Int,
+    val borrowerUID: String,
     val borrowerName: String
 )

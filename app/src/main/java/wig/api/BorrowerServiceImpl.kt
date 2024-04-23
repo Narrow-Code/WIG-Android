@@ -24,7 +24,7 @@ import wig.utils.TokenManager
 class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
     private val nullBorrowerList: List<Borrower> = listOf()
     private val nullIntList: List<Int> = listOf()
-    private val nullBorrower = Borrower(0, "")
+    private val nullBorrower = Borrower("", "")
     private val nullBorrowersList: List<Borrowers> = listOf()
 
     override suspend fun getBorrowers(): GetBorrowersResponse {
@@ -77,7 +77,7 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         }
     }
 
-    override suspend fun checkout(borrowerUID: Int, ownerships: CheckoutRequest): CheckoutResponse {
+    override suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse {
         return try {
             client.post{
                 url("${HttpRoutes.CHECKOUT}?borrowerUID=${borrowerUID}")

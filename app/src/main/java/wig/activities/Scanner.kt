@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -88,7 +89,7 @@ class Scanner : BaseCamera() {
                     ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, borrowerNames),
                     -1
                 ) { dialog, which ->
-                    var borrowerNum = 1
+                    var borrowerUUID = "Default"
                     when (borrowerNames[which]) {
                         "New" -> {
                             showNewBorrowerDialog(this@Scanner) { borrowerName ->
@@ -106,11 +107,11 @@ class Scanner : BaseCamera() {
                             }
                         }
                         "Self" -> {
-                            borrowerNum = 2
+                            borrowerUUID = "22222222-2222-2222-2222-222222222222"
                         }
                         else -> {
                             val selectedBorrower = borrowers.borrowers[which - 1]
-                            borrowerNum = selectedBorrower.borrowerUID
+                            borrowerUUID = selectedBorrower.borrowerUID
                         }
                     }
                     val ownerships: MutableList<Int> = mutableListOf()
@@ -119,7 +120,7 @@ class Scanner : BaseCamera() {
                     }
                     val request = CheckoutRequest(ownerships)
                     lifecycleScope.launch {
-                        val response = checkout(borrowerNum, request)
+                        val response = checkout(borrowerUUID, request)
                         if (response.success){
                             for (ownershipSuccess in response.ownerships){
                                 ownershipRowMap.entries.forEach { (ownershipUID, row) ->
@@ -177,7 +178,7 @@ class Scanner : BaseCamera() {
             name = ownership.item.itemName
         }
         var location = ownership.location.locationName
-        if (ownership.itemBorrower != 1){
+        if (ownership.borrower.borrowerName != "Default"){
             location = ownership.borrower.borrowerName
         }
 
@@ -527,7 +528,7 @@ class Scanner : BaseCamera() {
         val name = ownership.customItemName
 
         var location = ownership.location.locationName
-        if (ownership.itemBorrower != 1){
+        if (ownership.borrower.borrowerName != "Default"){
             location = ownership.borrower.borrowerName
         }
 
