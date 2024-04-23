@@ -98,7 +98,7 @@ class Inventory : BaseActivity() {
 
         row.addView(nameLayout)
         row.layoutParams = layoutParams
-        inventoryRowMap["100${location.parent.locationUID}".toInt()] = row
+        inventoryRowMap[location.parent.locationUID.toInt()] = row // TODO fix to string
 
         return row
     }
@@ -135,10 +135,10 @@ class Inventory : BaseActivity() {
             inventory.locations?.let { locations ->
                 if (locations.isNotEmpty()) {
                     for (i in inventory.locations) {
-                        val rowToRemove = inventoryRowMap["100${i.parent.locationUID}".toInt()]
+                        val rowToRemove = inventoryRowMap[i.parent.locationUID.toInt()]
                         rowToRemove?.let {
                             tableLayout.removeView(it)
-                            inventoryRowMap.remove("100${i.parent.locationUID}".toInt())
+                            inventoryRowMap.remove(i.parent.locationUID.toInt())
                         }
                     }
                 }
@@ -146,10 +146,10 @@ class Inventory : BaseActivity() {
             inventory.ownerships?.let { ownerships ->
                 if (ownerships.isNotEmpty()) {
                     for (i in inventory.ownerships) {
-                        val rowToRemove = inventoryRowMap["200${i.ownershipUID}".toInt()]
+                        val rowToRemove = inventoryRowMap[i.ownershipUID]
                         rowToRemove?.let {
                             tableLayout.removeView(it)
-                            inventoryRowMap.remove("200${i.ownershipUID}".toInt())
+                            inventoryRowMap.remove(i.ownershipUID)
                         }
                     }
                 }
@@ -176,7 +176,7 @@ class Inventory : BaseActivity() {
 
         row.addView(nameLayout)
         row.layoutParams = layoutParams
-        inventoryRowMap["200${ownership.ownershipUID}".toInt()] = row
+        inventoryRowMap[ownership.ownershipUID] = row
 
         return row
     }
