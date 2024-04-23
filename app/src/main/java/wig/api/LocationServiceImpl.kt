@@ -59,7 +59,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
-    override suspend fun unpackLocation(locationUID: Int): UnpackResponse {
+    override suspend fun unpackLocation(locationUID: String): UnpackResponse {
         return try {
             client.post {
                 url("${HttpRoutes.UNPACK_LOCATION}?locationUID=${locationUID}")
@@ -135,7 +135,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
-    override suspend fun locationEdit(editLocationRequest: EditLocationRequest, uid: Int): CommonResponse {
+    override suspend fun locationEdit(editLocationRequest: EditLocationRequest, uid: String): CommonResponse {
         return try {
             client.put {
                 url("${HttpRoutes.EDIT_LOCATION}?locationUID=${uid}")

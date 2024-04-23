@@ -20,13 +20,13 @@ interface LocationService {
 
     suspend fun createLocation(name: String, locationQR: String): LocationResponse
 
-    suspend fun unpackLocation(locationUID: Int): UnpackResponse
+    suspend fun unpackLocation(locationUID: String): UnpackResponse
 
     suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse
 
     suspend fun returnInventory(): InventoryResponse
 
-    suspend fun locationEdit(editLocationRequest: EditLocationRequest, uid: Int): CommonResponse
+    suspend fun locationEdit(editLocationRequest: EditLocationRequest, uid: String): CommonResponse
 
 
     companion object {

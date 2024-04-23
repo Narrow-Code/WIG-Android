@@ -266,7 +266,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun unpackLocation(locationUID: Int): UnpackResponse = withContext(Dispatchers.IO){
+    protected suspend fun unpackLocation(locationUID: String): UnpackResponse = withContext(Dispatchers.IO){
         val posts = locationService.unpackLocation(locationUID)
         posts
     }
@@ -311,7 +311,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun locationEdit(editLocationRequest: EditLocationRequest, locationUID: Int): CommonResponse = withContext(Dispatchers.IO){
+    protected suspend fun locationEdit(editLocationRequest: EditLocationRequest, locationUID: String): CommonResponse = withContext(Dispatchers.IO){
         val posts = locationService.locationEdit(editLocationRequest, locationUID)
         posts
     }

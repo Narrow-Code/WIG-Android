@@ -315,13 +315,13 @@ class Scanner : BaseCamera() {
         }
     }
 
-    private fun saveLocationButton(row: TableRow, uid: Int, editLocationRequest: EditLocationRequest) {
+    private fun saveLocationButton(row: TableRow, uid: String, editLocationRequest: EditLocationRequest) {
         lifecycleScope.launch {
             val response = locationEdit(editLocationRequest, uid)
             if (response.success){
                 val locationView = row.getChildAt(0) as TextView
                 locationView.text = editLocationRequest.locationName.substring(0 until 25.coerceAtMost(editLocationRequest.locationName.length))
-                OwnershipManager.setOwnershipName(uid, editLocationRequest.locationName)
+                OwnershipManager.setOwnershipName(uid.toInt(), editLocationRequest.locationName)
             }
         }
     }
@@ -353,7 +353,7 @@ class Scanner : BaseCamera() {
         row.addView(locationView)
 
         row.layoutParams = layoutParams
-        locationRowMap[location.locationUID] = row
+        locationRowMap[location.locationUID.toInt()] = row
 
         row.setOnLongClickListener {
             removeConfirmation(location.locationName) { shouldDelete ->
@@ -614,7 +614,7 @@ class Scanner : BaseCamera() {
         row.addView(nameLayout)
         row.addView(locationLayout)
         row.layoutParams = layoutParams
-        searchRowMap[location.locationUID] = row
+        searchRowMap[location.locationUID.toInt()] = row
 
         row.setOnClickListener {
             addConfirmation(location.locationName) { shouldAdd ->
@@ -742,12 +742,12 @@ class Scanner : BaseCamera() {
         }
     }
 
-    private fun removeLocationRow(uid: Int) {
+    private fun removeLocationRow(uid: String) {
         val tableLayout = scannerBinding.locationTableLayout
-        val rowToRemove = locationRowMap[uid]
+        val rowToRemove = locationRowMap[uid.toInt()]
         rowToRemove?.let {
             tableLayout.removeView(it)
-            locationRowMap.remove(uid)
+            locationRowMap.remove(uid.toInt())
             LocationManager.removeLocation(uid)
         }
         for (i in 0 until tableLayout.childCount) {
@@ -781,7 +781,7 @@ class Scanner : BaseCamera() {
     private fun populateLocations(location: Location){
         val tableLayout = scannerBinding.locationTableLayout
 
-        if(!locationRowMap.containsKey(location.locationUID)) {
+        if(!locationRowMap.containsKey(location.locationUID.toInt())) {
             LocationManager.addLocation(location)
             val row = createRowForLocation(location)
             setColorForRow(row, tableLayout.childCount)

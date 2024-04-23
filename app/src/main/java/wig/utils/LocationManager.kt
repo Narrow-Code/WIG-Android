@@ -9,7 +9,7 @@ object LocationManager {
         locations.add(location);
     }
 
-    fun removeLocation(uid: Int) {
+    fun removeLocation(uid: String) {
         val ownershipToRemove = locations.find {it.locationUID == uid}
         ownershipToRemove?.let { locations.remove(it)}
     }
@@ -30,7 +30,7 @@ object LocationManager {
         locations.clear()
     }
 
-    fun locationExists(locationUID: Int): Boolean {
+    fun locationExists(locationUID: String): Boolean {
         for (location in locations) {
             if (location.locationUID == locationUID) {
                 return true
@@ -38,5 +38,4 @@ object LocationManager {
         }
         return false
     }
-
 }

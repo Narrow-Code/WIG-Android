@@ -12,5 +12,5 @@ data class Location(
     val locationTags: String,
     val locationDescription: String,
     val user: User,
-    val location: Location?
+    var location: Location?
 )
