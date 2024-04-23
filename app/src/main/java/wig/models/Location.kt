@@ -4,10 +4,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Location(
-    val locationUID: Int,
+    val locationUID: String,
     val locationOwner: Int,
     val locationName: String,
-    val locationParent: Int,
+    val locationParent: String,
     val locationQR: String,
     val locationTags: String,
     val locationDescription: String,

@@ -10,7 +10,7 @@ data class Ownership(
     var customItemName: String,
     val customItemImage: String,
     val customItemDescription: String,
-    val itemLocation: Int,
+    val itemLocation: String,
     val itemQR: String,
     val itemTags: String,
     var itemQuantity: Int,
