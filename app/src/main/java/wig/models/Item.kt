@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Item(
-    val itemUID: Int,
+    val itemUID: String,
     val barcode: String,
     val itemName: String,
     val itemBrand: String,
