@@ -13,7 +13,10 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
+import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
+import wig.models.Borrower
+import wig.models.Item
 import wig.models.Location
 import wig.models.Ownership
 import wig.models.User
@@ -21,8 +24,11 @@ import wig.utils.JsonParse
 import wig.utils.TokenManager
 
 class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
+    private val nullItem = Item("", "", "", "", "")
+    private val nullBorrower = Borrower("", "")
     private val nullUser = User("", "", "", "", "")
     private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
+    private val nullOwnership = Ownership("", "", "", "", "", "", "", "", "", 0, "", "", nullUser, nullLocation, nullItem, nullBorrower)
 
     override suspend fun scan(barcode: String): ScanResponse {
         return try {
@@ -99,6 +105,31 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
             LocationResponse(errorMessage, false, nullLocation)
         } catch(e: Exception) {
             LocationResponse(e.message.toString(), false, nullLocation)
+        }
+    }
+
+    override suspend fun scanQROwnership(qr: String): OwnershipResponse {
+        return try {
+            client.get {
+                url("${HttpRoutes.SCAN_QR_OWNERSHIP}?qr=${qr}")
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            OwnershipResponse(errorMessage, false, nullOwnership)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            OwnershipResponse(errorMessage, false, nullOwnership)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            OwnershipResponse(errorMessage, false, nullOwnership)
+        } catch(e: Exception) {
+            OwnershipResponse(e.message.toString(), false, nullOwnership)
         }
     }
 

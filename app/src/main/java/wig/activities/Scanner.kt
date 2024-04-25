@@ -836,7 +836,9 @@ class Scanner : BaseCamera() {
                     switchToLocationsView()
                 }
                 "ITEM" -> {
-                    // TODO add item call here
+                    val ownershipResponse = scanQROwnership(code)
+                    populateItem(ownershipResponse.ownership)
+                    switchToItemsView()
                     codeScanner.startPreview()
                 }
             }
