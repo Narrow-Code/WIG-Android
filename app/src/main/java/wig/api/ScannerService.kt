@@ -8,6 +8,7 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import wig.api.dto.CommonResponse
 import wig.api.dto.LocationResponse
+import wig.api.dto.OwnershipResponse
 import wig.api.dto.ScanResponse
 
 interface ScannerService {
@@ -17,6 +18,8 @@ interface ScannerService {
     suspend fun checkQR(qr: String): CommonResponse
 
     suspend fun scanQRLocation(qr: String): LocationResponse
+
+    suspend fun scanQROwnership(qr: String): OwnershipResponse
 
     companion object {
         fun create(): ScannerService {
