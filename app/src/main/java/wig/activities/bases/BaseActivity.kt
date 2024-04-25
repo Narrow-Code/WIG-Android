@@ -266,7 +266,7 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
-    protected suspend fun unpackLocation(locationUID: String): UnpackResponse = withContext(Dispatchers.IO){
+    protected suspend fun unpackLocation(locationUID: String): InventoryResponse = withContext(Dispatchers.IO){
         val posts = locationService.unpackLocation(locationUID)
         posts
     }

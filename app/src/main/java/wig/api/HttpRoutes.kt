@@ -7,9 +7,9 @@ import wig.utils.SettingsManager
  */
 object HttpRoutes {
 
-    private const val DEFAULT_BASE_URL = "http://ec2-18-209-15-108.compute-1.amazonaws.com:30001" // SERVER
+    //private const val DEFAULT_BASE_URL = "http://ec2-18-209-15-108.compute-1.amazonaws.com:30001" // SERVER
     private val BASE_URL: String = getBaseUrl()
-    //private const val BASE_URL = "http://192.168.0.201:30001" // LOCAL
+    private const val DEFAULT_BASE_URL = "http://192.168.0.201:30001" // LOCAL
 
     val PING = "$BASE_URL/ping"
 

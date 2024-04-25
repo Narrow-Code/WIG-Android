@@ -19,9 +19,7 @@ import wig.api.dto.InventoryResponse
 import wig.api.dto.LocationResponse
 import wig.api.dto.SearchLocationResponse
 import wig.api.dto.SearchRequest
-import wig.api.dto.UnpackResponse
 import wig.models.Location
-import wig.models.Ownership
 import wig.models.User
 import wig.utils.JsonParse
 import wig.utils.TokenManager
@@ -30,9 +28,6 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullUser = User("", "", "", "", "")
     private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
     private val nullInventoryDTO = InventoryDTO(nullLocation, ArrayList(), ArrayList())
-    private val nullLocationList: List<Location> = listOf()
-    private val nullOwnershipList: List<Ownership> = listOf()
-
 
     override suspend fun createLocation(name: String, locationQR: String): LocationResponse {
         return try {
@@ -59,7 +54,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
-    override suspend fun unpackLocation(locationUID: String): UnpackResponse {
+    override suspend fun unpackLocation(locationUID: String): InventoryResponse {
         return try {
             client.post {
                 url("${HttpRoutes.UNPACK_LOCATION}?locationUID=${locationUID}")
@@ -70,17 +65,17 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            UnpackResponse(errorMessage, false, nullOwnershipList, nullLocationList)
+            InventoryResponse(errorMessage, false, nullInventoryDTO)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            UnpackResponse(errorMessage, false, nullOwnershipList, nullLocationList)
+            InventoryResponse(errorMessage, false, nullInventoryDTO)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            UnpackResponse(errorMessage, false, nullOwnershipList, nullLocationList)
+            InventoryResponse(errorMessage, false, nullInventoryDTO)
         } catch(e: Exception) {
-            UnpackResponse(e.message.toString(), false, nullOwnershipList, nullLocationList)
+            InventoryResponse(e.message.toString(), false, nullInventoryDTO)
         }
     }
 

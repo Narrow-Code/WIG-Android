@@ -27,6 +27,8 @@ import wig.activities.bases.BaseCamera
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.EditLocationRequest
 import wig.api.dto.EditOwnershipRequest
+import wig.api.dto.InventoryDTO
+import wig.api.dto.InventoryResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.ScanResponse
 import wig.api.dto.SearchRequest
@@ -418,14 +420,28 @@ class Scanner : BaseCamera() {
     }
 
     private fun unpackButton() {
-        for(location in LocationManager.getAllLocations()) {
+        for (location in LocationManager.getAllLocations()) {
             lifecycleScope.launch {
                 val unpacked = unpackLocation(location.locationUID)
-                for(ownership in unpacked.ownerships){
+                unpackInventory(unpacked.inventory)
+            }
+        }
+    }
+
+
+    private fun unpackInventory(inventoryDTO: InventoryDTO){
+        inventoryDTO.ownerships?.let { ownerships ->
+            if (ownerships.isNotEmpty()) {
+                for (ownership in ownerships) {
                     populateItem(ownership)
                 }
-                for(loc in unpacked.locations){
-                    populateLocations(loc)
+            }
+        }
+        inventoryDTO.locations?.let { locations ->
+            if (locations.isNotEmpty()) {
+                for (location in locations) {
+                    populateLocations(location.parent)
+                    unpackInventory(location)
                 }
             }
         }

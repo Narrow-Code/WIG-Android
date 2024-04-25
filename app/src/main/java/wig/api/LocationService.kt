@@ -20,7 +20,7 @@ interface LocationService {
 
     suspend fun createLocation(name: String, locationQR: String): LocationResponse
 
-    suspend fun unpackLocation(locationUID: String): UnpackResponse
+    suspend fun unpackLocation(locationUID: String): InventoryResponse
 
     suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse
 
