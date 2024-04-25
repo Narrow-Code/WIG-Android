@@ -243,6 +243,11 @@ open class BaseActivity : AppCompatActivity() {
         posts
     }
 
+    protected suspend fun scanQROwnership(qr: String): OwnershipResponse = withContext(Dispatchers.IO) {
+        val posts = scannerService.scanQROwnership(qr)
+        posts
+    }
+
     protected suspend fun setItemLocation(ownershipUID: String, locationQR: String): CommonResponse = withContext(
         Dispatchers.IO){
         val posts = ownershipService.setLocation(ownershipUID, locationQR)
