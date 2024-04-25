@@ -835,7 +835,7 @@ class Scanner : BaseCamera() {
                     populateLocations(locationResponse.location)
                     switchToLocationsView()
                 }
-                "ITEM" -> {
+                "OWNERSHIP" -> {
                     val ownershipResponse = scanQROwnership(code)
                     populateItem(ownershipResponse.ownership)
                     switchToItemsView()
