@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
+import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -211,31 +212,40 @@ class CheckedOut : Settings() {
         row.setBackgroundColor(backgroundColor)
     }
 
-    private fun borrowerClick(clickedRow: TableRow, borrowers: Borrowers){
+    // borrowerClick handles the expanding and collapsing of a Borrower
+    private fun borrowerClick(clickedRow: TableRow, borrowers: Borrowers) {
         val tableLayout = checkedOutBinding.searchTableLayout
         val rowIndex = tableLayout.indexOfChild(clickedRow)
+        val expandTextView = (clickedRow.getChildAt(0) as LinearLayout).getChildAt(1) as TextView
 
-        val expand = (clickedRow.getChildAt(0) as LinearLayout).getChildAt(1) as TextView
-
-        if (expand.text == " >") {
-            for (i in borrowers.ownerships) {
-                val newRow = createRowForOwnership(i, borrowers)
-                setColorForRow(newRow, rowIndex + 1)
-                tableLayout.addView(newRow, rowIndex + 1)
-            }
-            expand.text = " v"
-            resetRowColors(tableLayout)
+        if (expandTextView.text == " >") {
+            addOwnershipRows(tableLayout, borrowers, rowIndex)
+            expandTextView.text = " v"
+        } else if (expandTextView.text == " v") {
+            removeOwnershipRows(tableLayout, borrowers)
+            expandTextView.text = " >"
         }
-        else if (expand.text == " v") {
-            for (i in borrowers.ownerships) {
-                val rowToRemove = borrowerRowMap[i.ownershipUID]
-                rowToRemove?.let {
-                    tableLayout.removeView(it)
-                    borrowerRowMap.remove(i.ownershipUID)
-                }
+        resetRowColors(tableLayout)
+    }
+
+    // addOwnershipRows adds an ownership to a row in the table at the right index
+    private fun addOwnershipRows(tableLayout: TableLayout, borrowers: Borrowers, rowIndex: Int) {
+        for (ownership in borrowers.ownerships) {
+            val newRow = createRowForOwnership(ownership, borrowers)
+            setColorForRow(newRow, rowIndex + 1)
+            tableLayout.addView(newRow, rowIndex + 1)
+        }
+    }
+
+    // removeOwnershipRows removes ownerships from the table
+    private fun removeOwnershipRows(tableLayout: TableLayout, borrowers: Borrowers) {
+        for (ownership in borrowers.ownerships) {
+            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+            rowToRemove?.let {
+                tableLayout.removeView(it)
+                borrowerRowMap.remove(ownership.ownershipUID)
             }
-            expand.text = " >"
-            resetRowColors(tableLayout)        }
+        }
     }
 
     private fun createRowForOwnership(ownership: Ownership, borrower: Borrowers): TableRow {
