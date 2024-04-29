@@ -10,11 +10,8 @@ import wig.api.dto.CommonResponse
 import wig.api.dto.EditLocationRequest
 import wig.api.dto.InventoryResponse
 import wig.api.dto.LocationResponse
-import wig.api.dto.ScanResponse
 import wig.api.dto.SearchLocationResponse
-import wig.api.dto.SearchOwnershipResponse
 import wig.api.dto.SearchRequest
-import wig.api.dto.UnpackResponse
 
 interface LocationService {
 
