@@ -248,31 +248,38 @@ class CheckedOut : Settings() {
         }
     }
 
+    // createRowForOwnership creates the row for the ownership to be added to the table
     private fun createRowForOwnership(ownership: Ownership, borrower: Borrowers): TableRow {
-        val name = "        " + ownership.customItemName
+        val name = "        " + ownership.customItemName.substring(0, 25.coerceAtMost(ownership.customItemName.length))
+
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
 
         val nameLayout = LinearLayout(this)
-        nameLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
+        val nameLayoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f
+        )
+        nameLayout.layoutParams = nameLayoutParams
         nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
 
         val nameView = TextView(this)
-        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
-        nameLayout.addView(nameView)
+        nameView.text = name
 
+        nameLayout.addView(nameView)
         row.addView(nameLayout)
+
         row.layoutParams = layoutParams
         borrowerRowMap[ownership.ownershipUID] = row
 
-        row.setOnClickListener{returnOneItem(ownership, borrower)}
+        row.setOnClickListener { returnOneItem(ownership, borrower) }
 
         return row
     }
 
+    // resetRowColors makes sure all colors of rows stay consistent
     private fun resetRowColors(tableLayout: LinearLayout) {
         for (i in 0 until tableLayout.childCount) {
             val row = tableLayout.getChildAt(i) as? TableRow
