@@ -1,6 +1,5 @@
 package wig.activities.loggedin
 
-import android.app.AlertDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -14,6 +13,7 @@ import wig.models.responses.Borrowers
 import wig.models.requests.CheckoutRequest
 import wig.models.entities.Borrower
 import wig.models.entities.Ownership
+import wig.utils.Alerts
 
 class CheckedOut : Settings() {
 
@@ -43,7 +43,7 @@ class CheckedOut : Settings() {
 
     // returnAllButton checks in all checked out items
     private fun returnAllButton() {
-        returnAllConfirmation { shouldDelete ->
+        Alerts().returnAllConfirmation(this) { shouldDelete ->
             if (shouldDelete) {
                 processBorrowers()
                 clearBorrowersListAndRowMap()
@@ -78,32 +78,18 @@ class CheckedOut : Settings() {
     // returnAllFromBorrower returns all Ownerships from a specific borrower
     private fun returnAllFromBorrower(borrower: Borrowers) {
         val ownerships = borrower.ownerships.map { it.ownershipUID }
-
         val checkOutRequest = CheckoutRequest(ownerships)
-
         lifecycleScope.launch {
             val response = borrowerCheckIn(checkOutRequest)
-
             if (response.success){
                 removeOwnershipAndRows(borrower, ownerships)
             }
         }
     }
 
-    // removeOwnershipAndRows will remove ownerships and their corresponding rows
-    private fun removeOwnershipAndRows(borrower: Borrowers, ownerships: List<String>) {
-        for (ownership in ownerships) {
-            val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership }
-
-            ownershipToRemove?.let { itRemove ->
-                removeOwnershipAndRow(itRemove, borrower)
-            }
-        }
-    }
-
     // returnOneItem returns one specific item
     private fun returnOneItem(ownership: Ownership, borrower: Borrowers) {
-        returnSingleConfirmation(ownership) { shouldDelete ->
+        Alerts().returnSingleConfirmation(ownership, this) { shouldDelete ->
             if (shouldDelete) {
                 handleCheckIn(ownership, borrower)
             }
@@ -123,6 +109,16 @@ class CheckedOut : Settings() {
         }
     }
 
+    // removeOwnershipAndRows will remove ownerships and their corresponding rows
+    private fun removeOwnershipAndRows(borrower: Borrowers, ownerships: List<String>) {
+        for (ownership in ownerships) {
+            val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership }
+            ownershipToRemove?.let { itRemove ->
+                removeOwnershipAndRow(itRemove, borrower)
+            }
+        }
+    }
+
     // removeOwnershipAndRow removes the ownership and its corresponding row
     private fun removeOwnershipAndRow(ownership: Ownership, borrower: Borrowers) {
         val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
@@ -137,6 +133,7 @@ class CheckedOut : Settings() {
         }
     }
 
+    // getBorrowedItems returns all of the borrowed items and their borrowers
     private fun getBorrowedItems() {
         lifecycleScope.launch {
             val response = borrowerGetInventory()
@@ -147,21 +144,36 @@ class CheckedOut : Settings() {
         }
     }
 
+    // populateTable populates the table with the list of borrowers
     private fun populateTable(borrowers: List<Borrowers>) {
         val tableLayout = checkedOutBinding.searchTableLayout
-        for (borrower in borrowers) {
+        borrowers.forEach { borrower ->
             val row = createRowForBorrower(borrower.borrower)
             setColorForRow(row, tableLayout.childCount)
-            row.setOnClickListener { borrowerClick(it as TableRow, borrower) }
-            row.setOnLongClickListener {
-                returnBorrowerConfirmation(borrower.borrower) { shouldDelete ->
-                    if (shouldDelete){ returnAllFromBorrower(borrower)}
-                }
-                true
-            }
+            setRowListeners(row, borrower)
             tableLayout.addView(row)
         }
         resetRowColors(tableLayout)
+    }
+
+    // setRowListeners sets the listeners for the rows being created
+    private fun setRowListeners(row: TableRow, borrower: Borrowers) {
+        row.setOnClickListener {
+            borrowerClick(it as TableRow, borrower)
+        }
+        row.setOnLongClickListener {
+            handleReturnBorrower(borrower)
+        }
+    }
+
+    // handleReturnBorrower alerts to return a single borrowers ownerships
+    private fun handleReturnBorrower(borrower: Borrowers): Boolean {
+        Alerts().returnBorrowerConfirmation(borrower.borrower, this) { shouldDelete ->
+            if (shouldDelete) {
+                returnAllFromBorrower(borrower)
+            }
+        }
+        return true
     }
 
     private fun createRowForBorrower(borrower: Borrower): TableRow {
@@ -172,6 +184,7 @@ class CheckedOut : Settings() {
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
             TableRow.LayoutParams.WRAP_CONTENT)
+        row.layoutParams = layoutParams
 
         val nameLayout = LinearLayout(this)
         nameLayout.layoutParams = TableRow.LayoutParams(
@@ -187,7 +200,6 @@ class CheckedOut : Settings() {
         nameLayout.addView(expandView)
 
         row.addView(nameLayout)
-        row.layoutParams = layoutParams
         borrowerRowMap[borrower.borrowerUID] = row
 
         return row
@@ -259,63 +271,6 @@ class CheckedOut : Settings() {
             val row = tableLayout.getChildAt(i) as? TableRow
             row?.let { setColorForRow(it, i) }
         }
-    }
-
-    private fun returnAllConfirmation(callback: (Boolean) -> Unit) {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle("Confirm Return All")
-        alertDialogBuilder.setMessage("Are you sure you want to return all Checked Out items to their original locations??")
-
-        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
-            dialog.dismiss()
-            callback(true)
-        }
-
-        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
-            dialog.dismiss()
-            callback(false)
-        }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-    }
-
-    private fun returnSingleConfirmation(ownership: Ownership, callback: (Boolean) -> Unit) {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle("Confirm Return All")
-        alertDialogBuilder.setMessage("Are you sure you want to return ${ownership.customItemName} to it's original locations?")
-
-        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
-            dialog.dismiss()
-            callback(true)
-        }
-
-        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
-            dialog.dismiss()
-            callback(false)
-        }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-    }
-
-    private fun returnBorrowerConfirmation(borrower: Borrower, callback: (Boolean) -> Unit) {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle("Confirm Return Borrower")
-        alertDialogBuilder.setMessage("Are you sure you want to return all of ${borrower.borrowerName}'s borrowed items to their original locations?")
-
-        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
-            dialog.dismiss()
-            callback(true)
-        }
-
-        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
-            dialog.dismiss()
-            callback(false)
-        }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
     }
 
 }

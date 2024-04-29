@@ -2,6 +2,8 @@ package wig.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import wig.models.entities.Borrower
+import wig.models.entities.Ownership
 
 class Alerts {
 
@@ -30,6 +32,63 @@ class Alerts {
         alertDialogBuilder.setMessage("Are you sure you want to add $name to queue?")
 
         alertDialogBuilder.setPositiveButton("Add") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    fun returnAllConfirmation(context: Context, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle("Confirm Return All")
+        alertDialogBuilder.setMessage("Are you sure you want to return all Checked Out items to their original locations??")
+
+        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    fun returnSingleConfirmation(ownership: Ownership, context: Context, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle("Confirm Return All")
+        alertDialogBuilder.setMessage("Are you sure you want to return ${ownership.customItemName} to it's original locations?")
+
+        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    fun returnBorrowerConfirmation(borrower: Borrower, context: Context, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle("Confirm Return Borrower")
+        alertDialogBuilder.setMessage("Are you sure you want to return all of ${borrower.borrowerName}'s borrowed items to their original locations?")
+
+        alertDialogBuilder.setPositiveButton("RETURN") { dialog, _ ->
             dialog.dismiss()
             callback(true)
         }
