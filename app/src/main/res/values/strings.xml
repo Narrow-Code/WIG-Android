@@ -78,11 +78,15 @@
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="name">Name</string>
+    <string name="enter_name">Enter Name</string>
     <string name="qr_code">QR-Code</string>
     <string name="edit_location">Edit Location</string>
     <string name="qr">QR</string>
+    <string name="enter_qr">Enter QR</string>
     <string name="tags">Tags</string>
+    <string name="enter_tags">Enter Tags</string>
     <string name="notes_description">Notes/Description</string>
+    <string name="enter_notes">Enter Notes</string>
     <string name="save">Save</string>
     <string name="edit_ownership">Edit Ownership</string>
     <string name="disconnect">Disconnect</string>
