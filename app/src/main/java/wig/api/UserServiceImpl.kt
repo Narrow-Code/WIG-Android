@@ -6,7 +6,7 @@ import wig.models.responses.CommonResponse
 import wig.models.requests.LoginRequest
 import wig.models.responses.LoginResponse
 import wig.models.requests.SignupRequest
-import wig.utils.TokenManager
+import wig.managers.TokenManager
 import io.ktor.client.HttpClient
 import io.ktor.client.call.receive
 import io.ktor.client.features.ClientRequestException

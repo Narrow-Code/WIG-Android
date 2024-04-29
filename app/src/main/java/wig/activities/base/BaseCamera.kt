@@ -14,7 +14,7 @@ import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.launch
-import wig.utils.SettingsManager
+import wig.managers.SettingsManager
 
 private const val CAMERA_REQUEST_CODE = 101
 

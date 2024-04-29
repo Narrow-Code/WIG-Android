@@ -5,7 +5,7 @@ import android.widget.Button
 import androidx.lifecycle.lifecycleScope
 import wig.models.requests.SaltRequest
 import wig.utils.StoreToken
-import wig.utils.TokenManager
+import wig.managers.TokenManager
 import wig.utils.SaltAndHash
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -10,8 +10,8 @@ import kotlinx.coroutines.withContext
 import wig.activities.base.BaseActivity
 import wig.api.UserService
 import wig.models.requests.SignupRequest
-import wig.utils.EmailManager
-import wig.utils.RequirementsManager
+import wig.managers.EmailManager
+import wig.managers.RequirementsManager
 import wig.utils.SaltAndHash
 
 class Signup : BaseActivity() {

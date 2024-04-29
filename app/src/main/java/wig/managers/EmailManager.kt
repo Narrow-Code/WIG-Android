@@ -1,4 +1,4 @@
-package wig.utils
+package wig.managers
 
 object EmailManager {
     private var email: String = ""

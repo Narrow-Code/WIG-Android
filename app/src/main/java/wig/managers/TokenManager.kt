@@ -1,4 +1,4 @@
-package wig.utils
+package wig.managers
 
 object TokenManager {
     private var token: String = ""

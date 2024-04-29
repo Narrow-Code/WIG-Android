@@ -60,7 +60,7 @@ import wig.databinding.ScannerBinding
 import wig.databinding.ServerSetupBinding
 import wig.databinding.SettingsBinding
 import wig.databinding.SignupBinding
-import wig.utils.SettingsManager
+import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
 open class BaseActivity : AppCompatActivity() {

@@ -3,7 +3,7 @@ package wig.activities.loggedout
 import android.os.Bundle
 import wig.R
 import wig.activities.base.BaseActivity
-import wig.utils.EmailManager
+import wig.managers.EmailManager
 
 class ForgotPassword : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

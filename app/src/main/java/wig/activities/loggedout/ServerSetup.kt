@@ -6,7 +6,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.base.BaseActivity
-import wig.utils.SettingsManager
+import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
 class ServerSetup : BaseActivity() {

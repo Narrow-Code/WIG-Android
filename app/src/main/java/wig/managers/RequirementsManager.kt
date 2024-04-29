@@ -1,4 +1,4 @@
-package wig.utils
+package wig.managers
 
 object RequirementsManager {
     private val usernameRegex = Regex("^[a-zA-Z0-9_-]{4,20}$")

@@ -37,8 +37,8 @@ import wig.databinding.SearchBinding
 import wig.models.entities.ItemViewModel
 import wig.models.entities.Location
 import wig.models.entities.Ownership
-import wig.utils.LocationManager
-import wig.utils.OwnershipManager
+import wig.managers.LocationManager
+import wig.managers.OwnershipManager
 
 
 class Scanner : BaseCamera() {

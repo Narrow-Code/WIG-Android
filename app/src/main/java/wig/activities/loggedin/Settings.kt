@@ -6,7 +6,7 @@ import android.widget.AdapterView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.base.BaseActivity
-import wig.utils.SettingsManager
+import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 import wig.utils.StoreToken
 

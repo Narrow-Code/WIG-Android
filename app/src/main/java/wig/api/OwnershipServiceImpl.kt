@@ -23,7 +23,7 @@ import wig.models.entities.Location
 import wig.models.entities.Ownership
 import wig.models.entities.User
 import wig.utils.JsonParse
-import wig.utils.TokenManager
+import wig.managers.TokenManager
 
 class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     private val nullUser = User("", "", "", "", "")

@@ -1,4 +1,4 @@
-package wig.utils
+package wig.managers
 
 import wig.models.entities.Location
 import wig.models.entities.Ownership

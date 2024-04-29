@@ -2,7 +2,7 @@ package wig.activities.loggedout
 
 import android.os.Bundle
 import wig.activities.base.BaseActivity
-import wig.utils.EmailManager
+import wig.managers.EmailManager
 
 class ResetPassword : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

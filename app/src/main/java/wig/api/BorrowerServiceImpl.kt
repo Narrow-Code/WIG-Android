@@ -19,7 +19,7 @@ import wig.models.responses.GetBorrowersResponse
 import wig.models.responses.GetCheckedOutItemsResponse
 import wig.models.entities.Borrower
 import wig.utils.JsonParse
-import wig.utils.TokenManager
+import wig.managers.TokenManager
 
 class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
     private val nullBorrowerList: List<Borrower> = listOf()

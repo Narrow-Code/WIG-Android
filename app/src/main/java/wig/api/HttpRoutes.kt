@@ -1,6 +1,6 @@
 package wig.api
 
-import wig.utils.SettingsManager
+import wig.managers.SettingsManager
 
 /**
  * This package provides HTTP route constants.n

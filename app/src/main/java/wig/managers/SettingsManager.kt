@@ -1,4 +1,4 @@
-package wig.utils
+package wig.managers
 
 object SettingsManager {
     private var IsVibrateEnabled: Boolean = true

@@ -21,7 +21,7 @@ import wig.models.entities.Location
 import wig.models.entities.Ownership
 import wig.models.entities.User
 import wig.utils.JsonParse
-import wig.utils.TokenManager
+import wig.managers.TokenManager
 
 class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
     private val nullItem = Item("", "", "", "", "")

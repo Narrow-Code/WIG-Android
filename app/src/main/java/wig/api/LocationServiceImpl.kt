@@ -22,7 +22,7 @@ import wig.models.requests.SearchRequest
 import wig.models.entities.Location
 import wig.models.entities.User
 import wig.utils.JsonParse
-import wig.utils.TokenManager
+import wig.managers.TokenManager
 
 class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullUser = User("", "", "", "", "")
