@@ -14,53 +14,69 @@ import com.budiyev.android.codescanner.ErrorCallback
 import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.launch
-import wig.managers.SettingsManager
 
 private const val CAMERA_REQUEST_CODE = 101
 
 open class Camera : Settings()  {
     protected lateinit var codeScanner: CodeScanner
-
     protected open suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){}
 
+    // codeScanner is used to set up the scanners functionality and settings
     protected fun codeScanner() {
+        // Initialize CodeScanner
         codeScanner = CodeScanner(this, scannerBinding.scannerView)
 
         codeScanner.apply {
+            // Initialize CodeScanner settings
             camera = CodeScanner.CAMERA_BACK
-            formats = listOf(BarcodeFormat.UPC_A, BarcodeFormat.UPC_E, BarcodeFormat.EAN_13, BarcodeFormat.EAN_8, BarcodeFormat.QR_CODE)
             autoFocusMode = AutoFocusMode.SAFE
             scanMode = ScanMode.SINGLE
             isAutoFocusEnabled = true
             isFlashEnabled = false
+            formats = listOf(
+                BarcodeFormat.UPC_A,
+                BarcodeFormat.UPC_E,
+                BarcodeFormat.EAN_13,
+                BarcodeFormat.EAN_8,
+                BarcodeFormat.QR_CODE
+            )
+
+            // Define callback on scan
             decodeCallback = DecodeCallback {
-                if(SettingsManager.getIsVibrateEnabled()){
-                    performVibration(this@Camera)
-                }
-                if (SettingsManager.getSoundEnabled()){
-                    playScanSound(this@Camera)
-                }
+                performVibration(this@Camera)
+                playScanSound(this@Camera)
                 lifecycleScope.launch {
                     scanSuccess(it.text, it.barcodeFormat)
                 }
             }
-            errorCallback = ErrorCallback { runOnUiThread {} }
+
+            // Define error callback
+            errorCallback = ErrorCallback {
+                runOnUiThread {
+                    // Add error handling if needed
+                }
+            }
         }
+
+        // Start scanner preview when ScannerView is clicked
         scannerBinding.scannerView.setOnClickListener {
-            codeScanner.startPreview()
+            onResume()
         }
     }
 
+    // onResume is used to resume the camera
     override fun onResume() {
         super.onResume()
         codeScanner.startPreview()
     }
 
+    // onPause is used to pause the camera
     override fun onPause() {
         codeScanner.releaseResources()
         super.onPause()
     }
 
+    // setupPermissions is used to check and request camera permissions if not granted
     protected fun setupPermissions() {
         val permission : Int = ContextCompat.checkSelfPermission(this,
             Manifest.permission.CAMERA)
@@ -72,6 +88,7 @@ open class Camera : Settings()  {
         }
     }
 
+    // Override function to handle permission request result
     @SuppressLint("MissingSuperCall")
     override fun onRequestPermissionsResult(
         requestCode: Int,

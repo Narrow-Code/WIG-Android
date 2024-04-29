@@ -48,20 +48,24 @@ open class Settings : Bindings() {
 
     // performVibration will set off the vibration notification
     fun performVibration(context: Context) {
-        val vibrator = context.getSystemService(Vibrator::class.java)
-        vibrator?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
-            ?: run {
-                // handle the case where vibration is not supported
-            }
+        if(SettingsManager.getIsVibrateEnabled()){
+            val vibrator = context.getSystemService(Vibrator::class.java)
+            vibrator?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+                ?: run {
+                    // handle the case where vibration is not supported
+                }
+        }
     }
 
     // playScanSound will set off the sound notification
     fun playScanSound(context: Context) {
-        val ringtone = RingtoneManager.getRingtone(
-            context,
-            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        )
-        ringtone.play()
+        if (SettingsManager.getSoundEnabled()) {
+            val ringtone = RingtoneManager.getRingtone(
+                context,
+                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            )
+            ringtone.play()
+        }
     }
 
     // checkForUpdates will check github for most recent release and set appName color to reflect availability
