@@ -1,7 +1,6 @@
 package wig.api.dto
 
 import kotlinx.serialization.Serializable
-import wig.models.Borrower
 import wig.models.Location
 import wig.models.Ownership
 
