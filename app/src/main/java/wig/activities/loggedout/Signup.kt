@@ -7,14 +7,14 @@ import wig.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import wig.activities.base.Activity
+import wig.activities.base.Settings
 import wig.api.UserService
 import wig.models.requests.SignupRequest
 import wig.managers.EmailManager
 import wig.managers.RequirementsManager
 import wig.utils.SaltAndHash
 
-class Signup : Activity() {
+class Signup : Settings() {
     private val service = UserService.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {

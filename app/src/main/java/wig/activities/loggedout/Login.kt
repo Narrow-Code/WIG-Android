@@ -11,11 +11,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.R
-import wig.activities.base.Activity
+import wig.activities.base.Settings
 import wig.api.UserService
 import wig.models.requests.LoginRequest
 
-class Login : Activity() {
+class Login : Settings() {
     private val service = UserService.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {

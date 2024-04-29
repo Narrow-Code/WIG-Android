@@ -18,7 +18,7 @@ import wig.managers.SettingsManager
 
 private const val CAMERA_REQUEST_CODE = 101
 
-open class Camera : Activity()  {
+open class Camera : Settings()  {
     protected lateinit var codeScanner: CodeScanner
 
     protected open suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){}

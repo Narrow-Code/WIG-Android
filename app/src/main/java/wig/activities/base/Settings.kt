@@ -1,7 +1,6 @@
 package wig.activities.base
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -32,7 +31,7 @@ import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
 // Activity sets up the Base settings and functions for the application
-open class Activity : Bindings() {
+open class Settings : Bindings() {
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     // disableBackPress disables the back press button
@@ -45,6 +44,41 @@ open class Activity : Bindings() {
     @SuppressLint("SourceLockedOrientationActivity")
     protected fun setScreenOrientation() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    // performVibration will set off the vibration notification
+    fun performVibration(context: Context) {
+        val vibrator = context.getSystemService(Vibrator::class.java)
+        vibrator?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
+            ?: run {
+                // handle the case where vibration is not supported
+            }
+    }
+
+    // playScanSound will set off the sound notification
+    fun playScanSound(context: Context) {
+        val ringtone = RingtoneManager.getRingtone(
+            context,
+            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        )
+        ringtone.play()
+    }
+
+    // checkForUpdates will check github for most recent release and set appName color to reflect availability
+    fun checkForUpdates() {
+        coroutineScope.launch {
+            val updater = ApkUpdater(this@Settings, "https://github.com/WIGteam/WIG-Android/releases/latest")
+            updater.threeNumbers = true
+            if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
+                scannerBinding.topMenu.appName.setTextColor(Color.YELLOW)
+                scannerBinding.topMenu.appName.setOnClickListener { updateButton(updater) }
+            }
+        }
+    }
+
+    // updateButton will download the latest release from github releases
+    private fun updateButton(updater: ApkUpdater) {
+        updater.requestDownload()
     }
 
     // startActivityLogin starts Login activity
@@ -126,74 +160,50 @@ open class Activity : Bindings() {
         finish()
     }
 
-    fun performVibration(context: Context) {
-        val vibrator = context.getSystemService(Vibrator::class.java)
-        vibrator?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
-            ?: run {
-                // handle the case where vibration is not supported
-            }
-    }
-
-    fun playScanSound(context: Context) {
-        val ringtone = RingtoneManager.getRingtone(
-            context,
-            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        )
-        ringtone.play()
-    }
-
-    fun checkForUpdates() {
-        coroutineScope.launch {
-            val updater = ApkUpdater(this@Activity, "https://github.com/WIGteam/WIG-Android/releases/latest")
-            updater.threeNumbers = true
-            if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
-                scannerBinding.topMenu.appName.setTextColor(Color.YELLOW)
-                scannerBinding.topMenu.appName.setOnClickListener { updateButton(updater) }
-            }
-        }
-    }
-
-    private fun updateButton(updater: ApkUpdater) {
-        updater.requestDownload()
-    }
-
+    // unpackSettings will retrieve all of the saved settings from the DataStore
     suspend fun unpackSettings() = withContext(Dispatchers.IO){
-        val vibrateFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsVibrateEnabled
+        // vibration settings
+        val vibrateFlow: Flow<Boolean?> = StoreSettings(this@Settings).getIsVibrateEnabled
         vibrateFlow.map { isVibrateEnabled ->
             if (isVibrateEnabled != null) {
                 SettingsManager.setIsVibrateEnabled(isVibrateEnabled)
             }
         }.first()
 
-        val soundFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsSoundEnabled
+        // sound settings
+        val soundFlow: Flow<Boolean?> = StoreSettings(this@Settings).getIsSoundEnabled
         soundFlow.map { isSoundEnabled ->
             if (isSoundEnabled != null) {
                 SettingsManager.setIsSoundEnabled(isSoundEnabled)
             }
         }.first()
 
-        val startupFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsStartupOnScanner
+        // startup settings
+        val startupFlow: Flow<Boolean?> = StoreSettings(this@Settings).getIsStartupOnScanner
         startupFlow.map { isStartupOnScanner ->
             if (isStartupOnScanner != null) {
                 SettingsManager.setIsStartupOnScanner(isStartupOnScanner)
             }
         }.first()
 
-        val hostedFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsHosted
+        // self hosted settings
+        val hostedFlow: Flow<Boolean?> = StoreSettings(this@Settings).getIsHosted
         hostedFlow.map { isHosted ->
             if (isHosted != null) {
                 SettingsManager.setIsHosted(isHosted)
             }
         }.first()
 
-        val hostnameFlow: Flow<String?> = StoreSettings(this@Activity).getHostname
+        // hostname for self hosted server
+        val hostnameFlow: Flow<String?> = StoreSettings(this@Settings).getHostname
         hostnameFlow.map { hostname ->
             if (hostname != null) {
                 SettingsManager.setHostname(hostname)
             }
         }.first()
 
-        val portNumberFlow: Flow<String?> = StoreSettings(this@Activity).getPort
+        // portNumber for self hosted server
+        val portNumberFlow: Flow<String?> = StoreSettings(this@Settings).getPort
         portNumberFlow.map { portNumber ->
             if (portNumber != null) {
                 SettingsManager.setPortNumber(portNumber)

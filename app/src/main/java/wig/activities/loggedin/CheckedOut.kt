@@ -9,13 +9,13 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import wig.activities.base.Activity
+import wig.activities.base.Settings
 import wig.models.responses.Borrowers
 import wig.models.requests.CheckoutRequest
 import wig.models.entities.Borrower
 import wig.models.entities.Ownership
 
-class CheckedOut : Activity() {
+class CheckedOut : Settings() {
 
     private val borrowerRowMap = mutableMapOf<String, TableRow>()
     private lateinit var borrowers: List<Borrowers>

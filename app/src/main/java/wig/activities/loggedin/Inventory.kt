@@ -8,11 +8,11 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import wig.activities.base.Activity
+import wig.activities.base.Settings
 import wig.models.responses.InventoryDTO
 import wig.models.entities.Ownership
 
-class Inventory : Activity() {
+class Inventory : Settings() {
 
     private lateinit var inventory: List<InventoryDTO>
     private val inventoryRowMap = mutableMapOf<String, TableRow>()
