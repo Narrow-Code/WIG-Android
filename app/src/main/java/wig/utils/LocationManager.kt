@@ -6,7 +6,7 @@ object LocationManager {
     private val locations = mutableListOf<Location>()
 
     fun addLocation(location: Location) {
-        locations.add(location);
+        locations.add(location)
     }
 
     fun removeLocation(uid: String) {
