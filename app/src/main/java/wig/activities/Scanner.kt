@@ -273,10 +273,6 @@ class Scanner : BaseCamera() {
             popupDialog.setContentView(editOwnershipBinding.root)
             popupDialog.setOnDismissListener { codeScanner.startPreview() }
 
-            val layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
             val viewModel = ItemViewModel()
             viewModel.name = ownership.customItemName
             viewModel.qr = ownership.itemQR
@@ -370,10 +366,6 @@ class Scanner : BaseCamera() {
             popupDialog.setContentView(editLocationBinding.root)
             popupDialog.setOnDismissListener { codeScanner.startPreview() }
 
-            val layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-            )
             val viewModel = ItemViewModel()
             viewModel.name = location.locationName
             viewModel.qr = location.locationQR
