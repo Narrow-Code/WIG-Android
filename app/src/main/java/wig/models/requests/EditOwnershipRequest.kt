@@ -1,4 +1,4 @@
-package wig.api.dto
+package wig.models.requests
 
 import kotlinx.serialization.Serializable
 

@@ -1,4 +1,4 @@
-package wig.models
+package wig.models.entities
 
 import androidx.lifecycle.ViewModel
 

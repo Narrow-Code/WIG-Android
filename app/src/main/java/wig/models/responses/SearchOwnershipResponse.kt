@@ -1,7 +1,7 @@
-package wig.api.dto
+package wig.models.responses
 
 import kotlinx.serialization.Serializable
-import wig.models.Ownership
+import wig.models.entities.Ownership
 
 @Serializable
 data class SearchOwnershipResponse(

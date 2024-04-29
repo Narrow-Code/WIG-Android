@@ -11,15 +11,15 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import wig.api.dto.CommonResponse
-import wig.api.dto.LocationResponse
-import wig.api.dto.OwnershipResponse
-import wig.api.dto.ScanResponse
-import wig.models.Borrower
-import wig.models.Item
-import wig.models.Location
-import wig.models.Ownership
-import wig.models.User
+import wig.models.responses.CommonResponse
+import wig.models.responses.LocationResponse
+import wig.models.responses.OwnershipResponse
+import wig.models.responses.ScanResponse
+import wig.models.entities.Borrower
+import wig.models.entities.Item
+import wig.models.entities.Location
+import wig.models.entities.Ownership
+import wig.models.entities.User
 import wig.utils.JsonParse
 import wig.utils.TokenManager
 

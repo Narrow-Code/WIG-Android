@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.base.BaseActivity
-import wig.api.dto.InventoryDTO
-import wig.models.Ownership
+import wig.models.responses.InventoryDTO
+import wig.models.entities.Ownership
 
 class Inventory : BaseActivity() {
 

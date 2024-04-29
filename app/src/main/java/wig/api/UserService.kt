@@ -1,11 +1,11 @@
 package wig.api
 
-import wig.api.dto.SaltRequest
-import wig.api.dto.SaltResponse
-import wig.api.dto.CommonResponse
-import wig.api.dto.LoginRequest
-import wig.api.dto.LoginResponse
-import wig.api.dto.SignupRequest
+import wig.models.requests.SaltRequest
+import wig.models.responses.SaltResponse
+import wig.models.responses.CommonResponse
+import wig.models.requests.LoginRequest
+import wig.models.responses.LoginResponse
+import wig.models.requests.SignupRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.android.Android
 import io.ktor.client.features.json.JsonFeature

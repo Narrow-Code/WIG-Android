@@ -1,7 +1,7 @@
 package wig.utils
 
-import wig.models.Location
-import wig.models.Ownership
+import wig.models.entities.Location
+import wig.models.entities.Ownership
 
 object OwnershipManager {
     private val ownerships = mutableListOf<Ownership>()

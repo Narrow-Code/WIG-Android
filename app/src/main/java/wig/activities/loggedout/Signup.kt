@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.activities.base.BaseActivity
 import wig.api.UserService
-import wig.api.dto.SignupRequest
+import wig.models.requests.SignupRequest
 import wig.utils.EmailManager
 import wig.utils.RequirementsManager
 import wig.utils.SaltAndHash

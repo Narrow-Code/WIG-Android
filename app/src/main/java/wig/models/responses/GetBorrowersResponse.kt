@@ -1,7 +1,7 @@
-package wig.api.dto
+package wig.models.responses
 
 import kotlinx.serialization.Serializable
-import wig.models.Borrower
+import wig.models.entities.Borrower
 
 @Serializable
 data class GetBorrowersResponse(

@@ -10,10 +10,10 @@ import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.base.BaseActivity
-import wig.api.dto.Borrowers
-import wig.api.dto.CheckoutRequest
-import wig.models.Borrower
-import wig.models.Ownership
+import wig.models.responses.Borrowers
+import wig.models.requests.CheckoutRequest
+import wig.models.entities.Borrower
+import wig.models.entities.Ownership
 
 class CheckedOut : BaseActivity() {
 

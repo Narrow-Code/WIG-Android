@@ -2,7 +2,7 @@
     <data>
         <variable
             name="viewModel"
-            type="wig.models.ItemViewModel" />
+            type="wig.models.entities.ItemViewModel" />
     </data>
 
 <LinearLayout

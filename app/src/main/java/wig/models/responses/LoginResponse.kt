@@ -1,11 +1,11 @@
-package wig.api.dto
+package wig.models.responses
 
 import kotlinx.serialization.Serializable
-import wig.models.Borrower
 
 @Serializable
-data class CreateBorrowerResponse(
+data class LoginResponse(
     val message: String,
     val success: Boolean,
-    val borrower: Borrower
+    val token: String,
+    val uid: String
 )

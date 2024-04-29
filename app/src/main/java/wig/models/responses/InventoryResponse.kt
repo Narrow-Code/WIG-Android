@@ -1,8 +1,8 @@
-package wig.api.dto
+package wig.models.responses
 
 import kotlinx.serialization.Serializable
-import wig.models.Location
-import wig.models.Ownership
+import wig.models.entities.Location
+import wig.models.entities.Ownership
 
 @Serializable
 data class InventoryResponse(

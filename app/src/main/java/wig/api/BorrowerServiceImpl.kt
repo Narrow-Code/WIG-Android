@@ -11,13 +11,13 @@ import io.ktor.client.request.post
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import wig.api.dto.Borrowers
-import wig.api.dto.CheckoutResponse
-import wig.api.dto.CheckoutRequest
-import wig.api.dto.CreateBorrowerResponse
-import wig.api.dto.GetBorrowersResponse
-import wig.api.dto.GetCheckedOutItemsResponse
-import wig.models.Borrower
+import wig.models.responses.Borrowers
+import wig.models.responses.CheckoutResponse
+import wig.models.requests.CheckoutRequest
+import wig.models.responses.CreateBorrowerResponse
+import wig.models.responses.GetBorrowersResponse
+import wig.models.responses.GetCheckedOutItemsResponse
+import wig.models.entities.Borrower
 import wig.utils.JsonParse
 import wig.utils.TokenManager
 

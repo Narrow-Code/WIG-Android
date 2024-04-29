@@ -12,15 +12,15 @@ import io.ktor.client.request.put
 import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import wig.api.dto.CommonResponse
-import wig.api.dto.EditLocationRequest
-import wig.api.dto.InventoryDTO
-import wig.api.dto.InventoryResponse
-import wig.api.dto.LocationResponse
-import wig.api.dto.SearchLocationResponse
-import wig.api.dto.SearchRequest
-import wig.models.Location
-import wig.models.User
+import wig.models.responses.CommonResponse
+import wig.models.requests.EditLocationRequest
+import wig.models.responses.InventoryDTO
+import wig.models.responses.InventoryResponse
+import wig.models.responses.LocationResponse
+import wig.models.responses.SearchLocationResponse
+import wig.models.requests.SearchRequest
+import wig.models.entities.Location
+import wig.models.entities.User
 import wig.utils.JsonParse
 import wig.utils.TokenManager
 

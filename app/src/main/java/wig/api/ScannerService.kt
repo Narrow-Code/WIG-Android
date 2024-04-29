@@ -6,10 +6,10 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import wig.api.dto.CommonResponse
-import wig.api.dto.LocationResponse
-import wig.api.dto.OwnershipResponse
-import wig.api.dto.ScanResponse
+import wig.models.responses.CommonResponse
+import wig.models.responses.LocationResponse
+import wig.models.responses.OwnershipResponse
+import wig.models.responses.ScanResponse
 
 interface ScannerService {
 

@@ -3,7 +3,7 @@ package wig.activities.loggedout
 import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
-import wig.api.dto.SaltRequest
+import wig.models.requests.SaltRequest
 import wig.utils.StoreToken
 import wig.utils.TokenManager
 import wig.utils.SaltAndHash
@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 import wig.R
 import wig.activities.base.BaseActivity
 import wig.api.UserService
-import wig.api.dto.LoginRequest
+import wig.models.requests.LoginRequest
 
 class Login : BaseActivity() {
     private val service = UserService.create()

@@ -6,12 +6,12 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import wig.api.dto.CommonResponse
-import wig.api.dto.EditLocationRequest
-import wig.api.dto.InventoryResponse
-import wig.api.dto.LocationResponse
-import wig.api.dto.SearchLocationResponse
-import wig.api.dto.SearchRequest
+import wig.models.responses.CommonResponse
+import wig.models.requests.EditLocationRequest
+import wig.models.responses.InventoryResponse
+import wig.models.responses.LocationResponse
+import wig.models.responses.SearchLocationResponse
+import wig.models.requests.SearchRequest
 
 interface LocationService {
 

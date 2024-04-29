@@ -1,6 +1,6 @@
 package wig.utils
 
-import wig.models.Location
+import wig.models.entities.Location
 
 object LocationManager {
     private val locations = mutableListOf<Location>()

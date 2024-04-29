@@ -1,9 +1,9 @@
-package wig.api.dto
+package wig.models.requests
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SearchRequest(
+data class NewOwnershipRequest(
+    val qr: String,
     val name: String,
-    val tags: String
 )

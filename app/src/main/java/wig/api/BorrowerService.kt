@@ -6,11 +6,11 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import wig.api.dto.CheckoutResponse
-import wig.api.dto.CheckoutRequest
-import wig.api.dto.CreateBorrowerResponse
-import wig.api.dto.GetBorrowersResponse
-import wig.api.dto.GetCheckedOutItemsResponse
+import wig.models.responses.CheckoutResponse
+import wig.models.requests.CheckoutRequest
+import wig.models.responses.CreateBorrowerResponse
+import wig.models.responses.GetBorrowersResponse
+import wig.models.responses.GetCheckedOutItemsResponse
 
 interface BorrowerService {
 
