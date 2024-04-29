@@ -7,7 +7,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +27,6 @@ import wig.api.dto.CheckoutRequest
 import wig.api.dto.EditLocationRequest
 import wig.api.dto.EditOwnershipRequest
 import wig.api.dto.InventoryDTO
-import wig.api.dto.InventoryResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.ScanResponse
 import wig.api.dto.SearchRequest
