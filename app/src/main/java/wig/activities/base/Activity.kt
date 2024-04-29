@@ -28,224 +28,102 @@ import wig.activities.loggedin.Scanner
 import wig.activities.loggedout.ServerSetup
 import wig.activities.loggedin.Settings
 import wig.activities.loggedout.Signup
-import wig.api.BorrowerService
-import wig.api.LocationService
-import wig.api.OwnershipService
-import wig.api.ScannerService
-import wig.api.UserService
-import wig.models.requests.CheckoutRequest
-import wig.models.responses.CheckoutResponse
-import wig.models.responses.CommonResponse
-import wig.models.responses.CreateBorrowerResponse
-import wig.models.requests.EditLocationRequest
-import wig.models.requests.EditOwnershipRequest
-import wig.models.responses.GetBorrowersResponse
-import wig.models.responses.GetCheckedOutItemsResponse
-import wig.models.responses.InventoryResponse
-import wig.models.responses.LocationResponse
-import wig.models.requests.NewOwnershipRequest
-import wig.models.responses.OwnershipResponse
-import wig.models.responses.ScanResponse
-import wig.models.responses.SearchLocationResponse
-import wig.models.responses.SearchOwnershipResponse
-import wig.models.requests.SearchRequest
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
+// Activity sets up the Base settings and functions for the application
 open class Activity : Bindings() {
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
-    private val scannerService = ScannerService.create()
-    private val ownershipService = OwnershipService.create()
-    private val locationService = LocationService.create()
-    private val borrowerService = BorrowerService.create()
-    private val userService = UserService.create()
-
+    // disableBackPress disables the back press button
     protected fun disableBackPress() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {} })
     }
 
+    // setScreenOrientation sets the screen orientation to portrait view
     @SuppressLint("SourceLockedOrientationActivity")
     protected fun setScreenOrientation() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }
 
+    // startActivityLogin starts Login activity
     protected fun startActivityLogin() {
         val intent = Intent(this, Login::class.java)
         startActivity(intent)
         finish()
     }
 
+    // startActivitySignup starts Signup activity
     protected fun startActivitySignup() {
         val intent = Intent(this, Signup::class.java)
         startActivity(intent)
         finish()
     }
 
+    // startActivityServerSetup starts ServerSetup activity
     protected fun startActivityServerSetup() {
         val intent = Intent(this, ServerSetup::class.java)
         startActivity(intent)
         finish()
     }
 
+    // startActivityForgotPassword starts ForgotPassword activity
     protected fun startActivityForgotPassword() {
         val intent = Intent(this, ForgotPassword::class.java)
         startActivity(intent)
         finish()
     }
 
+    // startActivitySettingsLogin starts Inventory or Scanner activity based on settings selection
     protected fun startActivitySettingsLogin() {
         if(SettingsManager.getIsStartupOnScanner()) {
-            val scanner = Intent(this, Scanner::class.java)
-            startActivity(scanner)
-
-            finish()
+            startActivityScanner()
         } else {
-            val inventory = Intent(this, Inventory::class.java)
-            startActivity(inventory)
-
-            finish()
+            startActivityInventory()
         }
     }
 
+    // startActivityScanner starts Scanner activity
     protected fun startActivityScanner() {
         val intent = Intent(this, Scanner::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
     }
 
+    // startActivitySettings starts Settings activity
     protected fun startActivitySettings() {
         val intent = Intent(this, Settings::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
     }
 
+    // startActivityInventory starts Inventory activity
     protected fun startActivityInventory() {
         val intent = Intent(this, Inventory::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
     }
 
+    // startActivityCheckedOut starts CheckedOut activity
     protected fun startActivityCheckedOut() {
         val intent = Intent(this, CheckedOut::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         startActivity(intent)
     }
 
+    // startActivityResetPassword starts ResetPassword activity
     protected fun startActivityResetPassword() {
         val intent = Intent(this, ResetPassword::class.java)
         startActivity(intent)
         finish()
     }
 
+    // startActivityEmailVerification starts EmailVerification activity
     protected fun startActivityEmailVerification() {
         val intent = Intent(this, EmailVerification::class.java)
         startActivity(intent)
         finish()
-    }
-
-    protected suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.scan(barcode)
-        posts
-    }
-
-    protected suspend fun checkQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.checkQR(qr)
-        posts
-    }
-
-    protected suspend fun scanQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.scanQRLocation(qr)
-        posts
-    }
-
-    protected suspend fun scanQROwnership(qr: String): OwnershipResponse = withContext(Dispatchers.IO) {
-        val posts = scannerService.scanQROwnership(qr)
-        posts
-    }
-
-    protected suspend fun setItemLocation(ownershipUID: String, locationQR: String): CommonResponse = withContext(
-        Dispatchers.IO){
-        val posts = ownershipService.setLocation(ownershipUID, locationQR)
-        posts
-    }
-
-    protected suspend fun createNewLocation(name: String, locationQR: String): LocationResponse = withContext(
-        Dispatchers.IO){
-        val posts = locationService.createLocation(name, locationQR)
-        posts
-    }
-
-    protected suspend fun createNewOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse = withContext(
-        Dispatchers.IO){
-        val posts = ownershipService.createOwnershipNoItem(newOwnershipRequest)
-        posts
-    }
-
-    protected suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse = withContext(Dispatchers.IO){
-        val posts = ownershipService.changeQuantity(changeType, amount, ownershipUID)
-        posts
-    }
-
-    protected suspend fun unpackLocation(locationUID: String): InventoryResponse = withContext(Dispatchers.IO){
-        val posts = locationService.unpackLocation(locationUID)
-        posts
-    }
-
-    protected suspend fun getBorrowers(): GetBorrowersResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.getBorrowers()
-        posts
-    }
-
-    protected suspend fun createBorrowers(name: String): CreateBorrowerResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.createBorrower(name)
-        posts
-    }
-
-    protected suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.checkout(borrowerUID,ownerships)
-        posts
-    }
-
-    protected suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.checkIn(ownerships)
-        posts
-    }
-
-    protected suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse = withContext(Dispatchers.IO){
-        val posts = ownershipService.searchOwnership(searchRequest)
-        posts
-    }
-
-    protected suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = ownershipService.editOwnership(editOwnershipRequest, uid)
-        posts
-    }
-
-    protected suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.getCheckedOutItems()
-        posts
-    }
-
-    protected suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse = withContext(Dispatchers.IO){
-        val posts = locationService.searchLocation(searchRequest)
-        posts
-    }
-
-    protected suspend fun locationEdit(editLocationRequest: EditLocationRequest, locationUID: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = locationService.locationEdit(editLocationRequest, locationUID)
-        posts
-    }
-
-    protected suspend fun returnInventory(): InventoryResponse = withContext(Dispatchers.IO){
-        val posts = locationService.returnInventory()
-        posts
-    }
-
-    protected suspend fun ping(hostname: String, port: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = userService.ping(hostname, port)
-        posts
     }
 
     protected fun removeConfirmation(name: String, callback: (Boolean) -> Unit) {
