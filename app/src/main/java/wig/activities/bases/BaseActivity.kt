@@ -50,7 +50,6 @@ import wig.api.dto.ScanResponse
 import wig.api.dto.SearchLocationResponse
 import wig.api.dto.SearchOwnershipResponse
 import wig.api.dto.SearchRequest
-import wig.api.dto.UnpackResponse
 import wig.databinding.CheckedOutBinding
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding

@@ -64,12 +64,12 @@
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity
-            android:name="wig.activities.CheckedOut">
+        <activity android:name="wig.activities.CheckedOut">
+            <!-- Intent filters, etc. -->
         </activity>
 
-        <activity
-            android:name="wig.activities.Inventory">
+        <activity android:name="wig.activities.Inventory">
+            <!-- Intent filters, etc. -->
         </activity>
 
     </application>
