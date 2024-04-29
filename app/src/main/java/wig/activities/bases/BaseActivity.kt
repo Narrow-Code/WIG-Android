@@ -369,7 +369,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun performVibration(context: Context) {
-        val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator?
+        val vibrator = context.getSystemService(Vibrator::class.java)
         vibrator?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
             ?: run {
                 // handle the case where vibration is not supported
