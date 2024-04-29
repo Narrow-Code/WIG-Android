@@ -78,75 +78,88 @@ open class API : AppCompatActivity() {
         posts
     }
 
+    // changeQuantity changes or sets the quantity of an Ownership
     protected suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse = withContext(
         Dispatchers.IO){
         val posts = ownershipService.changeQuantity(changeType, amount, ownershipUID)
         posts
     }
 
+    // unpackLocation retrieves all inventory with a location
     protected suspend fun unpackLocation(locationUID: String): InventoryResponse = withContext(
         Dispatchers.IO){
         val posts = locationService.unpackLocation(locationUID)
         posts
     }
 
+    // getBorrowers retrieves all borrowers associated with the user
     protected suspend fun getBorrowers(): GetBorrowersResponse = withContext(Dispatchers.IO){
         val posts = borrowerService.getBorrowers()
         posts
     }
 
-    protected suspend fun createBorrowers(name: String): CreateBorrowerResponse = withContext(
+    // createBorrowers creates a new borrower
+    protected suspend fun createBorrower(name: String): CreateBorrowerResponse = withContext(
         Dispatchers.IO){
         val posts = borrowerService.createBorrower(name)
         posts
     }
 
+    // checkout checks out a list of Ownerships to a Borrower
     protected suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse = withContext(
         Dispatchers.IO){
         val posts = borrowerService.checkout(borrowerUID,ownerships)
         posts
     }
 
+    // checkIn returns a list of Ownerships from Borrowers
     protected suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse = withContext(
         Dispatchers.IO){
         val posts = borrowerService.checkIn(ownerships)
         posts
     }
 
+    // searchOwnership searches for an Ownership based on Name and Tags
     protected suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse = withContext(
         Dispatchers.IO){
         val posts = ownershipService.searchOwnership(searchRequest)
         posts
     }
 
+    // editOwnership edits the fields of an Ownership
     protected suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse = withContext(
         Dispatchers.IO){
         val posts = ownershipService.editOwnership(editOwnershipRequest, uid)
         posts
     }
 
-    protected suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.getCheckedOutItems()
+    // getCheckedOutItems returns all Borrowed ownerships
+    protected suspend fun getCheckedOutOwnerships(): GetCheckedOutItemsResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.getCheckedOutOwnerships()
         posts
     }
 
+    // searchLocation searches for Locations based on Name and Tags
     protected suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse = withContext(
         Dispatchers.IO){
         val posts = locationService.searchLocation(searchRequest)
         posts
     }
 
+    // locationEdit edits the fields of a Location
     protected suspend fun locationEdit(editLocationRequest: EditLocationRequest, locationUID: String): CommonResponse = withContext(
         Dispatchers.IO){
         val posts = locationService.locationEdit(editLocationRequest, locationUID)
         posts
     }
 
+    // returnInventory returns users entire inventory
     protected suspend fun returnInventory(): InventoryResponse = withContext(Dispatchers.IO){
         val posts = locationService.returnInventory()
         posts
     }
 
+    // ping performs a health check on a self hosted server to validate existance
     protected suspend fun ping(hostname: String, port: String): CommonResponse = withContext(
         Dispatchers.IO){
         val posts = userService.ping(hostname, port)

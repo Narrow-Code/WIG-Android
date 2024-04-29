@@ -129,7 +129,7 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         }
     }
 
-    override suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse {
+    override suspend fun getCheckedOutOwnerships(): GetCheckedOutItemsResponse {
         return try {
             client.get {
                 url(HttpRoutes.GET_CHECKED_OUT)

@@ -95,7 +95,7 @@ class Scanner : Camera() {
                         "New" -> {
                             showNewBorrowerDialog(this@Scanner) { borrowerName ->
                                 lifecycleScope.launch {
-                                    val response = createBorrowers(borrowerName)
+                                    val response = createBorrower(borrowerName)
                                     if (response.success) {
                                         Toast.makeText(
                                             this@Scanner,

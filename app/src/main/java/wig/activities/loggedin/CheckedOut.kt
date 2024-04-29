@@ -110,7 +110,7 @@ class CheckedOut : Settings() {
 
     private fun getBorrowedItems() {
         lifecycleScope.launch {
-            val response = getCheckedOutItems()
+            val response = getCheckedOutOwnerships()
             if (response.success) {
                 borrowers = response.borrowers
                 populateTable(borrowers)

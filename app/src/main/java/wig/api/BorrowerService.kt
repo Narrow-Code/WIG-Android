@@ -22,7 +22,7 @@ interface BorrowerService {
 
     suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse
 
-    suspend fun getCheckedOutItems(): GetCheckedOutItemsResponse
+    suspend fun getCheckedOutOwnerships(): GetCheckedOutItemsResponse
 
     companion object {
         fun create(): BorrowerService {
