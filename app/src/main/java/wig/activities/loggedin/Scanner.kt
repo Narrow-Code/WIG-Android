@@ -39,6 +39,7 @@ import wig.models.entities.Location
 import wig.models.entities.Ownership
 import wig.managers.LocationManager
 import wig.managers.OwnershipManager
+import wig.utils.Alerts
 
 
 class Scanner : Camera() {
@@ -259,7 +260,7 @@ class Scanner : Camera() {
         ownershipRowMap[ownership.ownershipUID] = row
 
         row.setOnLongClickListener {
-            removeConfirmation(ownership.customItemName) { shouldDelete ->
+            Alerts().removeConfirmation(ownership.customItemName, this) { shouldDelete ->
                 if (shouldDelete){ removeOwnershipRow(ownership.ownershipUID)}
             }
             true
@@ -352,7 +353,7 @@ class Scanner : Camera() {
         locationRowMap[location.locationUID] = row
 
         row.setOnLongClickListener {
-            removeConfirmation(location.locationName) { shouldDelete ->
+            Alerts().removeConfirmation(location.locationName, this) { shouldDelete ->
                 if (shouldDelete){ removeLocationRow(location.locationUID)}
             }
             true
@@ -572,7 +573,7 @@ class Scanner : Camera() {
         searchRowMap[ownership.ownershipUID] = row
 
         row.setOnClickListener {
-            addConfirmation(ownership.customItemName) { shouldAdd ->
+            Alerts().addConfirmation(ownership.customItemName, this) { shouldAdd ->
                 if (shouldAdd){
                     if (!OwnershipManager.ownershipExists(ownership.ownershipUID)){
                         populateItem(ownership)}}
@@ -623,7 +624,7 @@ class Scanner : Camera() {
         searchRowMap[location.locationUID] = row
 
         row.setOnClickListener {
-            addConfirmation(location.locationName) { shouldAdd ->
+            Alerts().addConfirmation(location.locationName, this) { shouldAdd ->
                 if (shouldAdd){
                     if (!LocationManager.locationExists(location.locationUID)){
                         populateLocations(location)}}

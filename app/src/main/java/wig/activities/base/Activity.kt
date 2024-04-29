@@ -126,44 +126,6 @@ open class Activity : Bindings() {
         finish()
     }
 
-    protected fun removeConfirmation(name: String, callback: (Boolean) -> Unit) {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle("Confirm Remove")
-        alertDialogBuilder.setMessage("Are you sure you want to remove $name from queue?")
-
-        alertDialogBuilder.setPositiveButton("REMOVE") { dialog, _ ->
-            dialog.dismiss()
-            callback(true)
-        }
-
-        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
-            dialog.dismiss()
-            callback(false)
-        }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-    }
-
-    protected fun addConfirmation(name: String, callback: (Boolean) -> Unit) {
-        val alertDialogBuilder = AlertDialog.Builder(this)
-        alertDialogBuilder.setTitle("Confirm Add")
-        alertDialogBuilder.setMessage("Are you sure you want to add $name to queue?")
-
-        alertDialogBuilder.setPositiveButton("Add") { dialog, _ ->
-            dialog.dismiss()
-            callback(true)
-        }
-
-        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
-            dialog.dismiss()
-            callback(false)
-        }
-
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog.show()
-    }
-
     fun performVibration(context: Context) {
         val vibrator = context.getSystemService(Vibrator::class.java)
         vibrator?.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.DEFAULT_AMPLITUDE))
