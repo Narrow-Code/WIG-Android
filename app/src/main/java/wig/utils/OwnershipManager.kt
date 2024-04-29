@@ -7,7 +7,7 @@ object OwnershipManager {
     private val ownerships = mutableListOf<Ownership>()
 
     fun addOwnership(ownership: Ownership) {
-        ownerships.add(ownership);
+        ownerships.add(ownership)
     }
 
     fun removeOwnership(uid: String) {
@@ -21,10 +21,6 @@ object OwnershipManager {
 
     fun removeAllOwnerships() {
         ownerships.clear()
-    }
-
-    fun getOwnership(uid: String): Ownership? {
-        return ownerships.find { it.ownershipUID == uid }
     }
 
     fun setOwnershipLocation(ownershipUID: String, location: Location) {
