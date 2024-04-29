@@ -52,7 +52,7 @@ import wig.models.requests.SearchRequest
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
-open class BaseActivity : BaseBindings() {
+open class Activity : Bindings() {
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private val scannerService = ScannerService.create()
@@ -304,7 +304,7 @@ open class BaseActivity : BaseBindings() {
 
     fun checkForUpdates() {
         coroutineScope.launch {
-            val updater = ApkUpdater(this@BaseActivity, "https://github.com/WIGteam/WIG-Android/releases/latest")
+            val updater = ApkUpdater(this@Activity, "https://github.com/WIGteam/WIG-Android/releases/latest")
             updater.threeNumbers = true
             if (updater.isInternetConnection() && updater.isNewUpdateAvailable() == true) {
                 scannerBinding.topMenu.appName.setTextColor(Color.YELLOW)
@@ -318,42 +318,42 @@ open class BaseActivity : BaseBindings() {
     }
 
     suspend fun unpackSettings() = withContext(Dispatchers.IO){
-        val vibrateFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsVibrateEnabled
+        val vibrateFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsVibrateEnabled
         vibrateFlow.map { isVibrateEnabled ->
             if (isVibrateEnabled != null) {
                 SettingsManager.setIsVibrateEnabled(isVibrateEnabled)
             }
         }.first()
 
-        val soundFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsSoundEnabled
+        val soundFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsSoundEnabled
         soundFlow.map { isSoundEnabled ->
             if (isSoundEnabled != null) {
                 SettingsManager.setIsSoundEnabled(isSoundEnabled)
             }
         }.first()
 
-        val startupFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsStartupOnScanner
+        val startupFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsStartupOnScanner
         startupFlow.map { isStartupOnScanner ->
             if (isStartupOnScanner != null) {
                 SettingsManager.setIsStartupOnScanner(isStartupOnScanner)
             }
         }.first()
 
-        val hostedFlow: Flow<Boolean?> = StoreSettings(this@BaseActivity).getIsHosted
+        val hostedFlow: Flow<Boolean?> = StoreSettings(this@Activity).getIsHosted
         hostedFlow.map { isHosted ->
             if (isHosted != null) {
                 SettingsManager.setIsHosted(isHosted)
             }
         }.first()
 
-        val hostnameFlow: Flow<String?> = StoreSettings(this@BaseActivity).getHostname
+        val hostnameFlow: Flow<String?> = StoreSettings(this@Activity).getHostname
         hostnameFlow.map { hostname ->
             if (hostname != null) {
                 SettingsManager.setHostname(hostname)
             }
         }.first()
 
-        val portNumberFlow: Flow<String?> = StoreSettings(this@BaseActivity).getPort
+        val portNumberFlow: Flow<String?> = StoreSettings(this@Activity).getPort
         portNumberFlow.map { portNumber ->
             if (portNumber != null) {
                 SettingsManager.setPortNumber(portNumber)

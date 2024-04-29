@@ -12,7 +12,7 @@ import wig.databinding.ServerSetupBinding
 import wig.databinding.SettingsBinding
 import wig.databinding.SignupBinding
 
-open class BaseBindings : AppCompatActivity() {
+open class Bindings : AppCompatActivity() {
     protected lateinit var emailVerificationBinding: EmailVerificationBinding
     protected lateinit var forgotPasswordBinding: ForgotPasswordBinding
     protected lateinit var loginBinding: LoginBinding

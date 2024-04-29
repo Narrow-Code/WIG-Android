@@ -22,7 +22,7 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
-import wig.activities.base.BaseCamera
+import wig.activities.base.Camera
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.EditLocationRequest
 import wig.models.requests.EditOwnershipRequest
@@ -41,7 +41,7 @@ import wig.managers.LocationManager
 import wig.managers.OwnershipManager
 
 
-class Scanner : BaseCamera() {
+class Scanner : Camera() {
     private var pageView = "items"
     private val ownershipRowMap = mutableMapOf<String, TableRow>()
     private val locationRowMap = mutableMapOf<String, TableRow>()

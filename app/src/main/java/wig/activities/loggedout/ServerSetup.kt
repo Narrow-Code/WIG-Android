@@ -5,11 +5,11 @@ import android.view.View
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.R
-import wig.activities.base.BaseActivity
+import wig.activities.base.Activity
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
-class ServerSetup : BaseActivity() {
+class ServerSetup : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

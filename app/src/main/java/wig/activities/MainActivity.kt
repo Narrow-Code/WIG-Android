@@ -11,10 +11,10 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import wig.activities.base.BaseActivity
+import wig.activities.base.Activity
 import android.util.Log
 
-class MainActivity : BaseActivity() {
+class MainActivity : Activity() {
 
     private val service = UserService.create()
 

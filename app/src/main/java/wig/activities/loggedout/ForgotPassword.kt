@@ -2,10 +2,10 @@ package wig.activities.loggedout
 
 import android.os.Bundle
 import wig.R
-import wig.activities.base.BaseActivity
+import wig.activities.base.Activity
 import wig.managers.EmailManager
 
-class ForgotPassword : BaseActivity() {
+class ForgotPassword : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()

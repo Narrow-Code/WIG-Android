@@ -5,12 +5,12 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import wig.activities.base.BaseActivity
+import wig.activities.base.Activity
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 import wig.utils.StoreToken
 
-class Settings : BaseActivity() {
+class Settings : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()

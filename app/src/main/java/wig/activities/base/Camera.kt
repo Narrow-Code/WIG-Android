@@ -18,7 +18,7 @@ import wig.managers.SettingsManager
 
 private const val CAMERA_REQUEST_CODE = 101
 
-open class BaseCamera : BaseActivity()  {
+open class Camera : Activity()  {
     protected lateinit var codeScanner: CodeScanner
 
     protected open suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){}
@@ -35,10 +35,10 @@ open class BaseCamera : BaseActivity()  {
             isFlashEnabled = false
             decodeCallback = DecodeCallback {
                 if(SettingsManager.getIsVibrateEnabled()){
-                    performVibration(this@BaseCamera)
+                    performVibration(this@Camera)
                 }
                 if (SettingsManager.getSoundEnabled()){
-                    playScanSound(this@BaseCamera)
+                    playScanSound(this@Camera)
                 }
                 lifecycleScope.launch {
                     scanSuccess(it.text, it.barcodeFormat)
