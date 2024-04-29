@@ -119,7 +119,7 @@
             android:id="@+id/disconnect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Disconnect"
+            android:text="@string/disconnect"
             android:textSize="25sp"
             android:visibility="invisible"
             android:layout_gravity="center"

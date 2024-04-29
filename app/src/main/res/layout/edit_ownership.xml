@@ -19,7 +19,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Edit Ownership"
+        android:text="@string/edit_ownership"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="Name"
+        android:hint="@string/name"
         android:minHeight="48dp"
         android:inputType="text"
         android:autofillHints="item name"
@@ -40,50 +40,53 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name" />
+        android:text="@string/name" />
 
         <EditText
             android:id="@+id/qr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:hint="QR"
+            android:hint="@string/qr"
             tools:ignore="TouchTargetSizeCheck"
             android:text="@={viewModel.qr}"
-            android:inputType="text" />
+            android:inputType="text"
+            android:autofillHints="@string/qr" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="QR" />
+        android:text="@string/qr" />
 
     <EditText
         android:id="@+id/tags"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="Tags"
+        android:hint="@string/tags"
         tools:ignore="TouchTargetSizeCheck"
         android:text="@={viewModel.tags}"
-        android:inputType="text" />
+        android:inputType="text"
+        android:autofillHints="@string/tags" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Tags" />
+        android:text="@string/tags" />
 
     <EditText
         android:id="@+id/Note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:hint="Notes/Description"
+        android:hint="@string/notes_description"
         android:text="@={viewModel.description}"
         tools:ignore="TouchTargetSizeCheck"
-        android:inputType="text" />
+        android:inputType="text"
+        android:autofillHints="@string/notes_description" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Notes/Description" />
+        android:text="@string/notes_description" />
 
     <!-- Buttons -->
     <LinearLayout
@@ -96,7 +99,7 @@
             android:id="@+id/cancelButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:layout_marginEnd="8dp"
             style="?android:attr/buttonBarButtonStyle" />
 
@@ -104,7 +107,7 @@
             android:id="@+id/saveButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:text="@string/save"
             android:layout_marginEnd="8dp"
             style="?android:attr/buttonBarButtonStyle" />
 

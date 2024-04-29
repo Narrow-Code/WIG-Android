@@ -53,7 +53,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@null"
-            android:contentDescription="@string/checked_out"
+            android:contentDescription="@string/borrowed_out"
             android:padding="10dp"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_checked_out"
