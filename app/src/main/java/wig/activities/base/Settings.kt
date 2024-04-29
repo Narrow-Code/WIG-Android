@@ -30,7 +30,7 @@ import wig.activities.loggedout.Signup
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
-// Activity sets up the Base settings and functions for the application
+// Settings sets up the Base settings and functions for the application
 open class Settings : Bindings() {
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 

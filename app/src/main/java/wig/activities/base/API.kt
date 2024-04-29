@@ -25,6 +25,7 @@ import wig.models.responses.ScanResponse
 import wig.models.responses.SearchLocationResponse
 import wig.models.responses.SearchOwnershipResponse
 
+// API holds all of the API calls within Coroutine functions
 open class API : AppCompatActivity() {
     private val scannerService = ScannerService.create()
     private val ownershipService = OwnershipService.create()
@@ -32,41 +33,48 @@ open class API : AppCompatActivity() {
     private val borrowerService = BorrowerService.create()
     private val userService = UserService.create()
 
+    // scanBarcode takes a barcode and retrieves existing Ownerships or creates a new one if none exist
     protected suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
         val posts = scannerService.scan(barcode)
         posts
     }
 
+    // checkQR checks if a QR code is in use by a Location, Ownership or is New
     protected suspend fun checkQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
         val posts = scannerService.checkQR(qr)
         posts
     }
 
+    // scanQRLocation takes a QR code and returns its location
     protected suspend fun scanQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
         val posts = scannerService.scanQRLocation(qr)
         posts
     }
 
+    // scanQROwnership takes a QR code and returns its Ownership
     protected suspend fun scanQROwnership(qr: String): OwnershipResponse = withContext(Dispatchers.IO) {
         val posts = scannerService.scanQROwnership(qr)
         posts
     }
 
-    protected suspend fun setItemLocation(ownershipUID: String, locationQR: String): CommonResponse = withContext(
+    // setOwnershipLocation sets the location of an Ownership
+    protected suspend fun setOwnershipLocation(ownershipUID: String, locationQR: String): CommonResponse = withContext(
         Dispatchers.IO){
         val posts = ownershipService.setLocation(ownershipUID, locationQR)
         posts
     }
 
+    // createNewLocation creates a new Location
     protected suspend fun createNewLocation(name: String, locationQR: String): LocationResponse = withContext(
         Dispatchers.IO){
         val posts = locationService.createLocation(name, locationQR)
         posts
     }
 
-    protected suspend fun createNewOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse = withContext(
+    // createNewOwnership creates a new Ownership
+    protected suspend fun createNewOwnership(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse = withContext(
         Dispatchers.IO){
-        val posts = ownershipService.createOwnershipNoItem(newOwnershipRequest)
+        val posts = ownershipService.createOwnership(newOwnershipRequest)
         posts
     }
 

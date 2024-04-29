@@ -676,7 +676,7 @@ class Scanner : Camera() {
                 }
                 "Item" -> {
                     val request = NewOwnershipRequest(qr, name)
-                    val response = createNewOwnershipNoItem(request)
+                    val response = createNewOwnership(request)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Ownership created", Toast.LENGTH_SHORT).show()
                         populateItem(response.ownership)
@@ -706,7 +706,7 @@ class Scanner : Camera() {
 
                                     for(ownership in OwnershipManager.getAllOwnerships()) {
                                         lifecycleScope.launch {
-                                            val response = setItemLocation(ownership.ownershipUID, qr)
+                                            val response = setOwnershipLocation(ownership.ownershipUID, qr)
                                             if (response.success){
                                                 updateLocationForAllRows(LocationManager.getAllLocations()[which])
                                             } else{

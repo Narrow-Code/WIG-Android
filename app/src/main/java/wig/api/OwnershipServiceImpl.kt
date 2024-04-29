@@ -82,7 +82,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-    override suspend fun createOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse {
+    override suspend fun createOwnership(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse {
         return try {
             client.post {
                 url("${HttpRoutes.CREATE_OWNERSHIP}?item_uid=1")

@@ -19,7 +19,7 @@ interface OwnershipService {
 
     suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse
 
-    suspend fun createOwnershipNoItem(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse
+    suspend fun createOwnership(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse
 
     suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse
 
