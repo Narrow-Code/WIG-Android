@@ -205,12 +205,9 @@ class CheckedOut : Settings() {
         return row
     }
 
-    private fun setColorForRow(row: TableRow, position: Int){
-        val backgroundColor = if(position % 2 == 0){
-            Color.BLACK
-        } else {
-            Color.DKGRAY
-        }
+    // setColorForRow rotates and sets the colors for each created row
+    private fun setColorForRow(row: TableRow, position: Int) {
+        val backgroundColor = if (position % 2 == 0) Color.BLACK else Color.DKGRAY
         row.setBackgroundColor(backgroundColor)
     }
 
