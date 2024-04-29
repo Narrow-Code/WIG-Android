@@ -10,7 +10,6 @@ import android.media.RingtoneManager
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AppCompatActivity
 import com.supersuman.apkupdater.ApkUpdater
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,31 +49,10 @@ import wig.models.responses.ScanResponse
 import wig.models.responses.SearchLocationResponse
 import wig.models.responses.SearchOwnershipResponse
 import wig.models.requests.SearchRequest
-import wig.databinding.CheckedOutBinding
-import wig.databinding.EmailVerificationBinding
-import wig.databinding.ForgotPasswordBinding
-import wig.databinding.InventoryBinding
-import wig.databinding.LoginBinding
-import wig.databinding.ResetPasswordBinding
-import wig.databinding.ScannerBinding
-import wig.databinding.ServerSetupBinding
-import wig.databinding.SettingsBinding
-import wig.databinding.SignupBinding
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 
-open class BaseActivity : AppCompatActivity() {
-    protected lateinit var emailVerificationBinding: EmailVerificationBinding
-    protected lateinit var forgotPasswordBinding: ForgotPasswordBinding
-    protected lateinit var loginBinding: LoginBinding
-    protected lateinit var resetPasswordBinding: ResetPasswordBinding
-    protected lateinit var scannerBinding: ScannerBinding
-    protected lateinit var serverSetupBinding: ServerSetupBinding
-    protected lateinit var signupBinding: SignupBinding
-    protected lateinit var settingsBinding: SettingsBinding
-    protected lateinit var checkedOutBinding: CheckedOutBinding
-    protected lateinit var inventoryBinding: InventoryBinding
-
+open class BaseActivity : BaseBindings() {
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     private val scannerService = ScannerService.create()
@@ -99,28 +77,10 @@ open class BaseActivity : AppCompatActivity() {
         finish()
     }
 
-    protected fun setLoginBindings(){
-        loginBinding = LoginBinding.inflate(layoutInflater)
-        val view = loginBinding.root
-        setContentView(view)
-    }
-
     protected fun startActivitySignup() {
         val intent = Intent(this, Signup::class.java)
         startActivity(intent)
         finish()
-    }
-
-    protected fun setSignupBindings(){
-        signupBinding = SignupBinding.inflate(layoutInflater)
-        val view = signupBinding.root
-        setContentView(view)
-    }
-
-    protected fun setSettingsBindings(){
-        settingsBinding = SettingsBinding.inflate(layoutInflater)
-        val view = settingsBinding.root
-        setContentView(view)
     }
 
     protected fun startActivityServerSetup() {
@@ -129,22 +89,10 @@ open class BaseActivity : AppCompatActivity() {
         finish()
     }
 
-    protected fun setServerSetupBindings() {
-        serverSetupBinding = ServerSetupBinding.inflate(layoutInflater)
-        val view = serverSetupBinding.root
-        setContentView(view)
-    }
-
     protected fun startActivityForgotPassword() {
         val intent = Intent(this, ForgotPassword::class.java)
         startActivity(intent)
         finish()
-    }
-
-    protected fun setForgotPasswordBindings(){
-        forgotPasswordBinding = ForgotPasswordBinding.inflate(layoutInflater)
-        val view = forgotPasswordBinding.root
-        setContentView(view)
     }
 
     protected fun startActivitySettingsLogin() {
@@ -185,46 +133,16 @@ open class BaseActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    protected fun setCheckedOutBindings(){
-        checkedOutBinding = CheckedOutBinding.inflate(layoutInflater)
-        val view = checkedOutBinding.root
-        setContentView(view)
-    }
-
-    protected fun setInventoryBindings(){
-        inventoryBinding = InventoryBinding.inflate(layoutInflater)
-        val view = inventoryBinding.root
-        setContentView(view)
-    }
-
-    protected fun setScannerBindings(){
-        scannerBinding = ScannerBinding.inflate(layoutInflater)
-        val view = scannerBinding.root
-        setContentView(view)
-    }
-
     protected fun startActivityResetPassword() {
         val intent = Intent(this, ResetPassword::class.java)
         startActivity(intent)
         finish()
     }
 
-    protected fun setResetPasswordBindings(){
-        resetPasswordBinding = ResetPasswordBinding.inflate(layoutInflater)
-        val view = resetPasswordBinding.root
-        setContentView(view)
-    }
-
     protected fun startActivityEmailVerification() {
         val intent = Intent(this, EmailVerification::class.java)
         startActivity(intent)
         finish()
-    }
-
-    protected fun setEmailVerificationBindings(){
-        emailVerificationBinding = EmailVerificationBinding.inflate(layoutInflater)
-        val view = emailVerificationBinding.root
-        setContentView(view)
     }
 
     protected suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
