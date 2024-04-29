@@ -1,11 +1,11 @@
 package wig.models.responses
 
 import kotlinx.serialization.Serializable
-import wig.models.entities.Borrower
+import wig.models.entities.Ownership
 
 @Serializable
-data class GetBorrowersResponse(
+data class ownershipSearchResponse(
     val message: String,
     val success: Boolean,
-    val borrowers: List<Borrower>
+    val ownership: List<Ownership>
 )

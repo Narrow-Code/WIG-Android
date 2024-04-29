@@ -13,11 +13,11 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.models.responses.CommonResponse
-import wig.models.requests.EditLocationRequest
+import wig.models.requests.LocationEditRequest
 import wig.models.responses.InventoryDTO
 import wig.models.responses.InventoryResponse
 import wig.models.responses.LocationResponse
-import wig.models.responses.SearchLocationResponse
+import wig.models.responses.LocationSearchResponse
 import wig.models.requests.SearchRequest
 import wig.models.entities.Location
 import wig.models.entities.User
@@ -29,7 +29,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
     private val nullInventoryDTO = InventoryDTO(nullLocation, ArrayList(), ArrayList())
 
-    override suspend fun createLocation(name: String, locationQR: String): LocationResponse {
+    override suspend fun locationCreate(name: String, locationQR: String): LocationResponse {
         return try {
             client.post {
                 url("${HttpRoutes.CREATE_LOCATION}?location_name=${name}&location_qr=${locationQR}")
@@ -54,7 +54,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
-    override suspend fun unpackLocation(locationUID: String): InventoryResponse {
+    override suspend fun locationUnpack(locationUID: String): InventoryResponse {
         return try {
             client.post {
                 url("${HttpRoutes.UNPACK_LOCATION}?locationUID=${locationUID}")
@@ -79,7 +79,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
-    override suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse {
+    override suspend fun locationSearch(searchRequest: SearchRequest): LocationSearchResponse {
         return try {
             client.post {
                 url(HttpRoutes.SEARCH_LOCATION)
@@ -91,21 +91,21 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SearchLocationResponse(errorMessage, false, ArrayList())
+            LocationSearchResponse(errorMessage, false, ArrayList())
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SearchLocationResponse(errorMessage, false, ArrayList())
+            LocationSearchResponse(errorMessage, false, ArrayList())
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SearchLocationResponse(errorMessage, false, ArrayList())
+            LocationSearchResponse(errorMessage, false, ArrayList())
         } catch(e: Exception) {
-            SearchLocationResponse(e.message.toString(), false, ArrayList())
+            LocationSearchResponse(e.message.toString(), false, ArrayList())
         }
     }
 
-    override suspend fun returnInventory(): InventoryResponse {
+    override suspend fun locationGetInventory(): InventoryResponse {
         return try {
             client.get {
                 url(HttpRoutes.RETURN_INVENTORY)
@@ -130,7 +130,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
-    override suspend fun locationEdit(editLocationRequest: EditLocationRequest, uid: String): CommonResponse {
+    override suspend fun locationEdit(editLocationRequest: LocationEditRequest, uid: String): CommonResponse {
         return try {
             client.put {
                 url("${HttpRoutes.EDIT_LOCATION}?locationUID=${uid}")

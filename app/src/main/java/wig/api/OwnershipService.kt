@@ -7,23 +7,23 @@ import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import wig.models.responses.CommonResponse
-import wig.models.requests.EditOwnershipRequest
-import wig.models.requests.NewOwnershipRequest
+import wig.models.requests.OwnershipEditRequest
+import wig.models.requests.OwnershipCreateRequest
 import wig.models.responses.OwnershipResponse
-import wig.models.responses.SearchOwnershipResponse
+import wig.models.responses.ownershipSearchResponse
 import wig.models.requests.SearchRequest
 
 interface OwnershipService {
 
-    suspend fun setLocation(ownershipUID: String, locationQR: String): CommonResponse
+    suspend fun ownershipSetLocation(ownershipUID: String, locationQR: String): CommonResponse
 
-    suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse
+    suspend fun ownershipQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse
 
-    suspend fun createOwnership(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse
+    suspend fun ownershipCreate(newOwnershipRequest: OwnershipCreateRequest): OwnershipResponse
 
-    suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse
+    suspend fun ownershipSearch(searchRequest: SearchRequest): ownershipSearchResponse
 
-    suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse
+    suspend fun ownershipEdit(editOwnershipRequest: OwnershipEditRequest, uid: String): CommonResponse
 
 
     companion object {

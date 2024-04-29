@@ -24,11 +24,11 @@ import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.base.Camera
 import wig.models.requests.CheckoutRequest
-import wig.models.requests.EditLocationRequest
-import wig.models.requests.EditOwnershipRequest
+import wig.models.requests.LocationEditRequest
+import wig.models.requests.OwnershipEditRequest
 import wig.models.responses.InventoryDTO
-import wig.models.requests.NewOwnershipRequest
-import wig.models.responses.ScanResponse
+import wig.models.requests.OwnershipCreateRequest
+import wig.models.responses.ScannerBarcodeResponse
 import wig.models.requests.SearchRequest
 import wig.databinding.CreateNewBinding
 import wig.databinding.EditLocationBinding
@@ -78,7 +78,7 @@ class Scanner : Camera() {
     private fun checkoutButton() {
         codeScanner.stopPreview()
         lifecycleScope.launch {
-                val borrowers = getBorrowers()
+                val borrowers = borrowerGetAll()
 
                 var borrowerNames = borrowers.borrowers.map { it.borrowerName }.toTypedArray()
                 borrowerNames = arrayOf("Self") + borrowerNames + "New"
@@ -95,7 +95,7 @@ class Scanner : Camera() {
                         "New" -> {
                             showNewBorrowerDialog(this@Scanner) { borrowerName ->
                                 lifecycleScope.launch {
-                                    val response = createBorrower(borrowerName)
+                                    val response = borrowerCreate(borrowerName)
                                     if (response.success) {
                                         Toast.makeText(
                                             this@Scanner,
@@ -121,7 +121,7 @@ class Scanner : Camera() {
                     }
                     val request = CheckoutRequest(ownerships)
                     lifecycleScope.launch {
-                        val response = checkout(borrowerUUID, request)
+                        val response = borrowerCheckout(borrowerUUID, request)
                         if (response.success){
                             for (ownershipSuccess in response.ownerships){
                                 ownershipRowMap.entries.forEach { (ownershipUID, row) ->
@@ -228,7 +228,7 @@ class Scanner : Camera() {
         plusButton.gravity = Gravity.END
         plusButton.setOnClickListener {
             lifecycleScope.launch {
-                val response = changeQuantity("increment", 1, ownership.ownershipUID)
+                val response = ownershipQuantity("increment", 1, ownership.ownershipUID)
                 if (response.success){
                     ownership.itemQuantity = response.ownership.itemQuantity
                     quantityView.text = ownership.itemQuantity.toString()
@@ -242,7 +242,7 @@ class Scanner : Camera() {
         minusButton.gravity = Gravity.END
         minusButton.setOnClickListener {
             lifecycleScope.launch {
-                val response = changeQuantity("decrement", 1, ownership.ownershipUID)
+                val response = ownershipQuantity("decrement", 1, ownership.ownershipUID)
                 if (response.success){
                     ownership.itemQuantity = response.ownership.itemQuantity
                     quantityView.text = ownership.itemQuantity.toString()
@@ -286,7 +286,7 @@ class Scanner : Camera() {
             editOwnershipBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
             editOwnershipBinding.saveButton.setOnClickListener {
                 val editOwnershipRequest =
-                    EditOwnershipRequest(
+                    OwnershipEditRequest(
                         editOwnershipBinding.name.text.toString(),
                         "",
                         editOwnershipBinding.Note.text.toString(),
@@ -301,9 +301,9 @@ class Scanner : Camera() {
         return row
     }
 
-    private fun saveOwnershipButton(row: TableRow, uid: String, editOwnershipRequest: EditOwnershipRequest) {
+    private fun saveOwnershipButton(row: TableRow, uid: String, editOwnershipRequest: OwnershipEditRequest) {
         lifecycleScope.launch {
-            val response = editOwnership(editOwnershipRequest, uid)
+            val response = ownershipEdit(editOwnershipRequest, uid)
             if (response.success){
                 val ownershipView = (row.getChildAt(0) as LinearLayout).getChildAt(0) as TextView
                 ownershipView.text = editOwnershipRequest.customItemName.substring(0 until 25.coerceAtMost(editOwnershipRequest.customItemName.length))
@@ -312,7 +312,7 @@ class Scanner : Camera() {
         }
     }
 
-    private fun saveLocationButton(row: TableRow, uid: String, editLocationRequest: EditLocationRequest) {
+    private fun saveLocationButton(row: TableRow, uid: String, editLocationRequest: LocationEditRequest) {
         lifecycleScope.launch {
             val response = locationEdit(editLocationRequest, uid)
             if (response.success){
@@ -379,7 +379,7 @@ class Scanner : Camera() {
             editLocationBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
             editLocationBinding.saveButton.setOnClickListener {
                 val editLocationRequest =
-                    EditLocationRequest(
+                    LocationEditRequest(
                         editLocationBinding.name.text.toString(),
                         editLocationBinding.Note.text.toString(),
                         editLocationBinding.tags.text.toString(),
@@ -413,7 +413,7 @@ class Scanner : Camera() {
     private fun unpackButton() {
         for (location in LocationManager.getAllLocations()) {
             lifecycleScope.launch {
-                val unpacked = unpackLocation(location.locationUID)
+                val unpacked = locationUnpack(location.locationUID)
                 unpackInventory(unpacked.inventory)
             }
         }
@@ -499,7 +499,7 @@ class Scanner : Camera() {
             return
         }
         lifecycleScope.launch {
-            val response = searchOwnership(SearchRequest(name, tags))
+            val response = ownershipSearch(SearchRequest(name, tags))
             if (response.success) {
                 for (ownership in response.ownership) {
                     val row = createRowForOwnershipSearch(ownership)
@@ -520,7 +520,7 @@ class Scanner : Camera() {
             return
         }
         lifecycleScope.launch {
-            val response = searchLocation(SearchRequest(name, tags))
+            val response = locationSearch(SearchRequest(name, tags))
             if (response.success) {
                 for (location in response.locations) {
                     val row = createRowForLocationSearch(location)
@@ -666,7 +666,7 @@ class Scanner : Camera() {
         lifecycleScope.launch {
             when (typeSpinner.selectedItem?.toString() ?: "") {
                 "Location" -> {
-                    val response = createNewLocation(name, qr)
+                    val response = locationCreate(name, qr)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Location created", Toast.LENGTH_SHORT).show()
                         populateLocations(response.location)
@@ -675,8 +675,8 @@ class Scanner : Camera() {
                     }
                 }
                 "Item" -> {
-                    val request = NewOwnershipRequest(qr, name)
-                    val response = createNewOwnership(request)
+                    val request = OwnershipCreateRequest(qr, name)
+                    val response = ownershipCreate(request)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Ownership created", Toast.LENGTH_SHORT).show()
                         populateItem(response.ownership)
@@ -706,7 +706,7 @@ class Scanner : Camera() {
 
                                     for(ownership in OwnershipManager.getAllOwnerships()) {
                                         lifecycleScope.launch {
-                                            val response = setOwnershipLocation(ownership.ownershipUID, qr)
+                                            val response = ownershipSetLocation(ownership.ownershipUID, qr)
                                             if (response.success){
                                                 updateLocationForAllRows(LocationManager.getAllLocations()[which])
                                             } else{
@@ -763,7 +763,7 @@ class Scanner : Camera() {
         }
     }
 
-    private fun populateItems(postScanResponse: ScanResponse) {
+    private fun populateItems(postScanResponse: ScannerBarcodeResponse) {
         runOnUiThread {
             for (ownership in postScanResponse.ownership) {
                 if (!ownershipRowMap.containsKey(ownership.ownershipUID)) {
@@ -811,18 +811,18 @@ class Scanner : Camera() {
     override suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){
         codeScanner.stopPreview()
         if(barcodeFormat != BarcodeFormat.QR_CODE){
-            val response = scanBarcode(code)
+            val response = scannerBarcode(code)
             if (response.message == "429"){Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()}
             populateItems(response)
             switchToItemsView()
         } else {
-            val response = checkQR(code)
+            val response = scannerCheckQR(code)
             when (response.message) {
                 "NEW" -> {
                     newEntry(code)
                 }
                 "LOCATION" -> {
-                    val locationResponse = scanQRLocation(code)
+                    val locationResponse = scannerQRLocation(code)
                     populateLocations(locationResponse.location)
                     switchToLocationsView()
                 }

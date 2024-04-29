@@ -12,10 +12,10 @@ import io.ktor.client.request.url
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import wig.models.responses.CommonResponse
-import wig.models.requests.EditOwnershipRequest
-import wig.models.requests.NewOwnershipRequest
+import wig.models.requests.OwnershipEditRequest
+import wig.models.requests.OwnershipCreateRequest
 import wig.models.responses.OwnershipResponse
-import wig.models.responses.SearchOwnershipResponse
+import wig.models.responses.ownershipSearchResponse
 import wig.models.requests.SearchRequest
 import wig.models.entities.Borrower
 import wig.models.entities.Item
@@ -32,7 +32,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
     private val nullOwnership = Ownership("", "", "", "", "", "", "", "", "", 0, "", "", nullUser, nullLocation, nullItem, nullBorrower)
 
-    override suspend fun setLocation(ownershipUID: String, locationQR: String): CommonResponse {
+    override suspend fun ownershipSetLocation(ownershipUID: String, locationQR: String): CommonResponse {
         return try {
             client.put {
                 url("${HttpRoutes.SET_OWNERSHIP_LOCATION}?ownershipUID=${ownershipUID}&location_qr=${locationQR}")
@@ -57,7 +57,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-    override suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse {
+    override suspend fun ownershipQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse {
         return try {
             client.put {
                 url("${HttpRoutes.CHANGE_OWNERSHIP_QUANTITY}${changeType}?ownershipUID=${ownershipUID}&amount=${amount}")
@@ -82,7 +82,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-    override suspend fun createOwnership(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse {
+    override suspend fun ownershipCreate(newOwnershipRequest: OwnershipCreateRequest): OwnershipResponse {
         return try {
             client.post {
                 url("${HttpRoutes.CREATE_OWNERSHIP}?item_uid=1")
@@ -108,7 +108,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-    override suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse {
+    override suspend fun ownershipSearch(searchRequest: SearchRequest): ownershipSearchResponse {
         return try {
             client.post {
                 url(HttpRoutes.SEARCH_OWNERSHIP)
@@ -120,21 +120,21 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SearchOwnershipResponse(errorMessage, false, ArrayList())
+            ownershipSearchResponse(errorMessage, false, ArrayList())
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SearchOwnershipResponse(errorMessage, false, ArrayList())
+            ownershipSearchResponse(errorMessage, false, ArrayList())
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            SearchOwnershipResponse(errorMessage, false, ArrayList())
+            ownershipSearchResponse(errorMessage, false, ArrayList())
         } catch(e: Exception) {
-            SearchOwnershipResponse(e.message.toString(), false, ArrayList())
+            ownershipSearchResponse(e.message.toString(), false, ArrayList())
         }
     }
 
-    override suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse {
+    override suspend fun ownershipEdit(editOwnershipRequest: OwnershipEditRequest, uid: String): CommonResponse {
         return try {
             client.put {
                 url("${HttpRoutes.EDIT_OWNERSHIP}?ownershipUID=${uid}")

@@ -1,10 +1,11 @@
 package wig.models.responses
 
 import kotlinx.serialization.Serializable
+import wig.models.entities.Ownership
 
 @Serializable
-data class CheckoutResponse(
+data class ScannerBarcodeResponse(
     val message: String,
     val success: Boolean,
-    val ownerships: List<String>
+    val ownership: List<Ownership>
 )

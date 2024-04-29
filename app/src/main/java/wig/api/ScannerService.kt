@@ -9,15 +9,15 @@ import io.ktor.client.features.logging.Logging
 import wig.models.responses.CommonResponse
 import wig.models.responses.LocationResponse
 import wig.models.responses.OwnershipResponse
-import wig.models.responses.ScanResponse
+import wig.models.responses.ScannerBarcodeResponse
 
 interface ScannerService {
 
-    suspend fun scan(barcode: String): ScanResponse
+    suspend fun scannerBarcode(barcode: String): ScannerBarcodeResponse
 
-    suspend fun checkQR(qr: String): CommonResponse
+    suspend fun scannerCheckQR(qr: String): CommonResponse
 
-    suspend fun scanQRLocation(qr: String): LocationResponse
+    suspend fun scannerQRLocation(qr: String): LocationResponse
 
     suspend fun scanQROwnership(qr: String): OwnershipResponse
 

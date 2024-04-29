@@ -1,11 +1,11 @@
 package wig.models.responses
 
 import kotlinx.serialization.Serializable
-import wig.models.entities.Location
+import wig.models.entities.Borrower
 
 @Serializable
-data class SearchLocationResponse(
+data class borrowerCreateResponse(
     val message: String,
     val success: Boolean,
-    val locations: List<Location>
+    val borrower: Borrower
 )

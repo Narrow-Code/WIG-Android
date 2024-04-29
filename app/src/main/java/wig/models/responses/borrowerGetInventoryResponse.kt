@@ -5,7 +5,7 @@ import wig.models.entities.Borrower
 import wig.models.entities.Ownership
 
 @Serializable
-data class GetCheckedOutItemsResponse(
+data class borrowerGetInventoryResponse(
     val borrowers: List<Borrowers>,
     val message: String,
     val success: Boolean

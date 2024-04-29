@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 import wig.models.entities.Borrower
 
 @Serializable
-data class CreateBorrowerResponse(
+data class borrowerGetAllResponse(
     val message: String,
     val success: Boolean,
-    val borrower: Borrower
+    val borrowers: List<Borrower>
 )

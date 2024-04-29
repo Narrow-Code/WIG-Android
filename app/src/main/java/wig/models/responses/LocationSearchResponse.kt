@@ -1,11 +1,11 @@
 package wig.models.responses
 
 import kotlinx.serialization.Serializable
-import wig.models.entities.Ownership
+import wig.models.entities.Location
 
 @Serializable
-data class ScanResponse(
+data class LocationSearchResponse(
     val message: String,
     val success: Boolean,
-    val ownership: List<Ownership>
+    val locations: List<Location>
 )

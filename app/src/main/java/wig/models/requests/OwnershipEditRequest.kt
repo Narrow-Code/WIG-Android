@@ -3,7 +3,7 @@ package wig.models.requests
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EditOwnershipRequest(
+data class OwnershipEditRequest(
     val customItemName: String,
     val customItemImg: String,
     val customItemDescription: String,

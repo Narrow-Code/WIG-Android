@@ -3,7 +3,7 @@ package wig.models.requests
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EditLocationRequest(
+data class LocationEditRequest(
     val locationName: String,
     val locationDescription: String,
     val locationTags: String,

@@ -14,7 +14,7 @@ import io.ktor.http.contentType
 import wig.models.responses.CommonResponse
 import wig.models.responses.LocationResponse
 import wig.models.responses.OwnershipResponse
-import wig.models.responses.ScanResponse
+import wig.models.responses.ScannerBarcodeResponse
 import wig.models.entities.Borrower
 import wig.models.entities.Item
 import wig.models.entities.Location
@@ -30,7 +30,7 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
     private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
     private val nullOwnership = Ownership("", "", "", "", "", "", "", "", "", 0, "", "", nullUser, nullLocation, nullItem, nullBorrower)
 
-    override suspend fun scan(barcode: String): ScanResponse {
+    override suspend fun scannerBarcode(barcode: String): ScannerBarcodeResponse {
         return try {
             client.post {
                 url("${HttpRoutes.SCAN_BARCODE}?barcode=${barcode}")
@@ -41,24 +41,24 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            ScanResponse(errorMessage, false, ArrayList())
+            ScannerBarcodeResponse(errorMessage, false, ArrayList())
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = when (e.response.status.value) {
                 429 -> "429"
                 else -> JsonParse().parseErrorMessage(e.response.receive<String>())
             }
-            ScanResponse(errorMessage, false, ArrayList())
+            ScannerBarcodeResponse(errorMessage, false, ArrayList())
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            ScanResponse(errorMessage, false, ArrayList())
+            ScannerBarcodeResponse(errorMessage, false, ArrayList())
         } catch(e: Exception) {
-            ScanResponse(e.message.toString(), false, ArrayList())
+            ScannerBarcodeResponse(e.message.toString(), false, ArrayList())
         }
     }
 
-    override suspend fun checkQR(qr: String): CommonResponse {
+    override suspend fun scannerCheckQR(qr: String): CommonResponse {
         return try {
             client.get {
                 url("${HttpRoutes.CHECK_QR}?qr=${qr}")
@@ -83,7 +83,7 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
         }
     }
 
-    override suspend fun scanQRLocation(qr: String): LocationResponse {
+    override suspend fun scannerQRLocation(qr: String): LocationResponse {
         return try {
             client.get {
                 url("${HttpRoutes.SCAN_QR_LOCATION}?qr=${qr}")

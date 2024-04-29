@@ -3,7 +3,7 @@ package wig.models.requests
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NewOwnershipRequest(
+data class OwnershipCreateRequest(
     val qr: String,
     val name: String,
 )

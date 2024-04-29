@@ -6,23 +6,23 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import wig.models.responses.CheckoutResponse
+import wig.models.responses.borrowerCheckedOutResponse
 import wig.models.requests.CheckoutRequest
-import wig.models.responses.CreateBorrowerResponse
-import wig.models.responses.GetBorrowersResponse
-import wig.models.responses.GetCheckedOutItemsResponse
+import wig.models.responses.borrowerCreateResponse
+import wig.models.responses.borrowerGetAllResponse
+import wig.models.responses.borrowerGetInventoryResponse
 
 interface BorrowerService {
 
-    suspend fun getBorrowers(): GetBorrowersResponse
+    suspend fun borrowerGetAll(): borrowerGetAllResponse
 
-    suspend fun createBorrower(name: String): CreateBorrowerResponse
+    suspend fun borrowerCreate(name: String): borrowerCreateResponse
 
-    suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse
+    suspend fun borrowerCheckout(borrowerUID: String, ownerships: CheckoutRequest): borrowerCheckedOutResponse
 
-    suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse
+    suspend fun borrowerCheckIn(ownerships: CheckoutRequest): borrowerCheckedOutResponse
 
-    suspend fun getCheckedOutOwnerships(): GetCheckedOutItemsResponse
+    suspend fun borrowerGetInventory(): borrowerGetInventoryResponse
 
     companion object {
         fun create(): BorrowerService {

@@ -35,7 +35,7 @@ class Inventory : Settings() {
 
     private fun getInventory() {
         lifecycleScope.launch {
-            val response = returnInventory()
+            val response = locationGetInventory()
             if (response.success) {
                 if(response.inventory.locations?.isNotEmpty() == true) {
                     inventory = response.inventory.locations

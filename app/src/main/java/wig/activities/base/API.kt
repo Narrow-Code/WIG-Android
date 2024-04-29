@@ -9,21 +9,21 @@ import wig.api.OwnershipService
 import wig.api.ScannerService
 import wig.api.UserService
 import wig.models.requests.CheckoutRequest
-import wig.models.requests.EditLocationRequest
-import wig.models.requests.EditOwnershipRequest
-import wig.models.requests.NewOwnershipRequest
+import wig.models.requests.LocationEditRequest
+import wig.models.requests.OwnershipEditRequest
+import wig.models.requests.OwnershipCreateRequest
 import wig.models.requests.SearchRequest
-import wig.models.responses.CheckoutResponse
+import wig.models.responses.borrowerCheckedOutResponse
 import wig.models.responses.CommonResponse
-import wig.models.responses.CreateBorrowerResponse
-import wig.models.responses.GetBorrowersResponse
-import wig.models.responses.GetCheckedOutItemsResponse
+import wig.models.responses.borrowerCreateResponse
+import wig.models.responses.borrowerGetAllResponse
+import wig.models.responses.borrowerGetInventoryResponse
 import wig.models.responses.InventoryResponse
 import wig.models.responses.LocationResponse
 import wig.models.responses.OwnershipResponse
-import wig.models.responses.ScanResponse
-import wig.models.responses.SearchLocationResponse
-import wig.models.responses.SearchOwnershipResponse
+import wig.models.responses.ScannerBarcodeResponse
+import wig.models.responses.LocationSearchResponse
+import wig.models.responses.ownershipSearchResponse
 
 // API holds all of the API calls within Coroutine functions
 open class API : AppCompatActivity() {
@@ -33,21 +33,78 @@ open class API : AppCompatActivity() {
     private val borrowerService = BorrowerService.create()
     private val userService = UserService.create()
 
-    // scanBarcode takes a barcode and retrieves existing Ownerships or creates a new one if none exist
-    protected suspend fun scanBarcode(barcode: String): ScanResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.scan(barcode)
+    // borrowerGetAll retrieves all borrowers associated with the user
+    protected suspend fun borrowerGetAll(): borrowerGetAllResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.borrowerGetAll()
         posts
     }
 
-    // checkQR checks if a QR code is in use by a Location, Ownership or is New
-    protected suspend fun checkQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.checkQR(qr)
+    // borrowerCreate creates a new borrower
+    protected suspend fun borrowerCreate(name: String): borrowerCreateResponse = withContext(
+        Dispatchers.IO){
+        val posts = borrowerService.borrowerCreate(name)
         posts
     }
 
-    // scanQRLocation takes a QR code and returns its location
-    protected suspend fun scanQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
-        val posts = scannerService.scanQRLocation(qr)
+    // borrowerCheckout checks out a list of Ownerships to a Borrower
+    protected suspend fun borrowerCheckout(borrowerUID: String, ownerships: CheckoutRequest): borrowerCheckedOutResponse = withContext(
+        Dispatchers.IO){
+        val posts = borrowerService.borrowerCheckout(borrowerUID,ownerships)
+        posts
+    }
+
+    // borrowerCheckIn returns a list of Ownerships from Borrowers
+    protected suspend fun borrowerCheckIn(ownerships: CheckoutRequest): borrowerCheckedOutResponse = withContext(
+        Dispatchers.IO){
+        val posts = borrowerService.borrowerCheckIn(ownerships)
+        posts
+    }
+
+    // borrowerGetInventory returns all Borrowed ownerships
+    protected suspend fun borrowerGetInventory(): borrowerGetInventoryResponse = withContext(Dispatchers.IO){
+        val posts = borrowerService.borrowerGetInventory()
+        posts
+    }
+
+    // ownershipCreate creates a new Ownership
+    protected suspend fun ownershipCreate(ownershipCreateRequest: OwnershipCreateRequest): OwnershipResponse = withContext(
+        Dispatchers.IO){
+        val posts = ownershipService.ownershipCreate(ownershipCreateRequest)
+        posts
+    }
+
+    // ownershipQuantity changes or sets the quantity of an Ownership
+    protected suspend fun ownershipQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse = withContext(
+        Dispatchers.IO){
+        val posts = ownershipService.ownershipQuantity(changeType, amount, ownershipUID)
+        posts
+    }
+
+    // ownershipSetLocation sets the location of an Ownership
+    protected suspend fun ownershipSetLocation(ownershipUID: String, locationQR: String): CommonResponse = withContext(
+        Dispatchers.IO){
+        val posts = ownershipService.ownershipSetLocation(ownershipUID, locationQR)
+        posts
+    }
+
+    // ownershipSearch searches for an Ownership based on Name and Tags
+    protected suspend fun ownershipSearch(searchRequest: SearchRequest): ownershipSearchResponse = withContext(
+        Dispatchers.IO){
+        val posts = ownershipService.ownershipSearch(searchRequest)
+        posts
+    }
+
+    // ownershipEdit edits the fields of an Ownership
+    protected suspend fun ownershipEdit(ownershipEditRequest: OwnershipEditRequest, uid: String): CommonResponse = withContext(
+        Dispatchers.IO){
+        val posts = ownershipService.ownershipEdit(ownershipEditRequest, uid)
+        posts
+    }
+
+
+    // scannerBarcode takes a barcode and retrieves existing Ownerships or creates a new one if none exist
+    protected suspend fun scannerBarcode(barcode: String): ScannerBarcodeResponse = withContext(Dispatchers.IO){
+        val posts = scannerService.scannerBarcode(barcode)
         posts
     }
 
@@ -57,109 +114,53 @@ open class API : AppCompatActivity() {
         posts
     }
 
-    // setOwnershipLocation sets the location of an Ownership
-    protected suspend fun setOwnershipLocation(ownershipUID: String, locationQR: String): CommonResponse = withContext(
+    // scannerCheckQR checks if a QR code is in use by a Location, Ownership or is New
+    protected suspend fun scannerCheckQR(qr: String): CommonResponse = withContext(Dispatchers.IO){
+        val posts = scannerService.scannerCheckQR(qr)
+        posts
+    }
+
+    // scannerQRLocation takes a QR code and returns its location
+    protected suspend fun scannerQRLocation(qr: String): LocationResponse = withContext(Dispatchers.IO){
+        val posts = scannerService.scannerQRLocation(qr)
+        posts
+    }
+
+    // locationCreate creates a new Location
+    protected suspend fun locationCreate(name: String, locationQR: String): LocationResponse = withContext(
         Dispatchers.IO){
-        val posts = ownershipService.setLocation(ownershipUID, locationQR)
+        val posts = locationService.locationCreate(name, locationQR)
         posts
     }
 
-    // createNewLocation creates a new Location
-    protected suspend fun createNewLocation(name: String, locationQR: String): LocationResponse = withContext(
+    // locationUnpack retrieves all inventory with a location
+    protected suspend fun locationUnpack(locationUID: String): InventoryResponse = withContext(
         Dispatchers.IO){
-        val posts = locationService.createLocation(name, locationQR)
+        val posts = locationService.locationUnpack(locationUID)
         posts
     }
 
-    // createNewOwnership creates a new Ownership
-    protected suspend fun createNewOwnership(newOwnershipRequest: NewOwnershipRequest): OwnershipResponse = withContext(
+    // locationSearch searches for Locations based on Name and Tags
+    protected suspend fun locationSearch(searchRequest: SearchRequest): LocationSearchResponse = withContext(
         Dispatchers.IO){
-        val posts = ownershipService.createOwnership(newOwnershipRequest)
-        posts
-    }
-
-    // changeQuantity changes or sets the quantity of an Ownership
-    protected suspend fun changeQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse = withContext(
-        Dispatchers.IO){
-        val posts = ownershipService.changeQuantity(changeType, amount, ownershipUID)
-        posts
-    }
-
-    // unpackLocation retrieves all inventory with a location
-    protected suspend fun unpackLocation(locationUID: String): InventoryResponse = withContext(
-        Dispatchers.IO){
-        val posts = locationService.unpackLocation(locationUID)
-        posts
-    }
-
-    // getBorrowers retrieves all borrowers associated with the user
-    protected suspend fun getBorrowers(): GetBorrowersResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.getBorrowers()
-        posts
-    }
-
-    // createBorrowers creates a new borrower
-    protected suspend fun createBorrower(name: String): CreateBorrowerResponse = withContext(
-        Dispatchers.IO){
-        val posts = borrowerService.createBorrower(name)
-        posts
-    }
-
-    // checkout checks out a list of Ownerships to a Borrower
-    protected suspend fun checkout(borrowerUID: String, ownerships: CheckoutRequest): CheckoutResponse = withContext(
-        Dispatchers.IO){
-        val posts = borrowerService.checkout(borrowerUID,ownerships)
-        posts
-    }
-
-    // checkIn returns a list of Ownerships from Borrowers
-    protected suspend fun checkIn(ownerships: CheckoutRequest): CheckoutResponse = withContext(
-        Dispatchers.IO){
-        val posts = borrowerService.checkIn(ownerships)
-        posts
-    }
-
-    // searchOwnership searches for an Ownership based on Name and Tags
-    protected suspend fun searchOwnership(searchRequest: SearchRequest): SearchOwnershipResponse = withContext(
-        Dispatchers.IO){
-        val posts = ownershipService.searchOwnership(searchRequest)
-        posts
-    }
-
-    // editOwnership edits the fields of an Ownership
-    protected suspend fun editOwnership(editOwnershipRequest: EditOwnershipRequest, uid: String): CommonResponse = withContext(
-        Dispatchers.IO){
-        val posts = ownershipService.editOwnership(editOwnershipRequest, uid)
-        posts
-    }
-
-    // getCheckedOutItems returns all Borrowed ownerships
-    protected suspend fun getCheckedOutOwnerships(): GetCheckedOutItemsResponse = withContext(Dispatchers.IO){
-        val posts = borrowerService.getCheckedOutOwnerships()
-        posts
-    }
-
-    // searchLocation searches for Locations based on Name and Tags
-    protected suspend fun searchLocation(searchRequest: SearchRequest): SearchLocationResponse = withContext(
-        Dispatchers.IO){
-        val posts = locationService.searchLocation(searchRequest)
+        val posts = locationService.locationSearch(searchRequest)
         posts
     }
 
     // locationEdit edits the fields of a Location
-    protected suspend fun locationEdit(editLocationRequest: EditLocationRequest, locationUID: String): CommonResponse = withContext(
+    protected suspend fun locationEdit(locationEditRequest: LocationEditRequest, locationUID: String): CommonResponse = withContext(
         Dispatchers.IO){
-        val posts = locationService.locationEdit(editLocationRequest, locationUID)
+        val posts = locationService.locationEdit(locationEditRequest, locationUID)
         posts
     }
 
-    // returnInventory returns users entire inventory
-    protected suspend fun returnInventory(): InventoryResponse = withContext(Dispatchers.IO){
-        val posts = locationService.returnInventory()
+    // locationGetInventory returns users entire inventory
+    protected suspend fun locationGetInventory(): InventoryResponse = withContext(Dispatchers.IO){
+        val posts = locationService.locationGetInventory()
         posts
     }
 
-    // ping performs a health check on a self hosted server to validate existance
+    // ping performs a health check on a self hosted server to validate existence
     protected suspend fun ping(hostname: String, port: String): CommonResponse = withContext(
         Dispatchers.IO){
         val posts = userService.ping(hostname, port)
