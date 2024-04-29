@@ -82,7 +82,7 @@
         android:text="@={viewModel.description}"
         tools:ignore="TouchTargetSizeCheck"
         android:inputType="text"
-        android:autofillHints="@string/notes.description" />
+        android:autofillHints="@string/notes_description" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
