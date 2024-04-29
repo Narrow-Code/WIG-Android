@@ -8,10 +8,8 @@ import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
 import wig.api.dto.CommonResponse
 import wig.api.dto.EditOwnershipRequest
-import wig.api.dto.LocationResponse
 import wig.api.dto.NewOwnershipRequest
 import wig.api.dto.OwnershipResponse
-import wig.api.dto.ScanResponse
 import wig.api.dto.SearchOwnershipResponse
 import wig.api.dto.SearchRequest
 
