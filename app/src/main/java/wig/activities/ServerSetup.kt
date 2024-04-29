@@ -2,8 +2,6 @@ package wig.activities
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.R
