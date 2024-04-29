@@ -42,7 +42,7 @@ class MainActivity : BaseActivity() {
             tokenFlow.map { token ->
                 if (!token.isNullOrBlank()) {
                     TokenManager.setToken(token)
-                    Log.d("Token", TokenManager.getToken().toString())
+                    Log.d("Token", TokenManager.getToken())
                     true
                 } else {
                     false
