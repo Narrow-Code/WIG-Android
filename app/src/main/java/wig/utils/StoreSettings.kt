@@ -83,7 +83,7 @@ import kotlinx.coroutines.flow.map
         /**
          * Function to save the isStartupOnScanner flag in the DataStore.
          *
-         * @param isStartupOnScanner The isStarupOnScanner flag to be saved.
+         * @param isStartupOnScanner The isStartupOnScanner flag to be saved.
          */
         suspend fun saveIsStartupOnScanner(isStartupOnScanner: Boolean) {
             context.dataStore.edit { preferences ->
