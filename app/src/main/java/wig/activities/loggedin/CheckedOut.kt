@@ -75,53 +75,64 @@ class CheckedOut : Settings() {
         tableLayout.removeAllViews()
     }
 
+    // returnAllFromBorrower returns all Ownerships from a specific borrower
     private fun returnAllFromBorrower(borrower: Borrowers) {
-                val ownerships = mutableListOf<String>()
-                for (ownership in borrower.ownerships) {
-                    ownerships.add(ownership.ownershipUID)
-                }
-                val checkOutRequest = CheckoutRequest(ownerships)
-                lifecycleScope.launch {
-                    val response = borrowerCheckIn(checkOutRequest)
-                    if (response.success){
-                        for (ownership in ownerships){
-                        val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership }
-                        ownershipToRemove?.let { itRemove ->
-                            borrower.ownerships.remove(itRemove)
-                            val tableLayout = checkedOutBinding.searchTableLayout
-                            val rowToRemove = borrowerRowMap[ownership]
-                            rowToRemove?.let {
-                                tableLayout.removeView(it)
-                                borrowerRowMap.remove(ownership)
-                            }
-                        }
+        val ownerships = borrower.ownerships.map { it.ownershipUID }
 
-                    }
+        val checkOutRequest = CheckoutRequest(ownerships)
+
+        lifecycleScope.launch {
+            val response = borrowerCheckIn(checkOutRequest)
+
+            if (response.success){
+                removeOwnershipAndRows(borrower, ownerships)
             }
         }
     }
 
+    // removeOwnershipAndRows will remove ownerships and their corresponding rows
+    private fun removeOwnershipAndRows(borrower: Borrowers, ownerships: List<String>) {
+        for (ownership in ownerships) {
+            val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership }
+
+            ownershipToRemove?.let { itRemove ->
+                removeOwnershipAndRow(itRemove, borrower)
+            }
+        }
+    }
+
+    // returnOneItem returns one specific item
     private fun returnOneItem(ownership: Ownership, borrower: Borrowers) {
         returnSingleConfirmation(ownership) { shouldDelete ->
             if (shouldDelete) {
-                val ownerships = mutableListOf<String>()
-                ownerships.add(ownership.ownershipUID)
-                val checkOutRequest = CheckoutRequest(ownerships)
-                lifecycleScope.launch {
-                    val response = borrowerCheckIn(checkOutRequest)
-                    if (response.success){
-                        val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
-                        ownershipToRemove?.let { itRemove ->
-                            borrower.ownerships.remove(itRemove)
-                            val tableLayout = checkedOutBinding.searchTableLayout
-                            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
-                            rowToRemove?.let {
-                                tableLayout.removeView(it)
-                                borrowerRowMap.remove(ownership.ownershipUID)
-                            }
-                        }
-                    }
-                }
+                handleCheckIn(ownership, borrower)
+            }
+        }
+    }
+
+    // handleCheckIn handles the check-in process
+    private fun handleCheckIn(ownership: Ownership, borrower: Borrowers) {
+        val ownerships = listOf(ownership.ownershipUID) // Create a list with the single ownership UID
+        val checkOutRequest = CheckoutRequest(ownerships)
+
+        lifecycleScope.launch {
+            val response = borrowerCheckIn(checkOutRequest)
+            if (response.success) {
+                removeOwnershipAndRow(ownership, borrower)
+            }
+        }
+    }
+
+    // removeOwnershipAndRow removes the ownership and its corresponding row
+    private fun removeOwnershipAndRow(ownership: Ownership, borrower: Borrowers) {
+        val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
+        ownershipToRemove?.let { itRemove ->
+            borrower.ownerships.remove(itRemove)
+            val tableLayout = checkedOutBinding.searchTableLayout
+            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+            rowToRemove?.let {
+                tableLayout.removeView(it)
+                borrowerRowMap.remove(ownership.ownershipUID)
             }
         }
     }
