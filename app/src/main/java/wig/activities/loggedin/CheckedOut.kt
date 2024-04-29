@@ -17,9 +17,13 @@ import wig.models.entities.Ownership
 
 class CheckedOut : Settings() {
 
+    // borrowerRowMap is a mutable map of the table index
     private val borrowerRowMap = mutableMapOf<String, TableRow>()
+
+    // borrowers is the list of borrowers returned
     private lateinit var borrowers: List<Borrowers>
 
+    // onCreate sets up the CheckedOut activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
@@ -28,6 +32,7 @@ class CheckedOut : Settings() {
         getBorrowedItems()
     }
 
+    // setOnClickListeners sets all onClickListeners
     private fun setOnClickListeners() {
         checkedOutBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
         checkedOutBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
@@ -36,25 +41,38 @@ class CheckedOut : Settings() {
         checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
     }
 
+    // returnAllButton checks in all checked out items
     private fun returnAllButton() {
         returnAllConfirmation { shouldDelete ->
             if (shouldDelete) {
-                for (borrower in borrowers) {
-                    val ownerships = mutableListOf<String>()
-                    for (ownership in borrower.ownerships) {
-                        ownerships.add(ownership.ownershipUID)
-                    }
-                    val checkOutRequest = CheckoutRequest(ownerships)
-                    lifecycleScope.launch {
-                        borrowerCheckIn(checkOutRequest)
-                    }
-                }
-                borrowers = emptyList()
-                borrowerRowMap.clear()
-                val tableLayout = checkedOutBinding.searchTableLayout
-                tableLayout.removeAllViews()
+                processBorrowers()
+                clearBorrowersListAndRowMap()
+                clearTableLayout()
             }
         }
+    }
+
+    // processBorrowers is used to process all Borrowers
+    private fun processBorrowers(){
+        for (borrower in borrowers) {
+            val ownerships = borrower.ownerships.map { it.ownershipUID }
+            val checkOutRequest = CheckoutRequest(ownerships)
+            lifecycleScope.launch {
+                borrowerCheckIn(checkOutRequest)
+            }
+        }
+    }
+
+    // clearBorrowersListAndRowMap is used to clear the list of borrowers and borrower row map
+    private fun clearBorrowersListAndRowMap() {
+        borrowers = emptyList()
+        borrowerRowMap.clear()
+    }
+
+    // clearTableLayout is used to clear the table layout
+    private fun clearTableLayout() {
+        val tableLayout = checkedOutBinding.searchTableLayout
+        tableLayout.removeAllViews()
     }
 
     private fun returnAllFromBorrower(borrower: Borrowers) {
