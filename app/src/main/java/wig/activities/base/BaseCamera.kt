@@ -1,4 +1,4 @@
-package wig.activities.bases
+package wig.activities.base
 
 import android.Manifest
 import android.annotation.SuppressLint

@@ -1,4 +1,4 @@
-package wig.activities
+package wig.activities.loggedout
 
 import android.os.Bundle
 import android.widget.Button
@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.R
-import wig.activities.bases.BaseActivity
+import wig.activities.base.BaseActivity
 import wig.api.UserService
 import wig.api.dto.LoginRequest
 

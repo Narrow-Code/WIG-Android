@@ -1,24 +1,26 @@
-package wig.activities
+package wig.activities.loggedout
 
 import android.os.Bundle
-import wig.activities.bases.BaseActivity
+import wig.activities.base.BaseActivity
 import wig.utils.EmailManager
 
-class ResetPassword : BaseActivity() {
+class EmailVerification : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
-        setResetPasswordBindings()
+        setEmailVerificationBindings()
+        //disableBackPress()
         appendEmailToPage()
         setOnClickListeners()
     }
 
     private fun setOnClickListeners() {
-        resetPasswordBinding.icExit.setOnClickListener { startActivityLogin() }
+        emailVerificationBinding.icExit.setOnClickListener { startActivityLogin() }
     }
 
     private fun appendEmailToPage() {
         val email = EmailManager.getEmail()
-        resetPasswordBinding.email.text = email
+        emailVerificationBinding.email.text = email
     }
+
 }

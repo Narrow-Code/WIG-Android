@@ -32,43 +32,43 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="wig.activities.Login">
+        <activity android:name="wig.activities.loggedout.Login">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.Scanner">
+        <activity android:name="wig.activities.loggedin.Scanner">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.Signup">
+        <activity android:name="wig.activities.loggedout.Signup">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.ServerSetup">
+        <activity android:name="wig.activities.loggedout.ServerSetup">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.ForgotPassword">
+        <activity android:name="wig.activities.loggedout.ForgotPassword">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.ResetPassword">
+        <activity android:name="wig.activities.loggedout.ResetPassword">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.EmailVerification">
+        <activity android:name="wig.activities.loggedout.EmailVerification">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.Settings">
+        <activity android:name="wig.activities.loggedin.Settings">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.CheckedOut">
+        <activity android:name="wig.activities.loggedin.CheckedOut">
             <!-- Intent filters, etc. -->
         </activity>
 
-        <activity android:name="wig.activities.Inventory">
+        <activity android:name="wig.activities.loggedin.Inventory">
             <!-- Intent filters, etc. -->
         </activity>
 

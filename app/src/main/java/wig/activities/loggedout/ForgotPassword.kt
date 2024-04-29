@@ -1,8 +1,8 @@
-package wig.activities
+package wig.activities.loggedout
 
 import android.os.Bundle
 import wig.R
-import wig.activities.bases.BaseActivity
+import wig.activities.base.BaseActivity
 import wig.utils.EmailManager
 
 class ForgotPassword : BaseActivity() {

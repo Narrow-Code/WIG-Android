@@ -1,4 +1,4 @@
-package wig.activities.bases
+package wig.activities.base
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -19,16 +19,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import wig.activities.CheckedOut
-import wig.activities.EmailVerification
-import wig.activities.ForgotPassword
-import wig.activities.Inventory
-import wig.activities.Login
-import wig.activities.ResetPassword
-import wig.activities.Scanner
-import wig.activities.ServerSetup
-import wig.activities.Settings
-import wig.activities.Signup
+import wig.activities.loggedin.CheckedOut
+import wig.activities.loggedout.EmailVerification
+import wig.activities.loggedout.ForgotPassword
+import wig.activities.loggedin.Inventory
+import wig.activities.loggedout.Login
+import wig.activities.loggedout.ResetPassword
+import wig.activities.loggedin.Scanner
+import wig.activities.loggedout.ServerSetup
+import wig.activities.loggedin.Settings
+import wig.activities.loggedout.Signup
 import wig.api.BorrowerService
 import wig.api.LocationService
 import wig.api.OwnershipService

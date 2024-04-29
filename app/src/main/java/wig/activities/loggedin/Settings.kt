@@ -1,11 +1,11 @@
-package wig.activities
+package wig.activities.loggedin
 
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import wig.activities.bases.BaseActivity
+import wig.activities.base.BaseActivity
 import wig.utils.SettingsManager
 import wig.utils.StoreSettings
 import wig.utils.StoreToken

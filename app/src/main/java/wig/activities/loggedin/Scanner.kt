@@ -1,4 +1,4 @@
-package wig.activities
+package wig.activities.loggedin
 
 import android.app.AlertDialog
 import android.app.Dialog
@@ -22,7 +22,7 @@ import com.google.zxing.BarcodeFormat
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import wig.R
-import wig.activities.bases.BaseCamera
+import wig.activities.base.BaseCamera
 import wig.api.dto.CheckoutRequest
 import wig.api.dto.EditLocationRequest
 import wig.api.dto.EditOwnershipRequest

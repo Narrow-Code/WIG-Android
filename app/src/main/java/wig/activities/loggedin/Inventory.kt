@@ -1,4 +1,4 @@
-package wig.activities
+package wig.activities.loggedin
 
 import android.graphics.Color
 import android.os.Bundle
@@ -8,7 +8,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import wig.activities.bases.BaseActivity
+import wig.activities.base.BaseActivity
 import wig.api.dto.InventoryDTO
 import wig.models.Ownership
 
