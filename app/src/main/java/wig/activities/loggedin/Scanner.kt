@@ -3,7 +3,6 @@ package wig.activities.loggedin
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
@@ -503,7 +502,7 @@ class Scanner : Camera() {
             if (response.success) {
                 for (ownership in response.ownership) {
                     val row = createRowForOwnershipSearch(ownership)
-                    setColorForRow(row, tableLayout.childCount)
+                    tableManager.setColorForRow(row, tableLayout.childCount)
                     tableLayout.addView(row)
                 }
             }
@@ -524,7 +523,7 @@ class Scanner : Camera() {
             if (response.success) {
                 for (location in response.locations) {
                     val row = createRowForLocationSearch(location)
-                    setColorForRow(row, tableLayout.childCount)
+                    tableManager.setColorForRow(row, tableLayout.childCount)
                     tableLayout.addView(row)
                 }
             }
@@ -745,7 +744,7 @@ class Scanner : Camera() {
         }
         for (i in 0 until tableLayout.childCount) {
             val row = tableLayout.getChildAt(i) as TableRow
-            setColorForRow(row, i)
+            tableManager.setColorForRow(row, i)
         }
     }
 
@@ -759,7 +758,7 @@ class Scanner : Camera() {
         }
         for (i in 0 until tableLayout.childCount) {
             val row = tableLayout.getChildAt(i) as TableRow
-            setColorForRow(row, i)
+            tableManager.setColorForRow(row, i)
         }
     }
 
@@ -781,7 +780,7 @@ class Scanner : Camera() {
 
         OwnershipManager.addOwnership(ownership)
         val row = createRowForOwnership(ownership)
-        setColorForRow(row, tableLayout.childCount)
+        tableManager.setColorForRow(row, tableLayout.childCount)
         tableLayout.addView(row)
     }
 
@@ -791,21 +790,12 @@ class Scanner : Camera() {
         if(!locationRowMap.containsKey(location.locationUID)) {
             LocationManager.addLocation(location)
             val row = createRowForLocation(location)
-            setColorForRow(row, tableLayout.childCount)
+            tableManager.setColorForRow(row, tableLayout.childCount)
             tableLayout.addView(row)
         }
         coroutineScope.launch {delay(1000)
             codeScanner.startPreview()
         }
-    }
-
-    private fun setColorForRow(row: TableRow, position: Int){
-        val backgroundColor = if(position % 2 == 0){
-            Color.BLACK
-        } else {
-            Color.DKGRAY
-        }
-        row.setBackgroundColor(backgroundColor)
     }
 
     override suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){
