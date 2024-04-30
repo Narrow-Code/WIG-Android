@@ -13,7 +13,7 @@ import wig.models.requests.CheckoutRequest
 import wig.models.entities.Borrower
 import wig.models.entities.Ownership
 import wig.utils.Alerts
-import wig.tables.TableManager
+import wig.utils.TableManager
 
 class CheckedOut : Settings() {
 
@@ -26,7 +26,7 @@ class CheckedOut : Settings() {
         setScreenOrientation()
         setCheckedOutBindings()
         setOnClickListeners()
-        getBorrowedItems()
+        getInventory()
     }
 
     private fun setOnClickListeners() {
@@ -37,88 +37,8 @@ class CheckedOut : Settings() {
         checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
     }
 
-    private fun returnAllButton() {
-        Alerts().returnAllConfirmation(this) { shouldDelete ->
-            if (shouldDelete) {
-                processBorrowers()
-                clearBorrowersListAndRowMap()
-            }
-        }
-    }
-
-    private fun processBorrowers(){
-        for (borrower in borrowers) {
-            val ownerships = borrower.ownerships.map { it.ownershipUID }
-            val checkOutRequest = CheckoutRequest(ownerships)
-            lifecycleScope.launch {
-                borrowerCheckIn(checkOutRequest)
-            }
-        }
-    }
-
-    private fun clearBorrowersListAndRowMap() {
-        borrowers = emptyList()
-        borrowerRowMap.clear()
-        tableLayout.removeAllViews()
-    }
-
-    private fun returnAllFromBorrower(borrower: Borrowers) {
-        val ownerships = borrower.ownerships.map { it.ownershipUID }
-        val checkOutRequest = CheckoutRequest(ownerships)
-        lifecycleScope.launch {
-            val response = borrowerCheckIn(checkOutRequest)
-            if (response.success){
-                removeOwnershipAndRows(borrower, ownerships)
-            }
-        }
-    }
-
-    private fun returnOneItem(ownership: Ownership, borrower: Borrowers) {
-        Alerts().returnSingleConfirmation(ownership, this) { shouldDelete ->
-            if (shouldDelete) {
-                handleCheckIn(ownership, borrower)
-            }
-        }
-    }
-
-    // handleCheckIn handles the check-in process
-    private fun handleCheckIn(ownership: Ownership, borrower: Borrowers) {
-        val ownerships = listOf(ownership.ownershipUID) // Create a list with the single ownership UID
-        val checkOutRequest = CheckoutRequest(ownerships)
-
-        lifecycleScope.launch {
-            val response = borrowerCheckIn(checkOutRequest)
-            if (response.success) {
-                removeOwnershipAndRow(ownership, borrower)
-            }
-        }
-    }
-
-    // removeOwnershipAndRows will remove ownerships and their corresponding rows
-    private fun removeOwnershipAndRows(borrower: Borrowers, ownerships: List<String>) {
-        for (ownership in ownerships) {
-            val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership }
-            ownershipToRemove?.let { itRemove ->
-                removeOwnershipAndRow(itRemove, borrower)
-            }
-        }
-    }
-
-    // removeOwnershipAndRow removes the ownership and its corresponding row
-    private fun removeOwnershipAndRow(ownership: Ownership, borrower: Borrowers) {
-        val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
-        ownershipToRemove?.let { itRemove ->
-            borrower.ownerships.remove(itRemove)
-            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
-            rowToRemove?.let {
-                tableLayout.removeView(it)
-                borrowerRowMap.remove(ownership.ownershipUID)
-            }
-        }
-    }
-
     // getBorrowedItems returns all of the borrowed items and their borrowers
-    private fun getBorrowedItems() {
+    private fun getInventory() {
         lifecycleScope.launch {
             val response = borrowerGetInventory()
             if (response.success) {
@@ -139,21 +59,101 @@ class CheckedOut : Settings() {
         TableManager().resetRowColors(tableLayout)
     }
 
+    private fun returnAllButton() {
+        Alerts().returnAllConfirmation(this) { shouldDelete ->
+            if (shouldDelete) {
+                checkInBorrowers()
+                clearBorrowersListAndRowMap()
+            }
+        }
+    }
+
+    private fun checkInBorrowers(){
+        for (borrower in borrowers) {
+            val ownerships = borrower.ownerships.map { it.ownershipUID }
+            val checkOutRequest = CheckoutRequest(ownerships)
+            lifecycleScope.launch {
+                borrowerCheckIn(checkOutRequest)
+            }
+        }
+    }
+
+    private fun clearBorrowersListAndRowMap() {
+        borrowers = emptyList()
+        borrowerRowMap.clear()
+        tableLayout.removeAllViews()
+    }
+
+    private fun checkInAllFromBorrower(borrower: Borrowers) {
+        val ownerships = borrower.ownerships.map { it.ownershipUID }
+        val checkOutRequest = CheckoutRequest(ownerships)
+        lifecycleScope.launch {
+            val response = borrowerCheckIn(checkOutRequest)
+            if (response.success){
+                removeOwnerships(borrower, ownerships)
+            }
+        }
+    }
+
+    private fun checkInSingleOwnership(ownership: Ownership, borrower: Borrowers) {
+        Alerts().returnSingleConfirmation(ownership, this) { shouldDelete ->
+            if (shouldDelete) {
+                checkInOwnership(ownership, borrower)
+            }
+        }
+    }
+
+    // handleCheckIn handles the check-in process
+    private fun checkInOwnership(ownership: Ownership, borrower: Borrowers) {
+        val ownerships = listOf(ownership.ownershipUID) // Create a list with the single ownership UID
+        val checkOutRequest = CheckoutRequest(ownerships)
+
+        lifecycleScope.launch {
+            val response = borrowerCheckIn(checkOutRequest)
+            if (response.success) {
+                removeOwnership(ownership, borrower)
+            }
+        }
+    }
+
+    // removeOwnershipAndRows will remove ownerships and their corresponding rows
+    private fun removeOwnerships(borrower: Borrowers, ownerships: List<String>) {
+        for (ownership in ownerships) {
+            val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership }
+            ownershipToRemove?.let { itRemove ->
+                removeOwnership(itRemove, borrower)
+            }
+        }
+    }
+
+    // removeOwnershipAndRow removes the ownership and its corresponding row
+    private fun removeOwnership(ownership: Ownership, borrower: Borrowers) {
+        val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
+        ownershipToRemove?.let { itRemove ->
+            borrower.ownerships.remove(itRemove)
+            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+            rowToRemove?.let {
+                tableLayout.removeView(it)
+                borrowerRowMap.remove(ownership.ownershipUID)
+            }
+        }
+    }
+
     // setRowListeners sets the listeners for the rows being created
     private fun setRowListeners(row: TableRow, borrower: Borrowers) {
         row.setOnClickListener {
             borrowerClick(it as TableRow, borrower)
         }
         row.setOnLongClickListener {
-            returnBorrower(borrower)
+            checkInBorrower(borrower)
         }
     }
 
     // returnBorrower alerts to return a single borrowers ownerships
-    private fun returnBorrower(borrower: Borrowers): Boolean {
+    private fun checkInBorrower(borrower: Borrowers): Boolean {
         Alerts().returnBorrowerConfirmation(borrower.borrower, this) { shouldDelete ->
             if (shouldDelete) {
-                returnAllFromBorrower(borrower)
+                checkInAllFromBorrower(borrower)
             }
         }
         return true
@@ -220,7 +220,7 @@ class CheckedOut : Settings() {
         row.layoutParams = layoutParams
         borrowerRowMap[ownership.ownershipUID] = row
 
-        row.setOnClickListener { returnOneItem(ownership, borrower) }
+        row.setOnClickListener { checkInSingleOwnership(ownership, borrower) }
 
         return row
     }

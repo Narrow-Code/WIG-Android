@@ -1,11 +1,11 @@
-package wig.tables
+package wig.utils
 
 import android.graphics.Color
 import android.widget.LinearLayout
 import android.widget.TableRow
 
 class TableManager {
-    
+
     // resetRowColors makes sure all colors of rows stay consistent
     fun resetRowColors(tableLayout: LinearLayout) {
         for (i in 0 until tableLayout.childCount) {
