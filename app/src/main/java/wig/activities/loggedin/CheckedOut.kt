@@ -1,6 +1,5 @@
 package wig.activities.loggedin
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -15,6 +14,7 @@ import wig.models.requests.CheckoutRequest
 import wig.models.entities.Borrower
 import wig.models.entities.Ownership
 import wig.utils.Alerts
+import wig.managers.TableManager
 
 class CheckedOut : Settings() {
 
@@ -150,11 +150,11 @@ class CheckedOut : Settings() {
         val tableLayout = checkedOutBinding.searchTableLayout
         borrowers.forEach { borrower ->
             val row = createRowForBorrower(borrower.borrower)
-            setColorForRow(row, tableLayout.childCount)
+            TableManager().setColorForRow(row, tableLayout.childCount)
             setRowListeners(row, borrower)
             tableLayout.addView(row)
         }
-        resetRowColors(tableLayout)
+        TableManager().resetRowColors(tableLayout)
     }
 
     // setRowListeners sets the listeners for the rows being created
@@ -177,6 +177,7 @@ class CheckedOut : Settings() {
         return true
     }
 
+    // createRowForBorrower takes a Borrower and creates a row to be added to the table
     private fun createRowForBorrower(borrower: Borrower): TableRow {
         val name = borrower.borrowerName
         val expand = " >"
@@ -206,12 +207,6 @@ class CheckedOut : Settings() {
         return row
     }
 
-    // setColorForRow rotates and sets the colors for each created row
-    private fun setColorForRow(row: TableRow, position: Int) {
-        val backgroundColor = if (position % 2 == 0) Color.BLACK else Color.DKGRAY
-        row.setBackgroundColor(backgroundColor)
-    }
-
     // borrowerClick handles the expanding and collapsing of a Borrower
     private fun borrowerClick(clickedRow: TableRow, borrowers: Borrowers) {
         val tableLayout = checkedOutBinding.searchTableLayout
@@ -225,14 +220,14 @@ class CheckedOut : Settings() {
             removeOwnershipRows(tableLayout, borrowers)
             expandTextView.text = " >"
         }
-        resetRowColors(tableLayout)
+        TableManager().resetRowColors(tableLayout)
     }
 
     // addOwnershipRows adds an ownership to a row in the table at the right index
     private fun addOwnershipRows(tableLayout: TableLayout, borrowers: Borrowers, rowIndex: Int) {
         for (ownership in borrowers.ownerships) {
             val newRow = createRowForOwnership(ownership, borrowers)
-            setColorForRow(newRow, rowIndex + 1)
+            TableManager().setColorForRow(newRow, rowIndex + 1)
             tableLayout.addView(newRow, rowIndex + 1)
         }
     }
@@ -277,14 +272,6 @@ class CheckedOut : Settings() {
         row.setOnClickListener { returnOneItem(ownership, borrower) }
 
         return row
-    }
-
-    // resetRowColors makes sure all colors of rows stay consistent
-    private fun resetRowColors(tableLayout: LinearLayout) {
-        for (i in 0 until tableLayout.childCount) {
-            val row = tableLayout.getChildAt(i) as? TableRow
-            row?.let { setColorForRow(it, i) }
-        }
     }
 
 }
