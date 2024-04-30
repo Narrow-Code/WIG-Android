@@ -3,7 +3,6 @@ package wig.activities.loggedin
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
-import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -14,19 +13,14 @@ import wig.models.requests.CheckoutRequest
 import wig.models.entities.Borrower
 import wig.models.entities.Ownership
 import wig.utils.Alerts
-import wig.managers.TableManager
+import wig.tables.TableManager
 
 class CheckedOut : Settings() {
 
-    // borrowerRowMap is a mutable map of the table index
     private val borrowerRowMap = mutableMapOf<String, TableRow>()
-
-    // borrowers is the list of borrowers returned
     private lateinit var borrowers: List<Borrowers>
     private val tableLayout = checkedOutBinding.searchTableLayout
 
-
-    // onCreate sets up the CheckedOut activity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
@@ -35,7 +29,6 @@ class CheckedOut : Settings() {
         getBorrowedItems()
     }
 
-    // setOnClickListeners sets all onClickListeners
     private fun setOnClickListeners() {
         checkedOutBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
         checkedOutBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
@@ -44,7 +37,6 @@ class CheckedOut : Settings() {
         checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
     }
 
-    // returnAllButton checks in all checked out items
     private fun returnAllButton() {
         Alerts().returnAllConfirmation(this) { shouldDelete ->
             if (shouldDelete) {
@@ -54,7 +46,6 @@ class CheckedOut : Settings() {
         }
     }
 
-    // processBorrowers is used to process all Borrowers
     private fun processBorrowers(){
         for (borrower in borrowers) {
             val ownerships = borrower.ownerships.map { it.ownershipUID }
@@ -65,14 +56,12 @@ class CheckedOut : Settings() {
         }
     }
 
-    // clearBorrowersListAndRowMap is used to clear the list of borrowers and borrower row map
     private fun clearBorrowersListAndRowMap() {
         borrowers = emptyList()
         borrowerRowMap.clear()
         tableLayout.removeAllViews()
     }
 
-    // returnAllFromBorrower returns all Ownerships from a specific borrower
     private fun returnAllFromBorrower(borrower: Borrowers) {
         val ownerships = borrower.ownerships.map { it.ownershipUID }
         val checkOutRequest = CheckoutRequest(ownerships)
@@ -84,7 +73,6 @@ class CheckedOut : Settings() {
         }
     }
 
-    // returnOneItem returns one specific item
     private fun returnOneItem(ownership: Ownership, borrower: Borrowers) {
         Alerts().returnSingleConfirmation(ownership, this) { shouldDelete ->
             if (shouldDelete) {
@@ -121,6 +109,17 @@ class CheckedOut : Settings() {
         val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
         ownershipToRemove?.let { itRemove ->
             borrower.ownerships.remove(itRemove)
+            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+            rowToRemove?.let {
+                tableLayout.removeView(it)
+                borrowerRowMap.remove(ownership.ownershipUID)
+            }
+        }
+    }
+
+    // collapseBorrower removes Ownerships of a Borrower from the table to collapse
+    private fun collapseBorrower(borrowers: Borrowers) {
+        for (ownership in borrowers.ownerships) {
             val rowToRemove = borrowerRowMap[ownership.ownershipUID]
             rowToRemove?.let {
                 tableLayout.removeView(it)
@@ -171,36 +170,6 @@ class CheckedOut : Settings() {
         return true
     }
 
-    // createRowForBorrower takes a Borrower and creates a row to be added to the table
-    private fun createRowForBorrower(borrower: Borrower): TableRow {
-        val name = borrower.borrowerName
-        val expand = " >"
-
-        val row = TableRow(this)
-        val layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
-        row.layoutParams = layoutParams
-
-        val nameLayout = LinearLayout(this)
-        nameLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
-        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
-
-        val nameView = TextView(this)
-        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
-        nameLayout.addView(nameView)
-
-        val expandView = TextView(this)
-        expandView.text = expand
-        nameLayout.addView(expandView)
-
-        row.addView(nameLayout)
-        borrowerRowMap[borrower.borrowerUID] = row
-
-        return row
-    }
-
     // borrowerClick handles the expanding and collapsing of a Borrower
     private fun borrowerClick(clickedRow: TableRow, borrowers: Borrowers) {
         val rowIndex = tableLayout.indexOfChild(clickedRow)
@@ -210,7 +179,7 @@ class CheckedOut : Settings() {
             addOwnershipRows(borrowers, rowIndex)
             expandTextView.text = " v"
         } else if (expandTextView.text == " v") {
-            removeOwnershipRows(borrowers)
+            collapseBorrower(borrowers)
             expandTextView.text = " >"
         }
         TableManager().resetRowColors(tableLayout)
@@ -222,17 +191,6 @@ class CheckedOut : Settings() {
             val newRow = createRowForOwnership(ownership, borrowers)
             TableManager().setColorForRow(newRow, rowIndex + 1)
             tableLayout.addView(newRow, rowIndex + 1)
-        }
-    }
-
-    // removeOwnershipRows removes ownerships from the table
-    private fun removeOwnershipRows(borrowers: Borrowers) {
-        for (ownership in borrowers.ownerships) {
-            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
-            rowToRemove?.let {
-                tableLayout.removeView(it)
-                borrowerRowMap.remove(ownership.ownershipUID)
-            }
         }
     }
 
@@ -263,6 +221,36 @@ class CheckedOut : Settings() {
         borrowerRowMap[ownership.ownershipUID] = row
 
         row.setOnClickListener { returnOneItem(ownership, borrower) }
+
+        return row
+    }
+
+    // createRowForBorrower takes a Borrower and creates a row to be added to the table
+    private fun createRowForBorrower(borrower: Borrower): TableRow {
+        val name = borrower.borrowerName
+        val expand = " >"
+
+        val row = TableRow(this)
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT)
+        row.layoutParams = layoutParams
+
+        val nameLayout = LinearLayout(this)
+        nameLayout.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
+        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+
+        val nameView = TextView(this)
+        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
+        nameLayout.addView(nameView)
+
+        val expandView = TextView(this)
+        expandView.text = expand
+        nameLayout.addView(expandView)
+
+        row.addView(nameLayout)
+        borrowerRowMap[borrower.borrowerUID] = row
 
         return row
     }

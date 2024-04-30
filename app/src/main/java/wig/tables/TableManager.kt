@@ -1,4 +1,4 @@
-package wig.managers
+package wig.tables
 
 import android.graphics.Color
 import android.widget.LinearLayout
