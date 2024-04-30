@@ -23,6 +23,8 @@ class CheckedOut : Settings() {
 
     // borrowers is the list of borrowers returned
     private lateinit var borrowers: List<Borrowers>
+    private val tableLayout = checkedOutBinding.searchTableLayout
+
 
     // onCreate sets up the CheckedOut activity
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +50,6 @@ class CheckedOut : Settings() {
             if (shouldDelete) {
                 processBorrowers()
                 clearBorrowersListAndRowMap()
-                clearTableLayout()
             }
         }
     }
@@ -68,11 +69,6 @@ class CheckedOut : Settings() {
     private fun clearBorrowersListAndRowMap() {
         borrowers = emptyList()
         borrowerRowMap.clear()
-    }
-
-    // clearTableLayout is used to clear the table layout
-    private fun clearTableLayout() {
-        val tableLayout = checkedOutBinding.searchTableLayout
         tableLayout.removeAllViews()
     }
 
@@ -125,7 +121,6 @@ class CheckedOut : Settings() {
         val ownershipToRemove = borrower.ownerships.find { it.ownershipUID == ownership.ownershipUID }
         ownershipToRemove?.let { itRemove ->
             borrower.ownerships.remove(itRemove)
-            val tableLayout = checkedOutBinding.searchTableLayout
             val rowToRemove = borrowerRowMap[ownership.ownershipUID]
             rowToRemove?.let {
                 tableLayout.removeView(it)
@@ -147,7 +142,6 @@ class CheckedOut : Settings() {
 
     // populateTable populates the table with the list of borrowers
     private fun populateTable(borrowers: List<Borrowers>) {
-        val tableLayout = checkedOutBinding.searchTableLayout
         borrowers.forEach { borrower ->
             val row = createRowForBorrower(borrower.borrower)
             TableManager().setColorForRow(row, tableLayout.childCount)
@@ -209,22 +203,21 @@ class CheckedOut : Settings() {
 
     // borrowerClick handles the expanding and collapsing of a Borrower
     private fun borrowerClick(clickedRow: TableRow, borrowers: Borrowers) {
-        val tableLayout = checkedOutBinding.searchTableLayout
         val rowIndex = tableLayout.indexOfChild(clickedRow)
         val expandTextView = (clickedRow.getChildAt(0) as LinearLayout).getChildAt(1) as TextView
 
         if (expandTextView.text == " >") {
-            addOwnershipRows(tableLayout, borrowers, rowIndex)
+            addOwnershipRows(borrowers, rowIndex)
             expandTextView.text = " v"
         } else if (expandTextView.text == " v") {
-            removeOwnershipRows(tableLayout, borrowers)
+            removeOwnershipRows(borrowers)
             expandTextView.text = " >"
         }
         TableManager().resetRowColors(tableLayout)
     }
 
     // addOwnershipRows adds an ownership to a row in the table at the right index
-    private fun addOwnershipRows(tableLayout: TableLayout, borrowers: Borrowers, rowIndex: Int) {
+    private fun addOwnershipRows(borrowers: Borrowers, rowIndex: Int) {
         for (ownership in borrowers.ownerships) {
             val newRow = createRowForOwnership(ownership, borrowers)
             TableManager().setColorForRow(newRow, rowIndex + 1)
@@ -233,7 +226,7 @@ class CheckedOut : Settings() {
     }
 
     // removeOwnershipRows removes ownerships from the table
-    private fun removeOwnershipRows(tableLayout: TableLayout, borrowers: Borrowers) {
+    private fun removeOwnershipRows(borrowers: Borrowers) {
         for (ownership in borrowers.ownerships) {
             val rowToRemove = borrowerRowMap[ownership.ownershipUID]
             rowToRemove?.let {
