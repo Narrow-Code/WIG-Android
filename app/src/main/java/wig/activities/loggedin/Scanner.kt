@@ -78,7 +78,7 @@ class Scanner : Camera() {
     private fun checkoutButton() {
         codeScanner.stopPreview()
         lifecycleScope.launch {
-                val borrowers = borrowerGetAll()
+                val borrowers = api.borrowerGetAll()
 
                 var borrowerNames = borrowers.borrowers.map { it.borrowerName }.toTypedArray()
                 borrowerNames = arrayOf("Self") + borrowerNames + "New"
@@ -95,7 +95,7 @@ class Scanner : Camera() {
                         "New" -> {
                             showNewBorrowerDialog(this@Scanner) { borrowerName ->
                                 lifecycleScope.launch {
-                                    val response = borrowerCreate(borrowerName)
+                                    val response = api.borrowerCreate(borrowerName)
                                     if (response.success) {
                                         Toast.makeText(
                                             this@Scanner,
@@ -121,7 +121,7 @@ class Scanner : Camera() {
                     }
                     val request = CheckoutRequest(ownerships)
                     lifecycleScope.launch {
-                        val response = borrowerCheckout(borrowerUUID, request)
+                        val response = api.borrowerCheckout(borrowerUUID, request)
                         if (response.success){
                             for (ownershipSuccess in response.ownerships){
                                 ownershipRowMap.entries.forEach { (ownershipUID, row) ->
@@ -228,7 +228,7 @@ class Scanner : Camera() {
         plusButton.gravity = Gravity.END
         plusButton.setOnClickListener {
             lifecycleScope.launch {
-                val response = ownershipQuantity("increment", 1, ownership.ownershipUID)
+                val response = api.ownershipQuantity("increment", 1, ownership.ownershipUID)
                 if (response.success){
                     ownership.itemQuantity = response.ownership.itemQuantity
                     quantityView.text = ownership.itemQuantity.toString()
@@ -242,7 +242,7 @@ class Scanner : Camera() {
         minusButton.gravity = Gravity.END
         minusButton.setOnClickListener {
             lifecycleScope.launch {
-                val response = ownershipQuantity("decrement", 1, ownership.ownershipUID)
+                val response = api.ownershipQuantity("decrement", 1, ownership.ownershipUID)
                 if (response.success){
                     ownership.itemQuantity = response.ownership.itemQuantity
                     quantityView.text = ownership.itemQuantity.toString()
@@ -303,7 +303,7 @@ class Scanner : Camera() {
 
     private fun saveOwnershipButton(row: TableRow, uid: String, editOwnershipRequest: OwnershipEditRequest) {
         lifecycleScope.launch {
-            val response = ownershipEdit(editOwnershipRequest, uid)
+            val response = api.ownershipEdit(editOwnershipRequest, uid)
             if (response.success){
                 val ownershipView = (row.getChildAt(0) as LinearLayout).getChildAt(0) as TextView
                 ownershipView.text = editOwnershipRequest.customItemName.substring(0 until 25.coerceAtMost(editOwnershipRequest.customItemName.length))
@@ -314,7 +314,7 @@ class Scanner : Camera() {
 
     private fun saveLocationButton(row: TableRow, uid: String, editLocationRequest: LocationEditRequest) {
         lifecycleScope.launch {
-            val response = locationEdit(editLocationRequest, uid)
+            val response = api.locationEdit(editLocationRequest, uid)
             if (response.success){
                 val locationView = row.getChildAt(0) as TextView
                 locationView.text = editLocationRequest.locationName.substring(0 until 25.coerceAtMost(editLocationRequest.locationName.length))
@@ -413,7 +413,7 @@ class Scanner : Camera() {
     private fun unpackButton() {
         for (location in LocationManager.getAllLocations()) {
             lifecycleScope.launch {
-                val unpacked = locationUnpack(location.locationUID)
+                val unpacked = api.locationUnpack(location.locationUID)
                 unpackInventory(unpacked.inventory)
             }
         }
@@ -499,7 +499,7 @@ class Scanner : Camera() {
             return
         }
         lifecycleScope.launch {
-            val response = ownershipSearch(SearchRequest(name, tags))
+            val response = api.ownershipSearch(SearchRequest(name, tags))
             if (response.success) {
                 for (ownership in response.ownership) {
                     val row = createRowForOwnershipSearch(ownership)
@@ -520,7 +520,7 @@ class Scanner : Camera() {
             return
         }
         lifecycleScope.launch {
-            val response = locationSearch(SearchRequest(name, tags))
+            val response = api.locationSearch(SearchRequest(name, tags))
             if (response.success) {
                 for (location in response.locations) {
                     val row = createRowForLocationSearch(location)
@@ -666,7 +666,7 @@ class Scanner : Camera() {
         lifecycleScope.launch {
             when (typeSpinner.selectedItem?.toString() ?: "") {
                 "Location" -> {
-                    val response = locationCreate(name, qr)
+                    val response = api.locationCreate(name, qr)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Location created", Toast.LENGTH_SHORT).show()
                         populateLocations(response.location)
@@ -676,7 +676,7 @@ class Scanner : Camera() {
                 }
                 "Item" -> {
                     val request = OwnershipCreateRequest(qr, name)
-                    val response = ownershipCreate(request)
+                    val response = api.ownershipCreate(request)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Ownership created", Toast.LENGTH_SHORT).show()
                         populateItem(response.ownership)
@@ -706,7 +706,7 @@ class Scanner : Camera() {
 
                                     for(ownership in OwnershipManager.getAllOwnerships()) {
                                         lifecycleScope.launch {
-                                            val response = ownershipSetLocation(ownership.ownershipUID, qr)
+                                            val response = api.ownershipSetLocation(ownership.ownershipUID, qr)
                                             if (response.success){
                                                 updateLocationForAllRows(LocationManager.getAllLocations()[which])
                                             } else{
@@ -811,23 +811,23 @@ class Scanner : Camera() {
     override suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){
         codeScanner.stopPreview()
         if(barcodeFormat != BarcodeFormat.QR_CODE){
-            val response = scannerBarcode(code)
+            val response = api.scannerBarcode(code)
             if (response.message == "429"){Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()}
             populateItems(response)
             switchToItemsView()
         } else {
-            val response = scannerCheckQR(code)
+            val response = api.scannerCheckQR(code)
             when (response.message) {
                 "NEW" -> {
                     newEntry(code)
                 }
                 "LOCATION" -> {
-                    val locationResponse = scannerQRLocation(code)
+                    val locationResponse = api.scannerQRLocation(code)
                     populateLocations(locationResponse.location)
                     switchToLocationsView()
                 }
                 "OWNERSHIP" -> {
-                    val ownershipResponse = scanQROwnership(code)
+                    val ownershipResponse = api.scanQROwnership(code)
                     populateItem(ownershipResponse.ownership)
                     switchToItemsView()
                     codeScanner.startPreview()

@@ -40,7 +40,7 @@ class CheckedOut : Settings() {
     // getBorrowedItems returns all of the borrowed items and their borrowers
     private fun getInventory() {
         lifecycleScope.launch {
-            val response = borrowerGetInventory()
+            val response = api.borrowerGetInventory()
             if (response.success) {
                 borrowers = response.borrowers
                 populateTable(borrowers)
@@ -73,7 +73,7 @@ class CheckedOut : Settings() {
             val ownerships = borrower.ownerships.map { it.ownershipUID }
             val checkOutRequest = CheckoutRequest(ownerships)
             lifecycleScope.launch {
-                borrowerCheckIn(checkOutRequest)
+                api.borrowerCheckIn(checkOutRequest)
             }
         }
     }
@@ -88,7 +88,7 @@ class CheckedOut : Settings() {
         val ownerships = borrower.ownerships.map { it.ownershipUID }
         val checkOutRequest = CheckoutRequest(ownerships)
         lifecycleScope.launch {
-            val response = borrowerCheckIn(checkOutRequest)
+            val response = api.borrowerCheckIn(checkOutRequest)
             if (response.success){
                 removeOwnerships(borrower, ownerships)
             }
@@ -109,7 +109,7 @@ class CheckedOut : Settings() {
         val checkOutRequest = CheckoutRequest(ownerships)
 
         lifecycleScope.launch {
-            val response = borrowerCheckIn(checkOutRequest)
+            val response = api.borrowerCheckIn(checkOutRequest)
             if (response.success) {
                 removeOwnership(ownership, borrower)
             }

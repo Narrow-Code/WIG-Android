@@ -45,7 +45,7 @@ class ServerSetup : Settings() {
         val hostname = serverSetupBinding.hostname.text.toString()
         val portNumber = serverSetupBinding.portNumber.text.toString()
         lifecycleScope.launch {
-            val response = ping(hostname, portNumber)
+            val response = api.ping(hostname, portNumber)
             if (response.success) {
                     val storeSettings = StoreSettings(this@ServerSetup)
                     storeSettings.saveIsHosted(true)

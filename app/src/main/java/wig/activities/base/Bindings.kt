@@ -1,5 +1,6 @@
 package wig.activities.base
 
+import androidx.appcompat.app.AppCompatActivity
 import wig.databinding.CheckedOutBinding
 import wig.databinding.EmailVerificationBinding
 import wig.databinding.ForgotPasswordBinding
@@ -12,7 +13,7 @@ import wig.databinding.SettingsBinding
 import wig.databinding.SignupBinding
 
 // Bindings sets up all of the layout bindings
-open class Bindings : API() {
+open class Bindings : AppCompatActivity() {
     protected lateinit var emailVerificationBinding: EmailVerificationBinding
     protected lateinit var forgotPasswordBinding: ForgotPasswordBinding
     protected lateinit var loginBinding: LoginBinding
