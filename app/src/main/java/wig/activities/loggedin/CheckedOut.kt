@@ -13,7 +13,6 @@ import wig.models.requests.CheckoutRequest
 import wig.models.entities.Borrower
 import wig.models.entities.Ownership
 import wig.utils.Alerts
-import wig.utils.TableManager
 
 class CheckedOut : Settings() {
 
@@ -52,11 +51,11 @@ class CheckedOut : Settings() {
     private fun populateTable(borrowers: List<Borrowers>) {
         borrowers.forEach { borrower ->
             val row = createRowForBorrower(borrower.borrower)
-            TableManager().setColorForRow(row, tableLayout.childCount)
+            tableManager.setColorForRow(row, tableLayout.childCount)
             setRowListeners(row, borrower)
             tableLayout.addView(row)
         }
-        TableManager().resetRowColors(tableLayout)
+        tableManager.resetRowColors(tableLayout)
     }
 
     private fun returnAllButton() {
@@ -171,7 +170,7 @@ class CheckedOut : Settings() {
             collapseBorrower(borrowers)
             expandTextView.text = " >"
         }
-        TableManager().resetRowColors(tableLayout)
+        tableManager.resetRowColors(tableLayout)
     }
 
     // collapseBorrower removes Ownerships of a Borrower from the table to collapse
@@ -189,7 +188,7 @@ class CheckedOut : Settings() {
     private fun expandBorrower(borrowers: Borrowers, rowIndex: Int) {
         for (ownership in borrowers.ownerships) {
             val newRow = createRowForOwnership(ownership, borrowers)
-            TableManager().setColorForRow(newRow, rowIndex + 1)
+            tableManager.setColorForRow(newRow, rowIndex + 1)
             tableLayout.addView(newRow, rowIndex + 1)
         }
     }

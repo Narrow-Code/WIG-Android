@@ -30,10 +30,12 @@ import wig.activities.loggedout.Signup
 import wig.api.API
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
+import wig.utils.TableManager
 
 // Settings sets up the Base settings and functions for the application
 open class Settings : Bindings() {
     val api = API()
+    val tableManager = TableManager()
     val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     // disableBackPress disables the back press button
