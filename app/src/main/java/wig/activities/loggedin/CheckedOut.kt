@@ -145,12 +145,12 @@ class CheckedOut : Settings() {
             borrowerClick(it as TableRow, borrower)
         }
         row.setOnLongClickListener {
-            handleReturnBorrower(borrower)
+            returnBorrower(borrower)
         }
     }
 
-    // handleReturnBorrower alerts to return a single borrowers ownerships
-    private fun handleReturnBorrower(borrower: Borrowers): Boolean {
+    // returnBorrower alerts to return a single borrowers ownerships
+    private fun returnBorrower(borrower: Borrowers): Boolean {
         Alerts().returnBorrowerConfirmation(borrower.borrower, this) { shouldDelete ->
             if (shouldDelete) {
                 returnAllFromBorrower(borrower)

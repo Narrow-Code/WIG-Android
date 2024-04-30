@@ -5,9 +5,7 @@ import android.widget.LinearLayout
 import android.widget.TableRow
 
 class TableManager {
-
-    private val tableRowMap = mutableMapOf<String, TableRow>()
-
+    
     // resetRowColors makes sure all colors of rows stay consistent
     fun resetRowColors(tableLayout: LinearLayout) {
         for (i in 0 until tableLayout.childCount) {
