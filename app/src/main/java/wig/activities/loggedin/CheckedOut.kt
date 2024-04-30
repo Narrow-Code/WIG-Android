@@ -117,17 +117,6 @@ class CheckedOut : Settings() {
         }
     }
 
-    // collapseBorrower removes Ownerships of a Borrower from the table to collapse
-    private fun collapseBorrower(borrowers: Borrowers) {
-        for (ownership in borrowers.ownerships) {
-            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
-            rowToRemove?.let {
-                tableLayout.removeView(it)
-                borrowerRowMap.remove(ownership.ownershipUID)
-            }
-        }
-    }
-
     // getBorrowedItems returns all of the borrowed items and their borrowers
     private fun getBorrowedItems() {
         lifecycleScope.launch {
@@ -176,7 +165,7 @@ class CheckedOut : Settings() {
         val expandTextView = (clickedRow.getChildAt(0) as LinearLayout).getChildAt(1) as TextView
 
         if (expandTextView.text == " >") {
-            addOwnershipRows(borrowers, rowIndex)
+            expandBorrower(borrowers, rowIndex)
             expandTextView.text = " v"
         } else if (expandTextView.text == " v") {
             collapseBorrower(borrowers)
@@ -185,8 +174,19 @@ class CheckedOut : Settings() {
         TableManager().resetRowColors(tableLayout)
     }
 
-    // addOwnershipRows adds an ownership to a row in the table at the right index
-    private fun addOwnershipRows(borrowers: Borrowers, rowIndex: Int) {
+    // collapseBorrower removes Ownerships of a Borrower from the table to collapse
+    private fun collapseBorrower(borrowers: Borrowers) {
+        for (ownership in borrowers.ownerships) {
+            val rowToRemove = borrowerRowMap[ownership.ownershipUID]
+            rowToRemove?.let {
+                tableLayout.removeView(it)
+                borrowerRowMap.remove(ownership.ownershipUID)
+            }
+        }
+    }
+
+    // expandBorrower adds ownerships to the table under a Borrower to expand
+    private fun expandBorrower(borrowers: Borrowers, rowIndex: Int) {
         for (ownership in borrowers.ownerships) {
             val newRow = createRowForOwnership(ownership, borrowers)
             TableManager().setColorForRow(newRow, rowIndex + 1)
