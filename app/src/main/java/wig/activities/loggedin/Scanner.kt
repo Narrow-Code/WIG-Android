@@ -111,7 +111,6 @@ class Scanner : Camera() {
             dialog.dismiss()
             codeScanner.startPreview()
         }
-
         // Create and show the AlertDialog
         val dialog = dialogBuilder.create()
         dialog.show()
@@ -160,132 +159,78 @@ class Scanner : Camera() {
         }
     }
 
-    private fun createRowForOwnership(ownership: Ownership): TableRow {
-        var name = ownership.customItemName
-        if (ownership.customItemName == ""){
-            name = ownership.item.itemName
+    private fun createLinearLayout(weight: Float, gravity: Int): LinearLayout {
+        return LinearLayout(this).apply {
+            layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, weight)
+            this.gravity = gravity
         }
-        var location = ownership.location.locationName
-        if (ownership.borrower.borrowerName != "Default"){
-            location = ownership.borrower.borrowerName
+    }
+
+    private fun createTextView(text: String): TextView {
+        return TextView(this).apply {
+            this.text = text
         }
+    }
 
-        val quantity = ownership.itemQuantity
+    private fun createButton(text: String, layoutParams: ViewGroup.LayoutParams, onClick: () -> Unit): Button {
+        return Button(this).apply {
+            this.text = text
+            this.layoutParams = layoutParams
+            gravity = Gravity.END
+            setOnClickListener { onClick.invoke() }
+        }
+    }
 
-        val row = TableRow(this)
-        val layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
+    private fun ownershipOnClick(ownership: Ownership, layoutParams: TableRow.LayoutParams, row: TableRow) {
+        codeScanner.stopPreview()
 
-        val nameLayout = LinearLayout(this)
-        nameLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
-        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
+        val editOwnershipBinding: EditOwnershipBinding = EditOwnershipBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(editOwnershipBinding.root)
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
 
-        val nameView = TextView(this)
-        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
-        nameLayout.addView(nameView)
+        val viewModel = ItemViewModel()
+        viewModel.name = ownership.customItemName
+        viewModel.qr = ownership.itemQR
+        viewModel.description = ownership.customItemDescription
+        viewModel.tags = ownership.itemTags
+        editOwnershipBinding.viewModel = viewModel
 
-        val locationLayout = LinearLayout(this)
-        locationLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
-        locationLayout.gravity = Gravity.CENTER or Gravity.CENTER_VERTICAL
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-        val locationView = TextView(this)
-        locationView.text = location.substring(0 until 25.coerceAtMost(location.length))
-        locationView.gravity = Gravity.CENTER
-        locationLayout.addView(locationView)
+        editOwnershipBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+        editOwnershipBinding.saveButton.setOnClickListener {
+            val editOwnershipRequest =
+                OwnershipEditRequest(
+                    editOwnershipBinding.name.text.toString(),
+                    "",
+                    editOwnershipBinding.Note.text.toString(),
+                    editOwnershipBinding.tags.text.toString(),
+                    editOwnershipBinding.qr.text.toString())
+            saveOwnershipButton(row, ownership.ownershipUID, editOwnershipRequest)
+            popupDialog.dismiss()
+        }
+        popupDialog.show()
+    }
 
-        val quantityLayout = LinearLayout(this)
-        quantityLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
-        quantityLayout.gravity = Gravity.END or Gravity.CENTER_VERTICAL
-
-        val quantityView = TextView(this)
-        quantityView.text = quantity.toString()
-        quantityView.gravity = Gravity.END
-
-        val buttonLayoutParams = TableRow.LayoutParams()
-        buttonLayoutParams.width = resources.getDimensionPixelSize(R.dimen.button_width)
-        buttonLayoutParams.height = resources.getDimensionPixelSize(R.dimen.button_height)
-
-        val plusButton = Button(this)
-        plusButton.text = "+"
-        plusButton.layoutParams = buttonLayoutParams
-        plusButton.gravity = Gravity.END
-        plusButton.setOnClickListener {
-            lifecycleScope.launch {
-                val response = api.ownershipQuantity("increment", 1, ownership.ownershipUID)
-                if (response.success){
-                    ownership.itemQuantity = response.ownership.itemQuantity
-                    quantityView.text = ownership.itemQuantity.toString()
-                }
+    private fun plusButton(ownership: Ownership, quantityView: TextView) {
+        lifecycleScope.launch {
+            val response = api.ownershipQuantity("increment", 1, ownership.ownershipUID)
+            if (response.success) {
+                ownership.itemQuantity = response.ownership.itemQuantity
+                quantityView.text = ownership.itemQuantity.toString()
             }
         }
+    }
 
-        val minusButton = Button(this)
-        minusButton.text = "-"
-        minusButton.layoutParams = buttonLayoutParams
-        minusButton.gravity = Gravity.END
-        minusButton.setOnClickListener {
-            lifecycleScope.launch {
-                val response = api.ownershipQuantity("decrement", 1, ownership.ownershipUID)
-                if (response.success){
-                    ownership.itemQuantity = response.ownership.itemQuantity
-                    quantityView.text = ownership.itemQuantity.toString()
-                }
+    private fun minusButton(ownership: Ownership, quantityView: TextView) {
+        lifecycleScope.launch {
+            val response = api.ownershipQuantity("decrement", 1, ownership.ownershipUID)
+            if (response.success){
+                ownership.itemQuantity = response.ownership.itemQuantity
+                quantityView.text = ownership.itemQuantity.toString()
             }
         }
-
-        row.addView(nameLayout)
-        row.addView(locationLayout)
-        row.addView(quantityLayout)
-        quantityLayout.addView(minusButton)
-        quantityLayout.addView(quantityView)
-        quantityLayout.addView(plusButton)
-        row.layoutParams = layoutParams
-        ownershipRowMap[ownership.ownershipUID] = row
-
-        row.setOnLongClickListener {
-            Alerts().removeConfirmation(ownership.customItemName, this) { shouldDelete ->
-                if (shouldDelete){ removeOwnershipRow(ownership.ownershipUID)}
-            }
-            true
-        }
-
-        row.setOnClickListener {
-            codeScanner.stopPreview()
-
-            val editOwnershipBinding: EditOwnershipBinding = EditOwnershipBinding.inflate(layoutInflater)
-            val popupDialog = Dialog(this)
-            popupDialog.setContentView(editOwnershipBinding.root)
-            popupDialog.setOnDismissListener { codeScanner.startPreview() }
-
-            val viewModel = ItemViewModel()
-            viewModel.name = ownership.customItemName
-            viewModel.qr = ownership.itemQR
-            viewModel.description = ownership.customItemDescription
-            viewModel.tags = ownership.itemTags
-            editOwnershipBinding.viewModel = viewModel
-
-            popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
-
-            editOwnershipBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
-            editOwnershipBinding.saveButton.setOnClickListener {
-                val editOwnershipRequest =
-                    OwnershipEditRequest(
-                        editOwnershipBinding.name.text.toString(),
-                        "",
-                        editOwnershipBinding.Note.text.toString(),
-                        editOwnershipBinding.tags.text.toString(),
-                        editOwnershipBinding.qr.text.toString())
-                saveOwnershipButton(row, ownership.ownershipUID, editOwnershipRequest)
-                popupDialog.dismiss()
-            }
-            popupDialog.show()
-        }
-
-        return row
     }
 
     private fun saveOwnershipButton(row: TableRow, uid: String, editOwnershipRequest: OwnershipEditRequest) {
@@ -310,75 +255,37 @@ class Scanner : Camera() {
         }
     }
 
-    private fun createRowForLocation(location: Location): TableRow {
-        val name = location.locationName
-        val parent = location.location?.locationName
+    private fun locationOnClick(location: Location, layoutParams: TableRow.LayoutParams, row: TableRow) {
+        codeScanner.stopPreview()
 
-        val row = TableRow(this)
-        val layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
+        val editLocationBinding: EditLocationBinding = EditLocationBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(editLocationBinding.root)
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
 
-        val nameView = TextView(this)
-        nameView.text = name.substring(0 until 20.coerceAtMost(name.length))
-        nameView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
-        row.addView(nameView)
+        val viewModel = ItemViewModel()
+        viewModel.name = location.locationName
+        viewModel.qr = location.locationQR
+        viewModel.description = location.locationDescription
+        viewModel.tags = location.locationTags
+        editLocationBinding.viewModel = viewModel
 
-        val locationView = TextView(this)
-        if (parent != null) {
-            locationView.text = parent.substring(0 until 18.coerceAtMost(parent.length))
-        } else {
-            locationView.text = getString(R.string.no_location)
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+        editLocationBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+        editLocationBinding.saveButton.setOnClickListener {
+            val editLocationRequest =
+                LocationEditRequest(
+                    editLocationBinding.name.text.toString(),
+                    editLocationBinding.Note.text.toString(),
+                    editLocationBinding.tags.text.toString(),
+                    editLocationBinding.qr.text.toString())
+            saveLocationButton(row, location.locationUID, editLocationRequest)
+            popupDialog.dismiss()
         }
-        locationView.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.WRAP_CONTENT, 1f)
-        locationView.gravity = Gravity.END
-        row.addView(locationView)
-
-        row.layoutParams = layoutParams
-        locationRowMap[location.locationUID] = row
-
-        row.setOnLongClickListener {
-            Alerts().removeConfirmation(location.locationName, this) { shouldDelete ->
-                if (shouldDelete){ removeLocationRow(location.locationUID)}
-            }
-            true
-        }
-
-        row.setOnClickListener {
-            codeScanner.stopPreview()
-
-            val editLocationBinding: EditLocationBinding = EditLocationBinding.inflate(layoutInflater)
-            val popupDialog = Dialog(this)
-            popupDialog.setContentView(editLocationBinding.root)
-            popupDialog.setOnDismissListener { codeScanner.startPreview() }
-
-            val viewModel = ItemViewModel()
-            viewModel.name = location.locationName
-            viewModel.qr = location.locationQR
-            viewModel.description = location.locationDescription
-            viewModel.tags = location.locationTags
-            editLocationBinding.viewModel = viewModel
-
-            popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
-
-            editLocationBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
-            editLocationBinding.saveButton.setOnClickListener {
-                val editLocationRequest =
-                    LocationEditRequest(
-                        editLocationBinding.name.text.toString(),
-                        editLocationBinding.Note.text.toString(),
-                        editLocationBinding.tags.text.toString(),
-                        editLocationBinding.qr.text.toString())
-                saveLocationButton(row, location.locationUID, editLocationRequest)
-                popupDialog.dismiss()
-            }
-            popupDialog.show() // TODO fix
-        }
-
-        return row
+        popupDialog.show() // TODO fix
     }
+
 
     private fun clearButton() {
         when (pageView) {
@@ -406,7 +313,6 @@ class Scanner : Camera() {
         }
     }
 
-
     private fun unpackInventory(inventoryDTO: InventoryDTO){
         inventoryDTO.ownerships?.let { ownerships ->
             if (ownerships.isNotEmpty()) {
@@ -423,31 +329,6 @@ class Scanner : Camera() {
                 }
             }
         }
-    }
-
-    private fun newEntry(qr: String) {
-        codeScanner.stopPreview()
-
-        val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
-        val popupDialog = Dialog(this)
-        popupDialog.setContentView(createNewBinding.root)
-        createNewBinding.qrCodeEditText.setText(qr)
-        popupDialog.setOnDismissListener { codeScanner.startPreview() }
-
-        val layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
-
-        createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
-        createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()
-        }
-
-        val spinnerPosition = if (pageView == "items") 0 else 1
-        createNewBinding.typeSpinner.setSelection(spinnerPosition)
-
-        popupDialog.show()
     }
 
     private fun searchButton() {
@@ -621,12 +502,13 @@ class Scanner : Camera() {
         return row
     }
 
-    private fun newEntry(){
+    private fun newEntry(qr: String? = null) {
         codeScanner.stopPreview()
 
         val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
         val popupDialog = Dialog(this)
         popupDialog.setContentView(createNewBinding.root)
+        qr?.let { createNewBinding.qrCodeEditText.setText(it) }
         popupDialog.setOnDismissListener { codeScanner.startPreview() }
 
         val layoutParams = ViewGroup.LayoutParams(
@@ -634,14 +516,16 @@ class Scanner : Camera() {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
-        createNewBinding.createButton.setOnClickListener{ createNewButton(createNewBinding, popupDialog) }
-        createNewBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+
+        createNewBinding.createButton.setOnClickListener { createNewButton(createNewBinding, popupDialog) }
+        createNewBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
 
         val spinnerPosition = if (pageView == "items") 0 else 1
         createNewBinding.typeSpinner.setSelection(spinnerPosition)
 
         popupDialog.show()
     }
+
 
     private fun createNewButton(createNewBinding: CreateNewBinding, popup: Dialog) {
         val typeSpinner = createNewBinding.typeSpinner
@@ -832,6 +716,97 @@ class Scanner : Camera() {
         scannerBinding.place.visibility = View.VISIBLE
         scannerBinding.unpack.visibility = View.INVISIBLE
         pageView = "items"
+    }
+
+    private fun createRowForOwnership(ownership: Ownership): TableRow {
+        val name = if (ownership.customItemName == "") ownership.item.itemName else ownership.customItemName
+        val location = if (ownership.borrower.borrowerName != "Default") ownership.borrower.borrowerName else ownership.location.locationName
+        val quantity = ownership.itemQuantity
+
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val row = TableRow(this).apply {
+            this.layoutParams = layoutParams
+            setOnClickListener { ownershipOnClick(ownership, layoutParams, this) }
+            setOnLongClickListener {
+                Alerts().removeConfirmation(ownership.customItemName, this@Scanner) { shouldDelete ->
+                    if (shouldDelete) removeOwnershipRow(ownership.ownershipUID)
+                }
+                true
+            }
+        }
+
+        val nameLayout = createLinearLayout(0.34f, Gravity.START or Gravity.CENTER_VERTICAL)
+        val nameView = createTextView(name.substring(0 until 25.coerceAtMost(name.length)))
+        nameLayout.addView(nameView)
+
+        val locationLayout = createLinearLayout(0.33f, Gravity.CENTER or Gravity.CENTER_VERTICAL)
+        val locationView = createTextView(location.substring(0 until 25.coerceAtMost(location.length)))
+        locationView.gravity = Gravity.CENTER
+        locationLayout.addView(locationView)
+
+        val quantityLayout = createLinearLayout(0.33f, Gravity.END or Gravity.CENTER_VERTICAL)
+        val quantityView = createTextView(quantity.toString())
+        quantityView.gravity = Gravity.END
+        val buttonLayoutParams = TableRow.LayoutParams(
+            resources.getDimensionPixelSize(R.dimen.button_width),
+            resources.getDimensionPixelSize(R.dimen.button_height)
+        )
+        val plusButton = createButton("+", buttonLayoutParams) { plusButton(ownership, quantityView) }
+        val minusButton = createButton("-", buttonLayoutParams) { minusButton(ownership, quantityView) }
+
+        quantityLayout.addView(minusButton)
+        quantityLayout.addView(quantityView)
+        quantityLayout.addView(plusButton)
+
+        row.addView(nameLayout)
+        row.addView(locationLayout)
+        row.addView(quantityLayout)
+        ownershipRowMap[ownership.ownershipUID] = row
+
+        return row
+    }
+
+    private fun createRowForLocation(location: Location): TableRow {
+        val name = location.locationName
+        val parent = location.location?.locationName
+        val row = TableRow(this)
+        val layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val nameView = createTextView(name.substring(0 until 20.coerceAtMost(name.length)))
+        nameView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f
+        )
+        row.addView(nameView)
+
+        val locationView = createTextView(
+            parent?.substring(0 until 18.coerceAtMost(parent.length)) ?: getString(R.string.no_location)
+        )
+        locationView.layoutParams = TableRow.LayoutParams(
+            0, TableRow.LayoutParams.WRAP_CONTENT, 1f
+        )
+        locationView.gravity = Gravity.END
+        row.addView(locationView)
+
+        row.layoutParams = layoutParams
+        locationRowMap[location.locationUID] = row
+
+        row.setOnLongClickListener {
+            Alerts().removeConfirmation(location.locationName, this) { shouldDelete ->
+                if (shouldDelete) removeLocationRow(location.locationUID)
+            }
+            true
+        }
+
+        row.setOnClickListener { locationOnClick(location, layoutParams, row) }
+
+        return row
     }
 
 }
