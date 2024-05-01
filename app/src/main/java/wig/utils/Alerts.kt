@@ -2,6 +2,8 @@ package wig.utils
 
 import android.app.AlertDialog
 import android.content.Context
+import android.widget.EditText
+import android.widget.LinearLayout
 import wig.models.entities.Borrower
 import wig.models.entities.Ownership
 
@@ -99,6 +101,30 @@ class Alerts {
         }
 
         val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
+    fun showNewBorrowerDialog(context: Context, onPositiveButtonClick: (String) -> Unit) {
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.setTitle("New Borrower")
+
+        val inputEditText = EditText(context)
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        inputEditText.layoutParams = layoutParams
+        alertDialog.setView(inputEditText)
+
+        alertDialog.setPositiveButton("Create") { _, _ ->
+            val borrowerName = inputEditText.text.toString()
+            onPositiveButtonClick.invoke(borrowerName)
+        }
+
+        alertDialog.setNegativeButton("Cancel") { dialog, _ ->
+            dialog.cancel()
+        }
+
         alertDialog.show()
     }
 }
