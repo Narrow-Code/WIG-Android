@@ -59,8 +59,8 @@ class Scanner : Camera() {
     }
 
     private fun setOnClickListeners() {
-        scannerBinding.locationsButton.setOnClickListener{ switchToLocationsView() }
-        scannerBinding.itemsButton.setOnClickListener{ switchToItemsView() }
+        scannerBinding.locationsButton.setOnClickListener { switchToLocationsView() }
+        scannerBinding.itemsButton.setOnClickListener { switchToItemsView() }
         scannerBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
         scannerBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
         scannerBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
@@ -68,8 +68,8 @@ class Scanner : Camera() {
         scannerBinding.clear.setOnClickListener { clearButton() }
         scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
-        scannerBinding.unpack.setOnClickListener {unpackButton()}
-        scannerBinding.checkOut.setOnClickListener {checkoutButton()}
+        scannerBinding.unpack.setOnClickListener { unpackButton() }
+        scannerBinding.checkOut.setOnClickListener { checkoutButton() }
         scannerBinding.search.setOnClickListener { searchButton() }
     }
 
@@ -98,9 +98,11 @@ class Scanner : Camera() {
                 "New" -> {
                     checkoutNew()
                 }
+
                 "Self" -> {
                     borrowerUUID = "22222222-2222-2222-2222-222222222222"
                 }
+
                 else -> {
                     val selectedBorrower = borrowers.borrowers[which - 1]
                     borrowerUUID = selectedBorrower.borrowerUID
@@ -118,17 +120,18 @@ class Scanner : Camera() {
 
     private fun checkoutOwnerships(uuid: String, name: String) {
         val ownerships: MutableList<String> = mutableListOf()
-        for (ownership in OwnershipManager.getAllOwnerships()){
+        for (ownership in OwnershipManager.getAllOwnerships()) {
             ownerships.add(ownership.ownershipUID)
         }
         val request = CheckoutRequest(ownerships)
         lifecycleScope.launch {
             val response = api.borrowerCheckout(uuid, request)
-            if (response.success){
-                for (ownershipSuccess in response.ownerships){
+            if (response.success) {
+                for (ownershipSuccess in response.ownerships) {
                     ownershipRowMap.entries.forEach { (ownershipUID, row) ->
                         if (ownershipUID == ownershipSuccess) {
-                            val locationView = (row.getChildAt(1) as LinearLayout).getChildAt(0) as TextView
+                            val locationView =
+                                (row.getChildAt(1) as LinearLayout).getChildAt(0) as TextView
                             locationView.text = name
                         }
                     }
@@ -143,7 +146,7 @@ class Scanner : Camera() {
     }
 
 
-    private fun checkoutNew(){
+    private fun checkoutNew() {
         Alerts().showNewBorrowerDialog(this@Scanner) { borrowerName ->
             lifecycleScope.launch {
                 val response = api.borrowerCreate(borrowerName)
@@ -172,7 +175,11 @@ class Scanner : Camera() {
         }
     }
 
-    private fun createButton(text: String, layoutParams: ViewGroup.LayoutParams, onClick: () -> Unit): Button {
+    private fun createButton(
+        text: String,
+        layoutParams: ViewGroup.LayoutParams,
+        onClick: () -> Unit
+    ): Button {
         return Button(this).apply {
             this.text = text
             this.layoutParams = layoutParams
@@ -181,10 +188,15 @@ class Scanner : Camera() {
         }
     }
 
-    private fun ownershipOnClick(ownership: Ownership, layoutParams: TableRow.LayoutParams, row: TableRow) {
+    private fun ownershipOnClick(
+        ownership: Ownership,
+        layoutParams: TableRow.LayoutParams,
+        row: TableRow
+    ) {
         codeScanner.stopPreview()
 
-        val editOwnershipBinding: EditOwnershipBinding = EditOwnershipBinding.inflate(layoutInflater)
+        val editOwnershipBinding: EditOwnershipBinding =
+            EditOwnershipBinding.inflate(layoutInflater)
         val popupDialog = Dialog(this)
         popupDialog.setContentView(editOwnershipBinding.root)
         popupDialog.setOnDismissListener { codeScanner.startPreview() }
@@ -198,7 +210,7 @@ class Scanner : Camera() {
 
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-        editOwnershipBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+        editOwnershipBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
         editOwnershipBinding.saveButton.setOnClickListener {
             val editOwnershipRequest =
                 OwnershipEditRequest(
@@ -206,7 +218,8 @@ class Scanner : Camera() {
                     "",
                     editOwnershipBinding.Note.text.toString(),
                     editOwnershipBinding.tags.text.toString(),
-                    editOwnershipBinding.qr.text.toString())
+                    editOwnershipBinding.qr.text.toString()
+                )
             saveOwnershipButton(row, ownership.ownershipUID, editOwnershipRequest)
             popupDialog.dismiss()
         }
@@ -226,36 +239,52 @@ class Scanner : Camera() {
     private fun minusButton(ownership: Ownership, quantityView: TextView) {
         lifecycleScope.launch {
             val response = api.ownershipQuantity("decrement", 1, ownership.ownershipUID)
-            if (response.success){
+            if (response.success) {
                 ownership.itemQuantity = response.ownership.itemQuantity
                 quantityView.text = ownership.itemQuantity.toString()
             }
         }
     }
 
-    private fun saveOwnershipButton(row: TableRow, uid: String, editOwnershipRequest: OwnershipEditRequest) {
+    private fun saveOwnershipButton(
+        row: TableRow,
+        uid: String,
+        editOwnershipRequest: OwnershipEditRequest
+    ) {
         lifecycleScope.launch {
             val response = api.ownershipEdit(editOwnershipRequest, uid)
-            if (response.success){
+            if (response.success) {
                 val ownershipView = (row.getChildAt(0) as LinearLayout).getChildAt(0) as TextView
-                ownershipView.text = editOwnershipRequest.customItemName.substring(0 until 25.coerceAtMost(editOwnershipRequest.customItemName.length))
+                ownershipView.text = editOwnershipRequest.customItemName.substring(
+                    0 until 25.coerceAtMost(editOwnershipRequest.customItemName.length)
+                )
                 OwnershipManager.setOwnershipName(uid, editOwnershipRequest.customItemName)
             }
         }
     }
 
-    private fun saveLocationButton(row: TableRow, uid: String, editLocationRequest: LocationEditRequest) {
+    private fun saveLocationButton(
+        row: TableRow,
+        uid: String,
+        editLocationRequest: LocationEditRequest
+    ) {
         lifecycleScope.launch {
             val response = api.locationEdit(editLocationRequest, uid)
-            if (response.success){
+            if (response.success) {
                 val locationView = row.getChildAt(0) as TextView
-                locationView.text = editLocationRequest.locationName.substring(0 until 25.coerceAtMost(editLocationRequest.locationName.length))
+                locationView.text = editLocationRequest.locationName.substring(
+                    0 until 25.coerceAtMost(editLocationRequest.locationName.length)
+                )
                 OwnershipManager.setOwnershipName(uid, editLocationRequest.locationName)
             }
         }
     }
 
-    private fun locationOnClick(location: Location, layoutParams: TableRow.LayoutParams, row: TableRow) {
+    private fun locationOnClick(
+        location: Location,
+        layoutParams: TableRow.LayoutParams,
+        row: TableRow
+    ) {
         codeScanner.stopPreview()
 
         val editLocationBinding: EditLocationBinding = EditLocationBinding.inflate(layoutInflater)
@@ -272,14 +301,15 @@ class Scanner : Camera() {
 
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-        editLocationBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+        editLocationBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
         editLocationBinding.saveButton.setOnClickListener {
             val editLocationRequest =
                 LocationEditRequest(
                     editLocationBinding.name.text.toString(),
                     editLocationBinding.Note.text.toString(),
                     editLocationBinding.tags.text.toString(),
-                    editLocationBinding.qr.text.toString())
+                    editLocationBinding.qr.text.toString()
+                )
             saveLocationButton(row, location.locationUID, editLocationRequest)
             popupDialog.dismiss()
         }
@@ -295,6 +325,7 @@ class Scanner : Camera() {
                 OwnershipManager.removeAllOwnerships()
                 ownershipRowMap.clear()
             }
+
             "locations" -> {
                 val tableLayout = scannerBinding.locationTableLayout
                 tableLayout.removeAllViews()
@@ -313,7 +344,7 @@ class Scanner : Camera() {
         }
     }
 
-    private fun unpackInventory(inventoryDTO: InventoryDTO){
+    private fun unpackInventory(inventoryDTO: InventoryDTO) {
         inventoryDTO.ownerships?.let { ownerships ->
             if (ownerships.isNotEmpty()) {
                 for (ownership in ownerships) {
@@ -345,13 +376,13 @@ class Scanner : Camera() {
         )
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-        if(pageView == "items") {
+        if (pageView == "items") {
             searchBinding.searchButton.setOnClickListener { searchOwnershipButton(searchBinding) }
         } else {
             searchBinding.searchButton.setOnClickListener { searchLocationButton(searchBinding) }
 
         }
-        searchBinding.cancelButton.setOnClickListener{popupDialog.dismiss()}
+        searchBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
 
         popupDialog.show()
     }
@@ -362,7 +393,7 @@ class Scanner : Camera() {
         val tableLayout = searchBinding.searchTableLayout
         tableLayout.removeAllViews()
         searchRowMap.clear()
-        if (name == "" && tags == ""){
+        if (name == "" && tags == "") {
 
             return
         }
@@ -384,7 +415,7 @@ class Scanner : Camera() {
         val tableLayout = searchBinding.searchTableLayout
         tableLayout.removeAllViews()
         searchRowMap.clear()
-        if (name == "" && tags == ""){
+        if (name == "" && tags == "") {
             return
         }
         lifecycleScope.launch {
@@ -401,105 +432,25 @@ class Scanner : Camera() {
 
     private fun createRowForOwnershipSearch(ownership: Ownership): TableRow {
         val name = ownership.customItemName
+        val location =
+            if (ownership.borrower.borrowerName != "Default") ownership.borrower.borrowerName else ownership.location.locationName
 
-        var location = ownership.location.locationName
-        if (ownership.borrower.borrowerName != "Default"){
-            location = ownership.borrower.borrowerName
-        }
-
-        val row = TableRow(this)
-        val layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
-
-        val nameLayout = LinearLayout(this)
-        nameLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
-        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
-
-        val nameView = TextView(this)
-        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
-        nameLayout.addView(nameView)
-
-        val locationLayout = LinearLayout(this)
-        locationLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
-        locationLayout.gravity = Gravity.END or Gravity.CENTER_VERTICAL
-
-        val locationView = TextView(this)
-        locationView.text = location.substring(0 until 25.coerceAtMost(location.length))
-        locationView.gravity = Gravity.CENTER
-        locationLayout.addView(locationView)
-
-        val buttonLayoutParams = TableRow.LayoutParams()
-        buttonLayoutParams.width = resources.getDimensionPixelSize(R.dimen.button_width)
-        buttonLayoutParams.height = resources.getDimensionPixelSize(R.dimen.button_height)
-
-        row.addView(nameLayout)
-        row.addView(locationLayout)
-        row.layoutParams = layoutParams
-        searchRowMap[ownership.ownershipUID] = row
-
-        row.setOnClickListener {
-            Alerts().addConfirmation(ownership.customItemName, this) { shouldAdd ->
-                if (shouldAdd){
-                    if (!OwnershipManager.ownershipExists(ownership.ownershipUID)){
-                        populateItem(ownership)}}
+        return createRowForSearch(name, location, ownership.ownershipUID) {
+            if (!OwnershipManager.ownershipExists(ownership.ownershipUID)) {
+                populateItem(ownership)
             }
         }
-
-        return row
     }
 
     private fun createRowForLocationSearch(location: Location): TableRow {
         val name = location.locationName
-
         val parent = location.location?.locationName
 
-        val row = TableRow(this)
-        val layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT)
-
-        val nameLayout = LinearLayout(this)
-        nameLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
-        nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
-
-        val nameView = TextView(this)
-        nameView.text = name.substring(0 until 25.coerceAtMost(name.length))
-        nameLayout.addView(nameView)
-
-        val locationLayout = LinearLayout(this)
-        locationLayout.layoutParams = TableRow.LayoutParams(
-            0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
-        locationLayout.gravity = Gravity.END or Gravity.CENTER_VERTICAL
-
-        val locationView = TextView(this)
-        if (parent != null) {
-            locationView.text = parent.substring(0 until 25.coerceAtMost(parent.length))
-        }
-        locationView.gravity = Gravity.CENTER
-        locationLayout.addView(locationView)
-
-        val buttonLayoutParams = TableRow.LayoutParams()
-        buttonLayoutParams.width = resources.getDimensionPixelSize(R.dimen.button_width)
-        buttonLayoutParams.height = resources.getDimensionPixelSize(R.dimen.button_height)
-
-        row.addView(nameLayout)
-        row.addView(locationLayout)
-        row.layoutParams = layoutParams
-        searchRowMap[location.locationUID] = row
-
-        row.setOnClickListener {
-            Alerts().addConfirmation(location.locationName, this) { shouldAdd ->
-                if (shouldAdd){
-                    if (!LocationManager.locationExists(location.locationUID)){
-                        populateLocations(location)}}
+        return createRowForSearch(name, parent, location.locationUID) {
+            if (!LocationManager.locationExists(location.locationUID)) {
+                populateLocations(location)
             }
         }
-
-        return row
     }
 
     private fun newEntry(qr: String? = null) {
@@ -517,7 +468,12 @@ class Scanner : Camera() {
         )
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
-        createNewBinding.createButton.setOnClickListener { createNewButton(createNewBinding, popupDialog) }
+        createNewBinding.createButton.setOnClickListener {
+            createNewButton(
+                createNewBinding,
+                popupDialog
+            )
+        }
         createNewBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
 
         val spinnerPosition = if (pageView == "items") 0 else 1
@@ -531,7 +487,7 @@ class Scanner : Camera() {
         val typeSpinner = createNewBinding.typeSpinner
         val name = createNewBinding.nameEditText.text.toString()
         val qr = createNewBinding.qrCodeEditText.text.toString()
-        if (name == "" || qr == ""){
+        if (name == "" || qr == "") {
             return
         }
         lifecycleScope.launch {
@@ -545,6 +501,7 @@ class Scanner : Camera() {
                         switchToLocationsView()
                     }
                 }
+
                 "Item" -> {
                     val request = OwnershipCreateRequest(qr, name)
                     val response = api.ownershipCreate(request)
@@ -560,48 +517,51 @@ class Scanner : Camera() {
     }
 
     private fun placeQueueButton() {
-                if (locationRowMap.isNotEmpty() and ownershipRowMap.isNotEmpty()){
-                    codeScanner.stopPreview()
+        if (locationRowMap.isNotEmpty() and ownershipRowMap.isNotEmpty()) {
+            codeScanner.stopPreview()
 
-                    val dialogBuilder = AlertDialog.Builder(this@Scanner)
-                    dialogBuilder.setTitle("Place Queue in:")
-                    val locations = LocationManager.getAllLocationNames()
+            val dialogBuilder = AlertDialog.Builder(this@Scanner)
+            dialogBuilder.setTitle("Place Queue in:")
+            val locations = LocationManager.getAllLocationNames()
 
-                    dialogBuilder.setSingleChoiceItems(
-                        ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, locations), -1)
-                            { dialog, which ->
-                            when (locations[which]) {
-                                else -> {
-                                    val selectedLocation = LocationManager.getAllLocations()[which]
-                                    val qr = selectedLocation.locationQR
+            dialogBuilder.setSingleChoiceItems(
+                ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, locations),
+                -1
+            )
+            { dialog, which ->
+                when (locations[which]) {
+                    else -> {
+                        val selectedLocation = LocationManager.getAllLocations()[which]
+                        val qr = selectedLocation.locationQR
 
-                                    for(ownership in OwnershipManager.getAllOwnerships()) {
-                                        lifecycleScope.launch {
-                                            val response = api.ownershipSetLocation(ownership.ownershipUID, qr)
-                                            if (response.success){
-                                                updateLocationForAllRows(LocationManager.getAllLocations()[which])
-                                            } else{
-                                                // TODO handle negative
-                                            }
-                                        }
-                                    }
+                        for (ownership in OwnershipManager.getAllOwnerships()) {
+                            lifecycleScope.launch {
+                                val response = api.ownershipSetLocation(ownership.ownershipUID, qr)
+                                if (response.success) {
+                                    updateLocationForAllRows(LocationManager.getAllLocations()[which])
+                                } else {
+                                    // TODO handle negative
                                 }
                             }
-                            // Dismiss the dialog
-                            dialog.dismiss()
-                            codeScanner.startPreview()
                         }
-
-                        // Create and show the AlertDialog
-                        val dialog = dialogBuilder.create()
-                        dialog.show()
+                    }
                 }
+                // Dismiss the dialog
+                dialog.dismiss()
+                codeScanner.startPreview()
+            }
+
+            // Create and show the AlertDialog
+            val dialog = dialogBuilder.create()
+            dialog.show()
         }
+    }
 
     private fun updateLocationForAllRows(location: Location) {
         ownershipRowMap.entries.forEach { (ownershipUID, row) ->
             val locationView = (row.getChildAt(1) as LinearLayout).getChildAt(0) as TextView
-            locationView.text = location.locationName.substring(0 until 25.coerceAtMost(location.locationName.length))
+            locationView.text =
+                location.locationName.substring(0 until 25.coerceAtMost(location.locationName.length))
             OwnershipManager.setOwnershipLocation(ownershipUID, location)
         }
     }
@@ -642,7 +602,8 @@ class Scanner : Camera() {
                 }
             }
         }
-        coroutineScope.launch {delay(1000)
+        coroutineScope.launch {
+            delay(1000)
             codeScanner.startPreview()
         }
     }
@@ -656,25 +617,28 @@ class Scanner : Camera() {
         tableLayout.addView(row)
     }
 
-    private fun populateLocations(location: Location){
+    private fun populateLocations(location: Location) {
         val tableLayout = scannerBinding.locationTableLayout
 
-        if(!locationRowMap.containsKey(location.locationUID)) {
+        if (!locationRowMap.containsKey(location.locationUID)) {
             LocationManager.addLocation(location)
             val row = createRowForLocation(location)
             tableManager.setColorForRow(row, tableLayout.childCount)
             tableLayout.addView(row)
         }
-        coroutineScope.launch {delay(1000)
+        coroutineScope.launch {
+            delay(1000)
             codeScanner.startPreview()
         }
     }
 
-    override suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat){
+    override suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat) {
         codeScanner.stopPreview()
-        if(barcodeFormat != BarcodeFormat.QR_CODE){
+        if (barcodeFormat != BarcodeFormat.QR_CODE) {
             val response = api.scannerBarcode(code)
-            if (response.message == "429"){Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()}
+            if (response.message == "429") {
+                Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()
+            }
             populateItems(response)
             switchToItemsView()
         } else {
@@ -683,11 +647,13 @@ class Scanner : Camera() {
                 "NEW" -> {
                     newEntry(code)
                 }
+
                 "LOCATION" -> {
                     val locationResponse = api.scannerQRLocation(code)
                     populateLocations(locationResponse.location)
                     switchToLocationsView()
                 }
+
                 "OWNERSHIP" -> {
                     val ownershipResponse = api.scanQROwnership(code)
                     populateItem(ownershipResponse.ownership)
@@ -719,8 +685,10 @@ class Scanner : Camera() {
     }
 
     private fun createRowForOwnership(ownership: Ownership): TableRow {
-        val name = if (ownership.customItemName == "") ownership.item.itemName else ownership.customItemName
-        val location = if (ownership.borrower.borrowerName != "Default") ownership.borrower.borrowerName else ownership.location.locationName
+        val name =
+            if (ownership.customItemName == "") ownership.item.itemName else ownership.customItemName
+        val location =
+            if (ownership.borrower.borrowerName != "Default") ownership.borrower.borrowerName else ownership.location.locationName
         val quantity = ownership.itemQuantity
 
         val layoutParams = TableRow.LayoutParams(
@@ -732,7 +700,10 @@ class Scanner : Camera() {
             this.layoutParams = layoutParams
             setOnClickListener { ownershipOnClick(ownership, layoutParams, this) }
             setOnLongClickListener {
-                Alerts().removeConfirmation(ownership.customItemName, this@Scanner) { shouldDelete ->
+                Alerts().removeConfirmation(
+                    ownership.customItemName,
+                    this@Scanner
+                ) { shouldDelete ->
                     if (shouldDelete) removeOwnershipRow(ownership.ownershipUID)
                 }
                 true
@@ -744,7 +715,8 @@ class Scanner : Camera() {
         nameLayout.addView(nameView)
 
         val locationLayout = createLinearLayout(0.33f, Gravity.CENTER or Gravity.CENTER_VERTICAL)
-        val locationView = createTextView(location.substring(0 until 25.coerceAtMost(location.length)))
+        val locationView =
+            createTextView(location.substring(0 until 25.coerceAtMost(location.length)))
         locationView.gravity = Gravity.CENTER
         locationLayout.addView(locationView)
 
@@ -755,8 +727,10 @@ class Scanner : Camera() {
             resources.getDimensionPixelSize(R.dimen.button_width),
             resources.getDimensionPixelSize(R.dimen.button_height)
         )
-        val plusButton = createButton("+", buttonLayoutParams) { plusButton(ownership, quantityView) }
-        val minusButton = createButton("-", buttonLayoutParams) { minusButton(ownership, quantityView) }
+        val plusButton =
+            createButton("+", buttonLayoutParams) { plusButton(ownership, quantityView) }
+        val minusButton =
+            createButton("-", buttonLayoutParams) { minusButton(ownership, quantityView) }
 
         quantityLayout.addView(minusButton)
         quantityLayout.addView(quantityView)
@@ -786,7 +760,8 @@ class Scanner : Camera() {
         row.addView(nameView)
 
         val locationView = createTextView(
-            parent?.substring(0 until 18.coerceAtMost(parent.length)) ?: getString(R.string.no_location)
+            parent?.substring(0 until 18.coerceAtMost(parent.length))
+                ?: getString(R.string.no_location)
         )
         locationView.layoutParams = TableRow.LayoutParams(
             0, TableRow.LayoutParams.WRAP_CONTENT, 1f
@@ -805,6 +780,53 @@ class Scanner : Camera() {
         }
 
         row.setOnClickListener { locationOnClick(location, layoutParams, row) }
+
+        return row
+    }
+
+    private fun createRowForSearch(
+        name: String,
+        location: String?,
+        id: String,
+        onClickAction: () -> Unit
+    ): TableRow {
+        val row = TableRow(this)
+        var layoutParams = TableRow.LayoutParams(
+            TableRow.LayoutParams.MATCH_PARENT,
+            TableRow.LayoutParams.WRAP_CONTENT
+        )
+
+        val nameLayout = LinearLayout(this).apply {
+            layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
+            gravity = Gravity.START or Gravity.CENTER_VERTICAL
+        }
+
+        val nameView = createTextView(name.substring(0 until 25.coerceAtMost(name.length)))
+
+        nameLayout.addView(nameView)
+
+        val locationLayout = LinearLayout(this).apply {
+            layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.33f)
+            gravity = Gravity.END or Gravity.CENTER_VERTICAL
+        }
+
+        val locationView =
+            createTextView(location?.substring(0 until 25.coerceAtMost(location.length)) ?: "")
+
+        locationLayout.addView(locationView)
+
+        row.addView(nameLayout)
+        row.addView(locationLayout)
+        row.layoutParams = layoutParams
+        searchRowMap[id] = row
+
+        row.setOnClickListener {
+            Alerts().addConfirmation(name, this) { shouldAdd ->
+                if (shouldAdd) {
+                    onClickAction()
+                }
+            }
+        }
 
         return row
     }
