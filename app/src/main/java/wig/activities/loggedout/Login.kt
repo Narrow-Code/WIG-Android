@@ -3,7 +3,6 @@ package wig.activities.loggedout
 import android.os.Bundle
 import android.widget.Button
 import androidx.lifecycle.lifecycleScope
-import wig.models.requests.SaltRequest
 import wig.utils.StoreToken
 import wig.managers.TokenManager
 import wig.utils.SaltAndHash
@@ -47,19 +46,18 @@ class Login : Settings() {
         }
     }
 
-    private suspend fun getSalt(username: String): String =
-        withContext(Dispatchers.IO) {
-            val posts = service.getSalt(SaltRequest(username))
-            if(posts.success){
-                posts.salt
-            } else {
-                enableButtons()
-                runOnUiThread {
-                    loginBinding.error.text = posts.message
-                }
-                ""
+    private suspend fun getSalt(username: String): String {
+        val posts = api.getSalt(username)
+        return if(posts.success){
+            posts.salt
+        } else {
+            enableButtons()
+            runOnUiThread {
+                loginBinding.error.text = posts.message
             }
+            ""
         }
+    }
 
     private suspend fun login(username: String, hash: String) =
         withContext(Dispatchers.IO) {

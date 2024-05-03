@@ -192,7 +192,7 @@ open class API {
         posts
     }
 
-    suspend fun getSale(username: String): SaltResponse = withContext(Dispatchers.IO) {
+    suspend fun getSalt(username: String): SaltResponse = withContext(Dispatchers.IO) {
         val posts = userService.getSalt(SaltRequest(username))
         posts
     }
