@@ -6,16 +6,11 @@ import androidx.lifecycle.lifecycleScope
 import wig.utils.StoreToken
 import wig.managers.TokenManager
 import wig.utils.SaltAndHash
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import wig.R
 import wig.activities.base.Settings
-import wig.api.UserService
-import wig.models.requests.LoginRequest
 
 class Login : Settings() {
-    private val service = UserService.create()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
