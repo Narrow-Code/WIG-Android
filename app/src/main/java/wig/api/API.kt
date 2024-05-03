@@ -201,7 +201,7 @@ open class API {
         posts
     }
 
-    private suspend fun login(username: String, hash: String): LoginResponse = withContext(Dispatchers.IO) {
+    suspend fun login(username: String, hash: String): LoginResponse = withContext(Dispatchers.IO) {
             val posts = userService.login(LoginRequest(username, hash))
             posts
         }

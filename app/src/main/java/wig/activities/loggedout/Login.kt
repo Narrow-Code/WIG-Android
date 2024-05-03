@@ -59,9 +59,8 @@ class Login : Settings() {
         }
     }
 
-    private suspend fun login(username: String, hash: String) =
-        withContext(Dispatchers.IO) {
-            val posts = service.login(LoginRequest(username, hash))
+    private suspend fun login(username: String, hash: String) {
+            val posts = api.login(username, hash)
             if(posts.success){
                 val storeToken = StoreToken(this@Login)
                 storeToken.saveToken(posts.token)
