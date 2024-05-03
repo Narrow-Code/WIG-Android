@@ -2,8 +2,10 @@ package wig.api
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import wig.managers.TokenManager
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.LocationEditRequest
+import wig.models.requests.LoginRequest
 import wig.models.requests.OwnershipEditRequest
 import wig.models.requests.OwnershipCreateRequest
 import wig.models.requests.SaltRequest
@@ -18,8 +20,10 @@ import wig.models.responses.LocationResponse
 import wig.models.responses.OwnershipResponse
 import wig.models.responses.ScannerBarcodeResponse
 import wig.models.responses.LocationSearchResponse
+import wig.models.responses.LoginResponse
 import wig.models.responses.SaltResponse
 import wig.models.responses.ownershipSearchResponse
+import wig.utils.StoreToken
 
 // API holds all of the API calls within Coroutine functions
 open class API {
@@ -196,5 +200,10 @@ open class API {
         val posts = userService.getSalt(SaltRequest(username))
         posts
     }
+
+    private suspend fun login(username: String, hash: String): LoginResponse = withContext(Dispatchers.IO) {
+            val posts = userService.login(LoginRequest(username, hash))
+            posts
+        }
 
 }
