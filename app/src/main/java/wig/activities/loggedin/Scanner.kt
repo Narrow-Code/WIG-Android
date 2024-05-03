@@ -73,11 +73,138 @@ class Scanner : Camera() {
         scannerBinding.search.setOnClickListener { searchButton() }
     }
 
+    private fun clearButton() {
+        when (pageView) {
+            "items" -> {
+                val tableLayout = scannerBinding.itemsTableLayout
+                tableLayout.removeAllViews()
+                OwnershipManager.removeAllOwnerships()
+                ownershipRowMap.clear()
+            }
+
+            "locations" -> {
+                val tableLayout = scannerBinding.locationTableLayout
+                tableLayout.removeAllViews()
+                LocationManager.removeAllLocations()
+                locationRowMap.clear()
+            }
+        }
+    }
+
+    private fun placeQueueButton() {
+        if (locationRowMap.isNotEmpty() and ownershipRowMap.isNotEmpty()) {
+            codeScanner.stopPreview()
+
+            val dialogBuilder = AlertDialog.Builder(this@Scanner)
+            dialogBuilder.setTitle("Place Queue in:")
+            val locations = LocationManager.getAllLocationNames()
+
+            dialogBuilder.setSingleChoiceItems(
+                ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, locations),
+                -1
+            )
+            { dialog, which ->
+                when (locations[which]) {
+                    else -> {
+                        val selectedLocation = LocationManager.getAllLocations()[which]
+
+                        setLocation(selectedLocation)
+                    }
+                }
+                // Dismiss the dialog
+                dialog.dismiss()
+                codeScanner.startPreview()
+            }
+
+            // Create and show the AlertDialog
+            val dialog = dialogBuilder.create()
+            dialog.show()
+        }
+    }
+
+    private fun newEntry(qr: String? = null) {
+        codeScanner.stopPreview()
+
+        val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(createNewBinding.root)
+        qr?.let { createNewBinding.qrCodeEditText.setText(it) }
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+        val layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+        createNewBinding.createButton.setOnClickListener {
+            createNewButton(
+                createNewBinding,
+                popupDialog
+            )
+        }
+        createNewBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
+
+        val spinnerPosition = if (pageView == "items") 0 else 1
+        createNewBinding.typeSpinner.setSelection(spinnerPosition)
+
+        popupDialog.show()
+    }
+
+    private fun unpackButton() {
+        for (location in LocationManager.getAllLocations()) {
+            lifecycleScope.launch {
+                val unpacked = api.locationUnpack(location.locationUID)
+                unpackInventory(unpacked.inventory)
+            }
+        }
+    }
+
     private fun checkoutButton() {
         codeScanner.stopPreview()
         lifecycleScope.launch {
             val borrowers = api.borrowerGetAll()
             checkoutPrompt(borrowers)
+        }
+    }
+
+    private fun searchButton() {
+        codeScanner.stopPreview()
+
+        val searchBinding: SearchBinding = SearchBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(searchBinding.root)
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+        val layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+        if (pageView == "items") {
+            searchBinding.searchButton.setOnClickListener { searchOwnershipButton(searchBinding) }
+        } else {
+            searchBinding.searchButton.setOnClickListener { searchLocationButton(searchBinding) }
+
+        }
+        searchBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
+
+        popupDialog.show()
+    }
+
+    private fun setLocation(selectedLocation: Location) {
+        val qr = selectedLocation.locationQR
+
+        for (ownership in OwnershipManager.getAllOwnerships()) {
+            lifecycleScope.launch {
+                val response = api.ownershipSetLocation(ownership.ownershipUID, qr)
+                if (response.success) {
+                    updateLocationForAllRows(selectedLocation)
+                } else {
+                    // TODO handle negative
+                }
+            }
         }
     }
 
@@ -316,34 +443,6 @@ class Scanner : Camera() {
         popupDialog.show() // TODO fix
     }
 
-
-    private fun clearButton() {
-        when (pageView) {
-            "items" -> {
-                val tableLayout = scannerBinding.itemsTableLayout
-                tableLayout.removeAllViews()
-                OwnershipManager.removeAllOwnerships()
-                ownershipRowMap.clear()
-            }
-
-            "locations" -> {
-                val tableLayout = scannerBinding.locationTableLayout
-                tableLayout.removeAllViews()
-                LocationManager.removeAllLocations()
-                locationRowMap.clear()
-            }
-        }
-    }
-
-    private fun unpackButton() {
-        for (location in LocationManager.getAllLocations()) {
-            lifecycleScope.launch {
-                val unpacked = api.locationUnpack(location.locationUID)
-                unpackInventory(unpacked.inventory)
-            }
-        }
-    }
-
     private fun unpackInventory(inventoryDTO: InventoryDTO) {
         inventoryDTO.ownerships?.let { ownerships ->
             if (ownerships.isNotEmpty()) {
@@ -360,31 +459,6 @@ class Scanner : Camera() {
                 }
             }
         }
-    }
-
-    private fun searchButton() {
-        codeScanner.stopPreview()
-
-        val searchBinding: SearchBinding = SearchBinding.inflate(layoutInflater)
-        val popupDialog = Dialog(this)
-        popupDialog.setContentView(searchBinding.root)
-        popupDialog.setOnDismissListener { codeScanner.startPreview() }
-
-        val layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
-
-        if (pageView == "items") {
-            searchBinding.searchButton.setOnClickListener { searchOwnershipButton(searchBinding) }
-        } else {
-            searchBinding.searchButton.setOnClickListener { searchLocationButton(searchBinding) }
-
-        }
-        searchBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
-
-        popupDialog.show()
     }
 
     private fun searchOwnershipButton(searchBinding: SearchBinding) {
@@ -453,36 +527,6 @@ class Scanner : Camera() {
         }
     }
 
-    private fun newEntry(qr: String? = null) {
-        codeScanner.stopPreview()
-
-        val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
-        val popupDialog = Dialog(this)
-        popupDialog.setContentView(createNewBinding.root)
-        qr?.let { createNewBinding.qrCodeEditText.setText(it) }
-        popupDialog.setOnDismissListener { codeScanner.startPreview() }
-
-        val layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
-
-        createNewBinding.createButton.setOnClickListener {
-            createNewButton(
-                createNewBinding,
-                popupDialog
-            )
-        }
-        createNewBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
-
-        val spinnerPosition = if (pageView == "items") 0 else 1
-        createNewBinding.typeSpinner.setSelection(spinnerPosition)
-
-        popupDialog.show()
-    }
-
-
     private fun createNewButton(createNewBinding: CreateNewBinding, popup: Dialog) {
         val typeSpinner = createNewBinding.typeSpinner
         val name = createNewBinding.nameEditText.text.toString()
@@ -513,47 +557,6 @@ class Scanner : Camera() {
                     }
                 }
             }
-        }
-    }
-
-    private fun placeQueueButton() {
-        if (locationRowMap.isNotEmpty() and ownershipRowMap.isNotEmpty()) {
-            codeScanner.stopPreview()
-
-            val dialogBuilder = AlertDialog.Builder(this@Scanner)
-            dialogBuilder.setTitle("Place Queue in:")
-            val locations = LocationManager.getAllLocationNames()
-
-            dialogBuilder.setSingleChoiceItems(
-                ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, locations),
-                -1
-            )
-            { dialog, which ->
-                when (locations[which]) {
-                    else -> {
-                        val selectedLocation = LocationManager.getAllLocations()[which]
-                        val qr = selectedLocation.locationQR
-
-                        for (ownership in OwnershipManager.getAllOwnerships()) {
-                            lifecycleScope.launch {
-                                val response = api.ownershipSetLocation(ownership.ownershipUID, qr)
-                                if (response.success) {
-                                    updateLocationForAllRows(LocationManager.getAllLocations()[which])
-                                } else {
-                                    // TODO handle negative
-                                }
-                            }
-                        }
-                    }
-                }
-                // Dismiss the dialog
-                dialog.dismiss()
-                codeScanner.startPreview()
-            }
-
-            // Create and show the AlertDialog
-            val dialog = dialogBuilder.create()
-            dialog.show()
         }
     }
 
@@ -791,10 +794,6 @@ class Scanner : Camera() {
         onClickAction: () -> Unit
     ): TableRow {
         val row = TableRow(this)
-        var layoutParams = TableRow.LayoutParams(
-            TableRow.LayoutParams.MATCH_PARENT,
-            TableRow.LayoutParams.WRAP_CONTENT
-        )
 
         val nameLayout = LinearLayout(this).apply {
             layoutParams = TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 0.34f)
@@ -817,7 +816,6 @@ class Scanner : Camera() {
 
         row.addView(nameLayout)
         row.addView(locationLayout)
-        row.layoutParams = layoutParams
         searchRowMap[id] = row
 
         row.setOnClickListener {
