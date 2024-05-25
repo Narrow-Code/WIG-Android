@@ -3,6 +3,7 @@ package wig.activities.loggedin
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
+import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -15,13 +16,13 @@ class Inventory : Settings() {
 
     private lateinit var inventory: List<InventoryDTO>
     private val inventoryRowMap = mutableMapOf<String, TableRow>()
-    private val tableLayout = inventoryBinding.searchTableLayout
-
+    private lateinit var tableLayout: TableLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setInventoryBindings()
+        tableLayout = inventoryBinding.searchTableLayout
         setOnClickListeners()
         getInventory()
     }

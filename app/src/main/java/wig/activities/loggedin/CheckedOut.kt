@@ -3,6 +3,7 @@ package wig.activities.loggedin
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
+import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
@@ -18,12 +19,13 @@ class CheckedOut : Settings() {
 
     private val borrowerRowMap = mutableMapOf<String, TableRow>()
     private lateinit var borrowers: List<Borrowers>
-    private val tableLayout = checkedOutBinding.searchTableLayout
+    private lateinit var tableLayout: TableLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setCheckedOutBindings()
+        tableLayout = checkedOutBinding.searchTableLayout
         setOnClickListeners()
         getInventory()
     }
