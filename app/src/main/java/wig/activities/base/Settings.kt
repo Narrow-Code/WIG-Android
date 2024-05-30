@@ -92,6 +92,7 @@ open class Settings : Bindings() {
     // startActivityLogin starts Login activity
     protected fun startActivityLogin() {
         val intent = Intent(this, Login::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         startActivity(intent)
         finish()
     }
