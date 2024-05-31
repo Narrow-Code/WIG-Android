@@ -55,7 +55,7 @@ jobs:
           echo "RELEASE_APK=app/build/outputs/apk/release/wig-${{ steps.apk-info.outputs.version-name }}.apk" >> $GITHUB_ENV
       - name: Push to Releases
         uses: ncipollo/release-action@v1
-        with:
+        with: 
           artifacts: ${{ env.RELEASE_APK }}
           tag: '${{ steps.apk-info.outputs.version-name }}'
           token: ${{ secrets.TOKEN }}
