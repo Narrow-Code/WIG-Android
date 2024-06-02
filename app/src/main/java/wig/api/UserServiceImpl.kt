@@ -125,7 +125,7 @@ class UserServiceImpl(
     override suspend fun ping(hostname: String, port: String): CommonResponse {
         return try {
             client.get {
-                url(HttpRoutes.PING)
+                url("$hostname:$port/ping")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
             }
