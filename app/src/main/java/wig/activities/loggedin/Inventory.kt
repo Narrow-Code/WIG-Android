@@ -84,9 +84,11 @@ class Inventory : Settings() {
         inventory.ownerships?.let { ownerships ->
             if (ownerships.isNotEmpty()) {
                 for (ownership in ownerships) {
-                    val newRow = createRowForOwnership(ownership)
-                    tableManager.setColorForRow(newRow, rowIndex + 1)
-                    tableLayout.addView(newRow, rowIndex + 1)
+                    if (ownership.itemCheckedOut == "false") {
+                        val newRow = createRowForOwnership(ownership)
+                        tableManager.setColorForRow(newRow, rowIndex + 1)
+                        tableLayout.addView(newRow, rowIndex + 1)
+                    }
                 }
             }
         }
