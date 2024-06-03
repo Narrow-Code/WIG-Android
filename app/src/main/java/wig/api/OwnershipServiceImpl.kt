@@ -85,7 +85,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     override suspend fun ownershipCreate(newOwnershipRequest: OwnershipCreateRequest): OwnershipResponse {
         return try {
             client.post {
-                url(HttpRoutes.CREATE_OWNERSHIP)
+                url(HttpRoutes.OWNERSHIP)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
@@ -134,10 +134,10 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
-    override suspend fun ownershipEdit(editOwnershipRequest: OwnershipEditRequest, uid: String): CommonResponse {
+    override suspend fun ownershipEdit(editOwnershipRequest: OwnershipEditRequest): CommonResponse {
         return try {
             client.put {
-                url("${HttpRoutes.EDIT_OWNERSHIP}?ownershipUID=${uid}")
+                url(HttpRoutes.OWNERSHIP)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())

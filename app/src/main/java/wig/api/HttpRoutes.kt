@@ -25,9 +25,8 @@ object HttpRoutes {
 
     val SET_OWNERSHIP_LOCATION = "${BASE_URL}/app/ownership/set-location"
     val CHANGE_OWNERSHIP_QUANTITY = "${BASE_URL}/app/ownership/quantity/"
-    val CREATE_OWNERSHIP = "${BASE_URL}/app/ownership"
+    val OWNERSHIP = "${BASE_URL}/app/ownership"
     val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
-    val EDIT_OWNERSHIP = "${BASE_URL}/app/ownership/edit"
 
     val CREATE_LOCATION = "${BASE_URL}/app/location/create"
     val UNPACK_LOCATION = "${BASE_URL}/app/location/unpack"

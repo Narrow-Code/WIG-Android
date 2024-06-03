@@ -23,7 +23,7 @@ interface OwnershipService {
 
     suspend fun ownershipSearch(searchRequest: SearchRequest): ownershipSearchResponse
 
-    suspend fun ownershipEdit(editOwnershipRequest: OwnershipEditRequest, uid: String): CommonResponse
+    suspend fun ownershipEdit(editOwnershipRequest: OwnershipEditRequest): CommonResponse
 
 
     companion object {

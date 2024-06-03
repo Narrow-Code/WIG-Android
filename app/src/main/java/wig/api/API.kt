@@ -2,7 +2,6 @@ package wig.api
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import wig.managers.TokenManager
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.LocationEditRequest
 import wig.models.requests.LoginRequest
@@ -23,7 +22,6 @@ import wig.models.responses.LocationSearchResponse
 import wig.models.responses.LoginResponse
 import wig.models.responses.SaltResponse
 import wig.models.responses.ownershipSearchResponse
-import wig.utils.StoreToken
 
 // API holds all of the API calls within Coroutine functions
 open class API {
@@ -115,11 +113,10 @@ open class API {
     // ownershipEdit edits the fields of an Ownership
     suspend fun ownershipEdit(
         ownershipEditRequest: OwnershipEditRequest,
-        uid: String
     ): CommonResponse = withContext(
         Dispatchers.IO
     ) {
-        val posts = ownershipService.ownershipEdit(ownershipEditRequest, uid)
+        val posts = ownershipService.ownershipEdit(ownershipEditRequest)
         posts
     }
 

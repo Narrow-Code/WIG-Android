@@ -341,6 +341,7 @@ class Scanner : Camera() {
         editOwnershipBinding.saveButton.setOnClickListener {
             val editOwnershipRequest =
                 OwnershipEditRequest(
+                    ownership.ownershipUID,
                     editOwnershipBinding.name.text.toString(),
                     "",
                     editOwnershipBinding.Note.text.toString(),
@@ -379,7 +380,7 @@ class Scanner : Camera() {
         editOwnershipRequest: OwnershipEditRequest
     ) {
         lifecycleScope.launch {
-            val response = api.ownershipEdit(editOwnershipRequest, uid)
+            val response = api.ownershipEdit(editOwnershipRequest)
             if (response.success) {
                 val ownershipView = (row.getChildAt(0) as LinearLayout).getChildAt(0) as TextView
                 ownershipView.text = editOwnershipRequest.customItemName.substring(
