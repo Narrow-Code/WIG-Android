@@ -7,13 +7,14 @@ import wig.managers.SettingsManager
  */
 object HttpRoutes {
 
-    private const val DEFAULT_BASE_URL = "http://ec2-18-209-15-108.compute-1.amazonaws.com:30001" // SERVER
-    private val BASE_URL: String = getBaseUrl()
+    // private const val DEFAULT_BASE_URL = "http://ec2-18-209-15-108.compute-1.amazonaws.com:30001" // SERVER
+    private const val DEFAULT_BASE_URL = "http://192.168.0.201:30001"
+    val BASE_URL: String = getBaseUrl()
 
     val PING = "$BASE_URL/ping"
 
     val SIGNUP = "$BASE_URL/user/signup"
-    val SALT = "$BASE_URL/user/salt"
+    val SALT = "$BASE_URL/user/username/salt"
     val LOGIN = "$BASE_URL/user/login"
     val LOGIN_CHECK = "$BASE_URL/app/validate"
 
@@ -24,7 +25,7 @@ object HttpRoutes {
 
     val SET_OWNERSHIP_LOCATION = "${BASE_URL}/app/ownership/set-location"
     val CHANGE_OWNERSHIP_QUANTITY = "${BASE_URL}/app/ownership/quantity/"
-    val CREATE_OWNERSHIP = "${BASE_URL}/app/ownership/create"
+    val CREATE_OWNERSHIP = "${BASE_URL}/app/ownership"
     val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
     val EDIT_OWNERSHIP = "${BASE_URL}/app/ownership/edit"
 
