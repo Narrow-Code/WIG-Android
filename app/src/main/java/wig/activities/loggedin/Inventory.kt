@@ -40,19 +40,30 @@ class Inventory : Settings() {
             if (response.success) {
                 if(response.inventory.locations?.isNotEmpty() == true) {
                     inventory = response.inventory.locations
-                    populateTable(inventory)
+                    populateTableLocations(inventory)
+                    response.inventory.ownerships?.let { populateTableOwnerships(it) }
                 }
             }
         }
     }
 
-    private fun populateTable(inventory: List<InventoryDTO>) {
+    private fun populateTableLocations(inventory: List<InventoryDTO>) {
         for (location in inventory) {
             val row = createRowForLocation(location)
             tableManager.setColorForRow(row, tableLayout.childCount)
             row.setOnClickListener { locationClick(it as TableRow, location) }
             tableLayout.addView(row)
         }
+        tableManager.resetRowColors(tableLayout)
+    }
+
+    private fun populateTableOwnerships(ownerships: MutableList<Ownership>){
+            for (ownership in ownerships) {
+                if (ownership.itemCheckedOut == "false") {
+                    val newRow = createRowForOwnership(ownership)
+                    tableLayout.addView(newRow)
+                }
+            }
         tableManager.resetRowColors(tableLayout)
     }
 
