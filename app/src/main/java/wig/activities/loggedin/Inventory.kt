@@ -49,9 +49,9 @@ class Inventory : Settings() {
 
     private fun populateTableLocations(inventory: List<InventoryDTO>) {
         for (location in inventory) {
-            val row = createRowForLocation(location)
+            val row = createRowForLocation(location, 0)
             tableManager.setColorForRow(row, tableLayout.childCount)
-            row.setOnClickListener { locationClick(it as TableRow, location) }
+            row.setOnClickListener { locationClick(it as TableRow, location, 0) }
             tableLayout.addView(row)
         }
         tableManager.resetRowColors(tableLayout)
@@ -60,19 +60,19 @@ class Inventory : Settings() {
     private fun populateTableOwnerships(ownerships: MutableList<Ownership>){
             for (ownership in ownerships) {
                 if (ownership.itemCheckedOut == "false") {
-                    val newRow = createRowForOwnership(ownership)
+                    val newRow = createRowForOwnership(ownership, 0)
                     tableLayout.addView(newRow)
                 }
             }
         tableManager.resetRowColors(tableLayout)
     }
 
-    private fun locationClick(clickedRow: TableRow, inventory: InventoryDTO) {
+    private fun locationClick(clickedRow: TableRow, inventory: InventoryDTO, indentationLevel: Int) {
         val rowIndex = tableLayout.indexOfChild(clickedRow)
         val expand = (clickedRow.getChildAt(0) as LinearLayout).getChildAt(1) as TextView
 
         if (expand.text == " >") {
-            expandLocation(inventory, rowIndex)
+            expandLocation(inventory, rowIndex, indentationLevel + 1)
             expand.text = " v"
             tableManager.resetRowColors(tableLayout)
         } else if (expand.text == " v") {
@@ -82,11 +82,11 @@ class Inventory : Settings() {
         }
     }
 
-    private fun expandLocation(inventory: InventoryDTO, rowIndex: Int) {
+    private fun expandLocation(inventory: InventoryDTO, rowIndex: Int, indentationLevel: Int) {
         inventory.locations?.let { locations ->
             if (locations.isNotEmpty()) {
                 for (location in locations) {
-                    val newRow = createRowForLocation(location)
+                    val newRow = createRowForLocation(location, indentationLevel)
                     tableManager.setColorForRow(newRow, rowIndex + 1)
                     tableLayout.addView(newRow, rowIndex + 1)
                 }
@@ -96,7 +96,7 @@ class Inventory : Settings() {
             if (ownerships.isNotEmpty()) {
                 for (ownership in ownerships) {
                     if (ownership.itemCheckedOut == "false") {
-                        val newRow = createRowForOwnership(ownership)
+                        val newRow = createRowForOwnership(ownership, indentationLevel)
                         tableManager.setColorForRow(newRow, rowIndex + 1)
                         tableLayout.addView(newRow, rowIndex + 1)
                     }
@@ -123,8 +123,9 @@ class Inventory : Settings() {
     }
 
 
-    private fun createRowForOwnership(ownership: Ownership): TableRow {
-        val name = "        " + ownership.customItemName.substring(0 until 25.coerceAtMost(ownership.customItemName.length))
+    private fun createRowForOwnership(ownership: Ownership, indentationLevel: Int): TableRow {
+        // Add indentation to name
+        val name = "    ".repeat(indentationLevel + 1) + ownership.customItemName.substring(0 until 25.coerceAtMost(ownership.customItemName.length))
         val row = TableRow(this)
         val layoutParams = TableRow.LayoutParams(
             TableRow.LayoutParams.MATCH_PARENT,
@@ -146,8 +147,8 @@ class Inventory : Settings() {
         return row
     }
 
-    private fun createRowForLocation(location: InventoryDTO): TableRow {
-        val name = location.parent.locationName.substring(0, 25.coerceAtMost(location.parent.locationName.length))
+    private fun createRowForLocation(location: InventoryDTO, indentationLevel: Int): TableRow {
+        var name = location.parent.locationName.substring(0, 25.coerceAtMost(location.parent.locationName.length))
         val expand = " >"
 
         val row = TableRow(this)
@@ -162,6 +163,9 @@ class Inventory : Settings() {
         nameLayout.gravity = Gravity.START or Gravity.CENTER_VERTICAL
 
         val nameView = TextView(this)
+        // Add indentation to name
+        val indentation = "    ".repeat(indentationLevel + 1)
+        name = "$indentation$name"
         nameView.text = name
         nameLayout.addView(nameView)
 
@@ -169,7 +173,7 @@ class Inventory : Settings() {
         expandView.text = expand
         nameLayout.addView(expandView)
 
-        row.setOnClickListener { locationClick(it as TableRow, location) }
+        row.setOnClickListener { locationClick(it as TableRow, location, indentationLevel + 1) }
 
         row.addView(nameLayout)
         inventoryRowMap[location.parent.locationUID] = row
