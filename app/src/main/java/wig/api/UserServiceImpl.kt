@@ -26,7 +26,7 @@ class UserServiceImpl(
     override suspend fun getSalt(saltRequest: SaltRequest): SaltResponse {
         return try {
             client.get {
-                url("${HttpRoutes.SALT}?username=${saltRequest.username}")
+                url("${HttpRoutes.BASE_URL}/${saltRequest.username}/salt")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
             }
