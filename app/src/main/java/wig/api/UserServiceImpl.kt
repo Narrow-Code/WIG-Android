@@ -74,7 +74,7 @@ class UserServiceImpl(
 
     override suspend fun validate(): CommonResponse {
         return try {
-            client.post {
+            client.get {
                 url(HttpRoutes.LOGIN_CHECK)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
