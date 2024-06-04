@@ -11,10 +11,7 @@ object HttpRoutes {
     private const val DEFAULT_BASE_URL = "http://192.168.0.201:30001"
     val BASE_URL: String = getBaseUrl()
 
-    val PING = "$BASE_URL/ping"
-
     val SIGNUP = "$BASE_URL/user/signup"
-    val SALT = "$BASE_URL/user/username/salt"
     val LOGIN = "$BASE_URL/user/login"
     val LOGIN_CHECK = "$BASE_URL/app/validate"
 
@@ -24,7 +21,6 @@ object HttpRoutes {
     val SCAN_QR_OWNERSHIP = "${BASE_URL}/app/scan/qr/ownership"
 
     val SET_OWNERSHIP_LOCATION = "${BASE_URL}/app/ownership/set-location"
-    val CHANGE_OWNERSHIP_QUANTITY = "${BASE_URL}/app/ownership/quantity/"
     val OWNERSHIP = "${BASE_URL}/app/ownership"
     val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
 

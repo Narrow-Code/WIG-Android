@@ -60,7 +60,7 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     override suspend fun ownershipQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse {
         return try {
             client.put {
-                url("${HttpRoutes.CHANGE_OWNERSHIP_QUANTITY}${changeType}?ownershipUID=${ownershipUID}&amount=${amount}")
+                url("${HttpRoutes.OWNERSHIP}/${ownershipUID}/quantity/${changeType}?amount=${amount}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
