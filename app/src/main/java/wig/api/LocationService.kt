@@ -24,7 +24,7 @@ interface LocationService {
 
     suspend fun locationGetInventory(): InventoryResponse
 
-    suspend fun locationEdit(editLocationRequest: LocationEditRequest, uid: String): CommonResponse
+    suspend fun locationEdit(editLocationRequest: LocationEditRequest): CommonResponse
 
 
     companion object {

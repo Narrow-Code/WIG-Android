@@ -374,11 +374,7 @@ class Scanner : Camera() {
         }
     }
 
-    private fun saveOwnershipButton(
-        row: TableRow,
-        uid: String,
-        editOwnershipRequest: OwnershipEditRequest
-    ) {
+    private fun saveOwnershipButton(row: TableRow, uid: String, editOwnershipRequest: OwnershipEditRequest) {
         lifecycleScope.launch {
             val response = api.ownershipEdit(editOwnershipRequest)
             if (response.success) {
@@ -391,13 +387,9 @@ class Scanner : Camera() {
         }
     }
 
-    private fun saveLocationButton(
-        row: TableRow,
-        uid: String,
-        editLocationRequest: LocationEditRequest
-    ) {
+    private fun saveLocationButton(row: TableRow, uid: String, editLocationRequest: LocationEditRequest) {
         lifecycleScope.launch {
-            val response = api.locationEdit(editLocationRequest, uid)
+            val response = api.locationEdit(editLocationRequest)
             if (response.success) {
                 val locationView = row.getChildAt(0) as TextView
                 locationView.text = editLocationRequest.locationName.substring(
@@ -408,11 +400,7 @@ class Scanner : Camera() {
         }
     }
 
-    private fun locationOnClick(
-        location: Location,
-        layoutParams: TableRow.LayoutParams,
-        row: TableRow
-    ) {
+    private fun locationOnClick(location: Location, layoutParams: TableRow.LayoutParams, row: TableRow) {
         codeScanner.stopPreview()
 
         val editLocationBinding: EditLocationBinding = EditLocationBinding.inflate(layoutInflater)
@@ -433,6 +421,7 @@ class Scanner : Camera() {
         editLocationBinding.saveButton.setOnClickListener {
             val editLocationRequest =
                 LocationEditRequest(
+                    location.locationUID,
                     editLocationBinding.name.text.toString(),
                     editLocationBinding.Note.text.toString(),
                     editLocationBinding.tags.text.toString(),

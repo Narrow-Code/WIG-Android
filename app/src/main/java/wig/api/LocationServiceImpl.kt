@@ -132,10 +132,10 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
         }
     }
 
-    override suspend fun locationEdit(editLocationRequest: LocationEditRequest, uid: String): CommonResponse {
+    override suspend fun locationEdit(editLocationRequest: LocationEditRequest): CommonResponse {
         return try {
             client.put {
-                url("${HttpRoutes.EDIT_LOCATION}?locationUID=${uid}")
+                url(HttpRoutes.LOCATION)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())

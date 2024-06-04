@@ -148,37 +148,26 @@ open class API {
     }
 
     // locationCreate creates a new Location
-    suspend fun locationCreate(name: String, locationQR: String): LocationResponse = withContext(
-        Dispatchers.IO
-    ) {
+    suspend fun locationCreate(name: String, locationQR: String): LocationResponse = withContext(Dispatchers.IO) {
         val posts = locationService.locationCreate(LocationCreateRequest(name, locationQR))
         posts
     }
 
     // locationUnpack retrieves all inventory with a location
-    suspend fun locationUnpack(locationUID: String): InventoryResponse = withContext(
-        Dispatchers.IO
-    ) {
+    suspend fun locationUnpack(locationUID: String): InventoryResponse = withContext(Dispatchers.IO) {
         val posts = locationService.locationUnpack(locationUID)
         posts
     }
 
     // locationSearch searches for Locations based on Name and Tags
-    suspend fun locationSearch(searchRequest: SearchRequest): LocationSearchResponse = withContext(
-        Dispatchers.IO
-    ) {
+    suspend fun locationSearch(searchRequest: SearchRequest): LocationSearchResponse = withContext(Dispatchers.IO) {
         val posts = locationService.locationSearch(searchRequest)
         posts
     }
 
     // locationEdit edits the fields of a Location
-    suspend fun locationEdit(
-        locationEditRequest: LocationEditRequest,
-        locationUID: String
-    ): CommonResponse = withContext(
-        Dispatchers.IO
-    ) {
-        val posts = locationService.locationEdit(locationEditRequest, locationUID)
+    suspend fun locationEdit(locationEditRequest: LocationEditRequest): CommonResponse = withContext(Dispatchers.IO) {
+        val posts = locationService.locationEdit(locationEditRequest)
         posts
     }
 
