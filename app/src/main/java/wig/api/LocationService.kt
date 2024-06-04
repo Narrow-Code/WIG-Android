@@ -6,6 +6,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
+import wig.models.requests.LocationCreateRequest
 import wig.models.responses.CommonResponse
 import wig.models.requests.LocationEditRequest
 import wig.models.responses.InventoryResponse
@@ -15,7 +16,7 @@ import wig.models.requests.SearchRequest
 
 interface LocationService {
 
-    suspend fun locationCreate(name: String, locationQR: String): LocationResponse
+    suspend fun locationCreate(locationCreateRequest: LocationCreateRequest): LocationResponse
 
     suspend fun locationUnpack(locationUID: String): InventoryResponse
 

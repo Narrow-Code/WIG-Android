@@ -3,6 +3,7 @@ package wig.api
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import wig.models.requests.CheckoutRequest
+import wig.models.requests.LocationCreateRequest
 import wig.models.requests.LocationEditRequest
 import wig.models.requests.LoginRequest
 import wig.models.requests.OwnershipEditRequest
@@ -150,7 +151,7 @@ open class API {
     suspend fun locationCreate(name: String, locationQR: String): LocationResponse = withContext(
         Dispatchers.IO
     ) {
-        val posts = locationService.locationCreate(name, locationQR)
+        val posts = locationService.locationCreate(LocationCreateRequest(name, locationQR))
         posts
     }
 

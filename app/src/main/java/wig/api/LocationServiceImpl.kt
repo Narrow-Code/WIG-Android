@@ -23,19 +23,21 @@ import wig.models.entities.Location
 import wig.models.entities.User
 import wig.utils.JsonParse
 import wig.managers.TokenManager
+import wig.models.requests.LocationCreateRequest
 
 class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     private val nullUser = User("", "", "", "", "")
     private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
     private val nullInventoryDTO = InventoryDTO(nullLocation, ArrayList(), ArrayList())
 
-    override suspend fun locationCreate(name: String, locationQR: String): LocationResponse {
+    override suspend fun locationCreate(locationCreateRequest: LocationCreateRequest): LocationResponse {
         return try {
             client.post {
-                url("${HttpRoutes.LOCATION}?location_name=${name}&location_qr=${locationQR}")
+                url(HttpRoutes.LOCATION)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
+                body = locationCreateRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
