@@ -23,7 +23,7 @@ object HttpRoutes {
     val OWNERSHIP = "${BASE_URL}/app/ownership"
     val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
 
-    val CREATE_LOCATION = "${BASE_URL}/app/location/create"
+    val LOCATION = "${BASE_URL}/app/location"
     val UNPACK_LOCATION = "${BASE_URL}/app/location/unpack"
     val SEARCH_LOCATION = "${BASE_URL}/app/location/search"
     val EDIT_LOCATION = "${BASE_URL}/app/location/edit"
