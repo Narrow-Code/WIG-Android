@@ -15,7 +15,7 @@ import wig.models.requests.SearchRequest
 
 interface OwnershipService {
 
-    suspend fun ownershipSetLocation(ownershipUID: String, locationQR: String): CommonResponse
+    suspend fun ownershipSetLocation(ownershipUID: String, locationUID: String): CommonResponse
 
     suspend fun ownershipQuantity(changeType: String, amount: Int, ownershipUID: String): OwnershipResponse
 

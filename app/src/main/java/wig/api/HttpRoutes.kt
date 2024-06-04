@@ -20,7 +20,6 @@ object HttpRoutes {
     val SCAN_QR_LOCATION = "${BASE_URL}/app/scan/qr/location"
     val SCAN_QR_OWNERSHIP = "${BASE_URL}/app/scan/qr/ownership"
 
-    val SET_OWNERSHIP_LOCATION = "${BASE_URL}/app/ownership/set-location"
     val OWNERSHIP = "${BASE_URL}/app/ownership"
     val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
 

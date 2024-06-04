@@ -93,11 +93,11 @@ open class API {
     }
 
     // ownershipSetLocation sets the location of an Ownership
-    suspend fun ownershipSetLocation(ownershipUID: String, locationQR: String): CommonResponse =
+    suspend fun ownershipSetLocation(ownershipUID: String, locationUID: String): CommonResponse =
         withContext(
             Dispatchers.IO
         ) {
-            val posts = ownershipService.ownershipSetLocation(ownershipUID, locationQR)
+            val posts = ownershipService.ownershipSetLocation(ownershipUID, locationUID)
             posts
         }
 

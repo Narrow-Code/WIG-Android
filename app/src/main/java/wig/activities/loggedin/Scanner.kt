@@ -194,11 +194,11 @@ class Scanner : Camera() {
     }
 
     private fun setLocation(selectedLocation: Location) {
-        val qr = selectedLocation.locationQR
+        val uid = selectedLocation.locationUID
 
         for (ownership in OwnershipManager.getAllOwnerships()) {
             lifecycleScope.launch {
-                val response = api.ownershipSetLocation(ownership.ownershipUID, qr)
+                val response = api.ownershipSetLocation(ownership.ownershipUID, uid)
                 if (response.success) {
                     updateLocationForAllRows(selectedLocation)
                 } else {

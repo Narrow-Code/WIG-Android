@@ -24,6 +24,7 @@ import wig.models.entities.Ownership
 import wig.models.entities.User
 import wig.utils.JsonParse
 import wig.managers.TokenManager
+import wig.models.requests.SetLocationRequest
 
 class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     private val nullUser = User("", "", "", "", "")
@@ -32,13 +33,15 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
     private val nullLocation = Location("", "", "", "", "", "", "", nullUser, null)
     private val nullOwnership = Ownership("", "", "", "", "", "", "", "", "", 0, "", "", nullUser, nullLocation, nullItem, nullBorrower)
 
-    override suspend fun ownershipSetLocation(ownershipUID: String, locationQR: String): CommonResponse {
+    override suspend fun ownershipSetLocation(ownershipUID: String, locationUID: String): CommonResponse {
         return try {
+            val setLocationRequest = SetLocationRequest(locationUID)
             client.put {
-                url("${HttpRoutes.SET_OWNERSHIP_LOCATION}?ownershipUID=${ownershipUID}&location_qr=${locationQR}")
+                url("${HttpRoutes.OWNERSHIP}/${ownershipUID}/set-parent")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
+                body = setLocationRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
