@@ -20,6 +20,7 @@ import wig.models.responses.borrowerGetInventoryResponse
 import wig.models.entities.Borrower
 import wig.utils.JsonParse
 import wig.managers.TokenManager
+import wig.models.requests.BorrowerCreateRequest
 
 class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
     private val nullBorrowerList: List<Borrower> = listOf()
@@ -52,13 +53,14 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         }
     }
 
-    override suspend fun borrowerCreate(name: String): borrowerCreateResponse {
+    override suspend fun borrowerCreate(borrowerCreateRequest: BorrowerCreateRequest): borrowerCreateResponse {
         return try {
             client.post{
-                url("${HttpRoutes.CREATE_BORROWER}?borrower=${name}")
+                url(HttpRoutes.BORROWER)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
+                body = borrowerCreateRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses

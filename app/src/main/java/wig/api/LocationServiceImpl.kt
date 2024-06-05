@@ -59,7 +59,7 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
     override suspend fun locationUnpack(locationUID: String): InventoryResponse {
         return try {
             client.post {
-                url("${HttpRoutes.UNPACK_LOCATION}?locationUID=${locationUID}")
+                url("${HttpRoutes.LOCATION}/${locationUID}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())

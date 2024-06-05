@@ -24,12 +24,10 @@ object HttpRoutes {
     val SEARCH_OWNERSHIP = "${BASE_URL}/app/ownership/search"
 
     val LOCATION = "${BASE_URL}/app/location"
-    val UNPACK_LOCATION = "${BASE_URL}/app/location/unpack"
     val SEARCH_LOCATION = "${BASE_URL}/app/location/search"
-    val EDIT_LOCATION = "${BASE_URL}/app/location/edit"
 
     val GET_BORROWERS = "${BASE_URL}/app/borrower/get"
-    val CREATE_BORROWER = "${BASE_URL}/app/borrower/create"
+    val BORROWER = "${BASE_URL}/app/borrower"
     val CHECKOUT = "${BASE_URL}/app/borrower/checkout"
     val CHECK_IN = "${BASE_URL}/app/borrower/checkin"
     val GET_CHECKED_OUT = "${BASE_URL}/app/borrower/getcheckedout"

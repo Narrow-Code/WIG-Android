@@ -6,6 +6,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
+import wig.models.requests.BorrowerCreateRequest
 import wig.models.responses.borrowerCheckedOutResponse
 import wig.models.requests.CheckoutRequest
 import wig.models.responses.borrowerCreateResponse
@@ -16,7 +17,7 @@ interface BorrowerService {
 
     suspend fun borrowerGetAll(): borrowerGetAllResponse
 
-    suspend fun borrowerCreate(name: String): borrowerCreateResponse
+    suspend fun borrowerCreate(borrowerCreateRequest: BorrowerCreateRequest): borrowerCreateResponse
 
     suspend fun borrowerCheckout(borrowerUID: String, ownerships: CheckoutRequest): borrowerCheckedOutResponse
 

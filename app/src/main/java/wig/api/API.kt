@@ -2,6 +2,7 @@ package wig.api
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import wig.models.requests.BorrowerCreateRequest
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.LocationCreateRequest
 import wig.models.requests.LocationEditRequest
@@ -39,20 +40,13 @@ open class API {
     }
 
     // borrowerCreate creates a new borrower
-    suspend fun borrowerCreate(name: String): borrowerCreateResponse = withContext(
-        Dispatchers.IO
-    ) {
-        val posts = borrowerService.borrowerCreate(name)
+    suspend fun borrowerCreate(name: String): borrowerCreateResponse = withContext(Dispatchers.IO) {
+        val posts = borrowerService.borrowerCreate(BorrowerCreateRequest(name))
         posts
     }
 
     // borrowerCheckout checks out a list of Ownerships to a Borrower
-    suspend fun borrowerCheckout(
-        borrowerUID: String,
-        ownerships: CheckoutRequest
-    ): borrowerCheckedOutResponse = withContext(
-        Dispatchers.IO
-    ) {
+    suspend fun borrowerCheckout(borrowerUID: String, ownerships: CheckoutRequest): borrowerCheckedOutResponse = withContext(Dispatchers.IO) {
         val posts = borrowerService.borrowerCheckout(borrowerUID, ownerships)
         posts
     }
