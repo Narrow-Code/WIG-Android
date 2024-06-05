@@ -26,7 +26,6 @@ object HttpRoutes {
     val LOCATION = "${BASE_URL}/app/location"
     val SEARCH_LOCATION = "${BASE_URL}/app/location/search"
 
-    val GET_BORROWERS = "${BASE_URL}/app/borrower/get"
     val BORROWER = "${BASE_URL}/app/borrower"
     val CHECKOUT = "${BASE_URL}/app/borrower/checkout"
     val CHECK_IN = "${BASE_URL}/app/borrower/checkin"

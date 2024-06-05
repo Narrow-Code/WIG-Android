@@ -31,7 +31,7 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
     override suspend fun borrowerGetAll(): borrowerGetAllResponse {
         return try {
             client.get {
-                url(HttpRoutes.GET_BORROWERS)
+                url(HttpRoutes.BORROWER)
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
