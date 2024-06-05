@@ -18,7 +18,6 @@ import wig.utils.Alerts
 
 class CheckedOut : Settings() {
 
-    private lateinit var borrowers: List<Borrowers>
     private lateinit var tableLayout: ExpandableListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +42,7 @@ class CheckedOut : Settings() {
         lifecycleScope.launch {
             val response = api.borrowerGetInventory()
             if (response.success) {
-                borrowers = response.borrowers
+                val borrowers = response.borrowers
                 populateTable(borrowers)
             }
         }
