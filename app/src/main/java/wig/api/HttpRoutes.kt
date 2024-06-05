@@ -15,7 +15,7 @@ object HttpRoutes {
     val LOGIN = "$BASE_URL/user/login"
     val LOGIN_CHECK = "$BASE_URL/app/validate"
 
-    val SCAN_BARCODE = "${BASE_URL}/app/scan/barcode"
+    val SCAN_BARCODE = "${BASE_URL}/app/scan"
     val CHECK_QR = "${BASE_URL}/app/scan/check-qr"
     val SCAN_QR_LOCATION = "${BASE_URL}/app/scan/qr/location"
     val SCAN_QR_OWNERSHIP = "${BASE_URL}/app/scan/qr/ownership"
@@ -28,7 +28,7 @@ object HttpRoutes {
 
     val BORROWER = "${BASE_URL}/app/borrower"
     val CHECK_IN = "${BASE_URL}/app/borrower/check-in"
-    val GET_CHECKED_OUT = "${BASE_URL}/app/borrower/getcheckedout"
+    val GET_CHECKED_OUT = "${BASE_URL}/app/borrower/checked-out"
 
     val RETURN_INVENTORY = "${BASE_URL}/app/inventory"
 
