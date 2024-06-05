@@ -11,7 +11,7 @@ import wig.models.responses.borrowerCheckedOutResponse
 import wig.models.requests.CheckoutRequest
 import wig.models.responses.borrowerCreateResponse
 import wig.models.responses.borrowerGetAllResponse
-import wig.models.responses.borrowerGetInventoryResponse
+import wig.models.responses.BorrowerGetInventoryResponse
 
 interface BorrowerService {
 
@@ -23,7 +23,7 @@ interface BorrowerService {
 
     suspend fun borrowerCheckIn(ownerships: CheckoutRequest): borrowerCheckedOutResponse
 
-    suspend fun borrowerGetInventory(): borrowerGetInventoryResponse
+    suspend fun borrowerGetInventory(): BorrowerGetInventoryResponse
 
     companion object {
         fun create(): BorrowerService {

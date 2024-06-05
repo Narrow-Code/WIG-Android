@@ -16,7 +16,7 @@ import wig.models.responses.borrowerCheckedOutResponse
 import wig.models.requests.CheckoutRequest
 import wig.models.responses.borrowerCreateResponse
 import wig.models.responses.borrowerGetAllResponse
-import wig.models.responses.borrowerGetInventoryResponse
+import wig.models.responses.BorrowerGetInventoryResponse
 import wig.models.entities.Borrower
 import wig.utils.JsonParse
 import wig.managers.TokenManager
@@ -131,7 +131,7 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         }
     }
 
-    override suspend fun borrowerGetInventory(): borrowerGetInventoryResponse {
+    override suspend fun borrowerGetInventory(): BorrowerGetInventoryResponse {
         return try {
             client.get {
                 url(HttpRoutes.GET_CHECKED_OUT)
@@ -142,17 +142,17 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
         } catch(e: RedirectResponseException) {
             // 3xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            borrowerGetInventoryResponse(nullBorrowersList, errorMessage, false)
+            BorrowerGetInventoryResponse(nullBorrowersList, errorMessage, false)
         } catch(e: ClientRequestException) {
             // 4xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            borrowerGetInventoryResponse(nullBorrowersList, errorMessage, false)
+            BorrowerGetInventoryResponse(nullBorrowersList, errorMessage, false)
         } catch(e: ServerResponseException) {
             // 5xx - responses
             val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
-            borrowerGetInventoryResponse(nullBorrowersList, errorMessage, false)
+            BorrowerGetInventoryResponse(nullBorrowersList, errorMessage, false)
         } catch(e: Exception) {
-            borrowerGetInventoryResponse(nullBorrowersList, e.message.toString(), false)
+            BorrowerGetInventoryResponse(nullBorrowersList, e.message.toString(), false)
         }
     }
 

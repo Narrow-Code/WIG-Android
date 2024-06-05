@@ -15,7 +15,7 @@ import wig.models.responses.borrowerCheckedOutResponse
 import wig.models.responses.CommonResponse
 import wig.models.responses.borrowerCreateResponse
 import wig.models.responses.borrowerGetAllResponse
-import wig.models.responses.borrowerGetInventoryResponse
+import wig.models.responses.BorrowerGetInventoryResponse
 import wig.models.responses.InventoryResponse
 import wig.models.responses.LocationResponse
 import wig.models.responses.OwnershipResponse
@@ -61,7 +61,7 @@ open class API {
         }
 
     // borrowerGetInventory returns all Borrowed ownerships
-    suspend fun borrowerGetInventory(): borrowerGetInventoryResponse = withContext(Dispatchers.IO) {
+    suspend fun borrowerGetInventory(): BorrowerGetInventoryResponse = withContext(Dispatchers.IO) {
         val posts = borrowerService.borrowerGetInventory()
         posts
     }
