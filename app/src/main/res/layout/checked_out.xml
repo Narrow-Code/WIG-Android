@@ -42,7 +42,8 @@
             <ExpandableListView
                 android:id="@+id/search_table_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:groupIndicator="@null">
             </ExpandableListView>
         </ScrollView>
 
