@@ -82,7 +82,7 @@ class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
     override suspend fun borrowerCheckout(borrowerUID: String, ownerships: CheckoutRequest): borrowerCheckedOutResponse {
         return try {
             client.post{
-                url("${HttpRoutes.CHECKOUT}?borrowerUID=${borrowerUID}")
+                url("${HttpRoutes.BORROWER}/${borrowerUID}/checkout")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
