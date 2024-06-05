@@ -61,7 +61,7 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
     override suspend fun scannerCheckQR(qr: String): CommonResponse {
         return try {
             client.get {
-                url("${HttpRoutes.CHECK_QR}?qr=${qr}")
+                url("${HttpRoutes.CHECK_QR}/check?qr=${qr}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
@@ -86,7 +86,7 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
     override suspend fun scannerQRLocation(qr: String): LocationResponse {
         return try {
             client.get {
-                url("${HttpRoutes.SCAN_QR_LOCATION}?qr=${qr}")
+                url("${HttpRoutes.CHECK_QR}/location?qr=${qr}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
@@ -111,7 +111,7 @@ class ScannerServiceImpl(private val client: HttpClient ) : ScannerService {
     override suspend fun scanQROwnership(qr: String): OwnershipResponse {
         return try {
             client.get {
-                url("${HttpRoutes.SCAN_QR_OWNERSHIP}?qr=${qr}")
+                url("${HttpRoutes.CHECK_QR}/ownership?qr=${qr}")
                 contentType(ContentType.Application.Json)
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
