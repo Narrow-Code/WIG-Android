@@ -1,30 +1,23 @@
 package wig.activities.loggedin
 
 import android.os.Bundle
-import android.view.Gravity
+import android.util.Log
 import android.widget.ExpandableListView
-import android.widget.LinearLayout
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.base.Settings
-import wig.models.responses.Borrowers
-import wig.models.requests.CheckoutRequest
-import wig.models.entities.Borrower
-import wig.models.entities.Ownership
-import wig.utils.Alerts
+import wig.managers.BorrowersExpandableListAdapter
 
 class CheckedOut : Settings() {
 
-    private lateinit var tableLayout: ExpandableListView
+    private lateinit var expandableListView: ExpandableListView
+    private lateinit var adapter: BorrowersExpandableListAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setCheckedOutBindings()
-        tableLayout = checkedOutBinding.searchTableLayout
+        expandableListView = checkedOutBinding.searchTableLayout
         setOnClickListeners()
         getInventory()
     }
@@ -34,7 +27,7 @@ class CheckedOut : Settings() {
         checkedOutBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
         checkedOutBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
         checkedOutBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
-        checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
+        // checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
     }
 
     // getBorrowedItems returns all of the borrowed items and their borrowers
@@ -43,18 +36,15 @@ class CheckedOut : Settings() {
             val response = api.borrowerGetInventory()
             if (response.success) {
                 val borrowers = response.borrowers
-                populateTable(borrowers)
+                adapter = BorrowersExpandableListAdapter(this@CheckedOut, borrowers)
+                expandableListView.setAdapter(adapter)
+                expandableListView.expandGroup(0)
             }
         }
     }
 
     // returnAllButton handles the button click of Return All
     private fun returnAllButton() {
-        // TODO
-    }
-
-    // populateTable populates the table with the list of borrowers
-    private fun populateTable(borrowers: List<Borrowers>) {
         // TODO
     }
 
