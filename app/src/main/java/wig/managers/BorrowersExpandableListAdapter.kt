@@ -15,11 +15,11 @@ class BorrowersExpandableListAdapter(
     private val borrowersList: MutableList<Borrowers>
 ) : BaseExpandableListAdapter() {
 
-    override fun getGroup(groupPosition: Int): Any {
+    override fun getGroup(groupPosition: Int): Borrowers {
         return borrowersList[groupPosition]
     }
 
-    override fun getChild(groupPosition: Int, childPosition: Int): Any {
+    override fun getChild(groupPosition: Int, childPosition: Int): Ownership {
         return borrowersList[groupPosition].ownerships[childPosition]
     }
 
@@ -46,7 +46,7 @@ class BorrowersExpandableListAdapter(
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
         val convertView = convertView ?: LayoutInflater.from(context).inflate(R.layout.borrower_list_group, parent, false)
         val txtBorrowerName = convertView.findViewById<TextView>(R.id.txtBorrowerName)
-        val borrower = getGroup(groupPosition) as Borrowers
+        val borrower = getGroup(groupPosition)
         txtBorrowerName.text = borrower.borrower.borrowerName
         return convertView
     }
@@ -54,7 +54,7 @@ class BorrowersExpandableListAdapter(
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
         val convertView = convertView ?: LayoutInflater.from(context).inflate(R.layout.ownership_list_item, parent, false)
         val txtOwnershipDescription = convertView.findViewById<TextView>(R.id.txtOwnershipDescription)
-        val ownership = getChild(groupPosition, childPosition) as Ownership
+        val ownership = getChild(groupPosition, childPosition)
         txtOwnershipDescription.text = ownership.customItemName
         return convertView
     }
@@ -65,6 +65,11 @@ class BorrowersExpandableListAdapter(
 
     fun removeGroup(groupPosition: Int) {
         borrowersList.removeAt(groupPosition)
+        notifyDataSetChanged()
+    }
+
+    fun removeChild(groupPosition: Int, childPosition: Int) {
+        getGroup(groupPosition).ownerships.removeAt(childPosition)
         notifyDataSetChanged()
     }
 }

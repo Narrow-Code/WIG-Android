@@ -3,7 +3,9 @@ package wig.activities.loggedin
 import android.os.Bundle
 import android.widget.ExpandableListView
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import wig.activities.base.Settings
 import wig.managers.BorrowersExpandableListAdapter
 import wig.models.requests.CheckoutRequest
@@ -33,7 +35,6 @@ class CheckedOut : Settings() {
         checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
     }
 
-    // getBorrowedItems returns all of the borrowed items and their borrowers
     private fun getInventory() {
         lifecycleScope.launch {
             val response = api.borrowerGetInventory()
@@ -42,22 +43,40 @@ class CheckedOut : Settings() {
                 adapter = BorrowersExpandableListAdapter(this@CheckedOut, borrowers)
                 expandableListView.setAdapter(adapter)
 
-                expandableListView.setOnItemLongClickListener { _, _, position, _ ->
-                    val packedPosition = expandableListView.getExpandableListPosition(position)
-                    val itemType = ExpandableListView.getPackedPositionType(packedPosition)
-                    if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-                        val groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition)
-                        adapter.removeGroup(groupPosition)
-                        true  // return true if the callback consumed the long click
-                    } else {
-                        false
-                    }
-                }
+                setOnItemLongClickListener()
             }
         }
     }
 
-    // returnAllButton handles the button click of Return All
+    private fun setOnItemLongClickListener() {
+        expandableListView.setOnItemLongClickListener { _, _, position, _ ->
+            val packedPosition = expandableListView.getExpandableListPosition(position)
+            val itemType = ExpandableListView.getPackedPositionType(packedPosition)
+            val groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition)
+            if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                val borrower = adapter.getGroup(groupPosition)
+                checkInBorrower(borrower, groupPosition)
+            } else {
+                val childPosition = ExpandableListView.getPackedPositionChild(packedPosition)
+                val ownerships: MutableList<String> = mutableListOf()
+                val ownership = adapter.getChild(groupPosition, childPosition)
+                Alerts().returnSingleConfirmation(ownership, this) { shouldDelete ->
+                    if (shouldDelete) {
+                        ownerships.add(ownership.ownershipUID)
+                        lifecycleScope.launch {
+                            val result = checkInOwnerships(ownerships)
+                            if(result){
+                                adapter.removeChild(groupPosition, childPosition)
+                            }
+                        }
+                    }
+                }
+
+            }
+            true
+        }
+    }
+
     private fun returnAllButton() {
         Alerts().returnAllConfirmation(this) { shouldDelete ->
             if (shouldDelete) {
@@ -65,23 +84,37 @@ class CheckedOut : Settings() {
                 for (borrower in borrowers) {
                     borrower.ownerships.map { ownerships.add(it.ownershipUID)}
                 }
-                checkInOwnerships(ownerships)
+                lifecycleScope.launch {
+                    val result = checkInOwnerships(ownerships)
+                    if (result){
+                        borrowers.clear()
+                        adapter.notifyDataSetChanged()
+                    }
+                }
             }
         }
     }
 
-    // checkInBorrowers checks in all of the borrowers
-    private fun checkInOwnerships(ownerships: MutableList<String>){
+    private suspend fun checkInOwnerships(ownerships: MutableList<String>): Boolean {
         val checkOutRequest = CheckoutRequest(ownerships)
-        lifecycleScope.launch {
+        return withContext(Dispatchers.IO) {
             val response = api.borrowerCheckIn(checkOutRequest)
-            if (response.success){
-                borrowers.clear()
-                adapter.notifyDataSetChanged()
-            }
+            response.success
         }
     }
 
 
-
+    private fun checkInBorrower(borrower: Borrowers, groupPosition: Int) {
+        Alerts().returnBorrowerConfirmation(borrower.borrower, this) { shouldDelete ->
+            if (shouldDelete) {
+                val ownerships: MutableList<String> = mutableListOf()
+                borrower.ownerships.map { ownerships.add(it.ownershipUID)}
+                lifecycleScope.launch {
+                    if (checkInOwnerships(ownerships)){
+                        adapter.removeGroup(groupPosition)
+                    }
+                }
+            }
+        }
+    }
 }
