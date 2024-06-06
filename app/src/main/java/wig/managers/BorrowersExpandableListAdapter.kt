@@ -12,7 +12,7 @@ import wig.models.responses.Borrowers
 
 class BorrowersExpandableListAdapter(
     private val context: Context,
-    private val borrowersList: List<Borrowers>
+    private val borrowersList: MutableList<Borrowers>
 ) : BaseExpandableListAdapter() {
 
     override fun getGroup(groupPosition: Int): Any {
@@ -61,5 +61,10 @@ class BorrowersExpandableListAdapter(
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
         return true
+    }
+
+    fun removeGroup(groupPosition: Int) {
+        borrowersList.removeAt(groupPosition)
+        notifyDataSetChanged()
     }
 }
