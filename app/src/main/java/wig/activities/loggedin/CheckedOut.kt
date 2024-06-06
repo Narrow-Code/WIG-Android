@@ -41,6 +41,18 @@ class CheckedOut : Settings() {
                 borrowers = response.borrowers.toMutableList()
                 adapter = BorrowersExpandableListAdapter(this@CheckedOut, borrowers)
                 expandableListView.setAdapter(adapter)
+
+                expandableListView.setOnItemLongClickListener { _, _, position, _ ->
+                    val packedPosition = expandableListView.getExpandableListPosition(position)
+                    val itemType = ExpandableListView.getPackedPositionType(packedPosition)
+                    if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                        val groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition)
+                        adapter.removeGroup(groupPosition)
+                        true  // return true if the callback consumed the long click
+                    } else {
+                        false
+                    }
+                }
             }
         }
     }
@@ -49,17 +61,17 @@ class CheckedOut : Settings() {
     private fun returnAllButton() {
         Alerts().returnAllConfirmation(this) { shouldDelete ->
             if (shouldDelete) {
-                checkInBorrowers()
+                val ownerships: MutableList<String> = mutableListOf()
+                for (borrower in borrowers) {
+                    borrower.ownerships.map { ownerships.add(it.ownershipUID)}
+                }
+                checkInOwnerships(ownerships)
             }
         }
     }
 
     // checkInBorrowers checks in all of the borrowers
-    private fun checkInBorrowers(){
-        val ownerships: MutableList<String> = mutableListOf()
-        for (borrower in borrowers) {
-            borrower.ownerships.map { ownerships.add(it.ownershipUID) }
-        }
+    private fun checkInOwnerships(ownerships: MutableList<String>){
         val checkOutRequest = CheckoutRequest(ownerships)
         lifecycleScope.launch {
             val response = api.borrowerCheckIn(checkOutRequest)
@@ -69,5 +81,7 @@ class CheckedOut : Settings() {
             }
         }
     }
+
+
 
 }
