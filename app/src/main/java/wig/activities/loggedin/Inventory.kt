@@ -15,7 +15,6 @@ import wig.models.entities.Ownership
 class Inventory : Settings() {
 
     private lateinit var inventory: List<InventoryDTO>
-    private val inventoryRowMap = mutableMapOf<String, TableRow>()
     private lateinit var tableLayout: TableLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
