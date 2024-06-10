@@ -3,7 +3,6 @@ package wig.activities.loggedin
 import android.os.Bundle
 import android.widget.TableLayout
 import wig.activities.base.Settings
-import wig.models.responses.InventoryDTO
 
 class Inventory : Settings() {
 
