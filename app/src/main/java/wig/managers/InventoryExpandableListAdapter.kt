@@ -71,8 +71,8 @@ class InventoryExpandableListAdapter(
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.inventory, parent, false)
-        val txtItemName = view.findViewById<TextView>(R.id.txtBorrowerName)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.ownership_list_item, parent, false)
+        val txtItemName = view.findViewById<TextView>(R.id.txtOwnershipDescription)
 
         val ownership = getChild(groupPosition, childPosition)
         txtItemName.text = ownership.customItemName
