@@ -90,6 +90,7 @@
     <string name="save">Save</string>
     <string name="edit_ownership">Edit Ownership</string>
     <string name="disconnect">Disconnect</string>
+    <string name="unpacked_items">Unpacked Items</string>
 
     <string-array name="location_types">
         <item>Item</item>
