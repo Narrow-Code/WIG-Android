@@ -44,7 +44,7 @@ class BorrowersExpandableListAdapter(
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val convertView = convertView ?: LayoutInflater.from(context).inflate(R.layout.borrower_list_group, parent, false)
+        val convertView = convertView ?: LayoutInflater.from(context).inflate(R.layout.location_list_group, parent, false)
         val txtBorrowerName = convertView.findViewById<TextView>(R.id.txtBorrowerName)
         val borrower = getGroup(groupPosition)
         txtBorrowerName.text = borrower.borrower.borrowerName
