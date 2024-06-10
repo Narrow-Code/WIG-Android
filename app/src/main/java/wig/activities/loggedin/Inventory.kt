@@ -2,7 +2,6 @@ package wig.activities.loggedin
 
 import android.os.Bundle
 import android.widget.ExpandableListView
-import android.widget.TableLayout
 import wig.activities.base.Settings
 
 class Inventory : Settings() {
