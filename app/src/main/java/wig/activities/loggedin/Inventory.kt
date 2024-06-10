@@ -1,19 +1,20 @@
 package wig.activities.loggedin
 
 import android.os.Bundle
+import android.widget.ExpandableListView
 import android.widget.TableLayout
 import wig.activities.base.Settings
 
 class Inventory : Settings() {
 
     // private lateinit var inventory: List<InventoryDTO>
-    private lateinit var tableLayout: TableLayout
+    private lateinit var expandableListView: ExpandableListView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setInventoryBindings()
-        tableLayout = inventoryBinding.searchTableLayout
+        expandableListView = inventoryBinding.searchTableLayout
         setOnClickListeners()
         // getInventory()
     }
