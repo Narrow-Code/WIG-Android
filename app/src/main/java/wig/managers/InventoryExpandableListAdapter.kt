@@ -57,7 +57,7 @@ class InventoryExpandableListAdapter(
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.inventory, parent, false)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.location_list_group, parent, false)
         val txtLocationName = view.findViewById<TextView>(R.id.txtBorrowerName)
 
         if (groupPosition == 0) {
