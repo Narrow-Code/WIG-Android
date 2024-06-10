@@ -7,7 +7,7 @@ import wig.models.responses.InventoryDTO
 
 class Inventory : Settings() {
 
-    private lateinit var inventory: List<InventoryDTO>
+    // private lateinit var inventory: List<InventoryDTO>
     private lateinit var tableLayout: TableLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
