@@ -44,19 +44,19 @@ class BorrowersExpandableListAdapter(
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val convertView = convertView ?: LayoutInflater.from(context).inflate(R.layout.location_list_group, parent, false)
-        val txtBorrowerName = convertView.findViewById<TextView>(R.id.txtBorrowerName)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.location_list_group, parent, false)
+        val txtBorrowerName = view.findViewById<TextView>(R.id.txtBorrowerName)
         val borrower = getGroup(groupPosition)
         txtBorrowerName.text = borrower.borrower.borrowerName
-        return convertView
+        return view
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val convertView = convertView ?: LayoutInflater.from(context).inflate(R.layout.ownership_list_item, parent, false)
-        val txtOwnershipDescription = convertView.findViewById<TextView>(R.id.txtOwnershipDescription)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.ownership_list_item, parent, false)
+        val txtOwnershipDescription = view.findViewById<TextView>(R.id.txtOwnershipDescription)
         val ownership = getChild(groupPosition, childPosition)
         txtOwnershipDescription.text = ownership.customItemName
-        return convertView
+        return view
     }
 
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
