@@ -16,7 +16,11 @@ class InventoryExpandableListAdapter(
 ) : BaseExpandableListAdapter() {
 
     override fun getGroup(groupPosition: Int): InventoryDTO {
-        return inventory.locations?.get(groupPosition) ?: inventory
+        return if (groupPosition == 0){
+            inventory
+        } else {
+            return inventory.locations?.get(groupPosition) ?: inventory
+        }
     }
 
     override fun getChild(groupPosition: Int, childPosition: Int): Ownership {
