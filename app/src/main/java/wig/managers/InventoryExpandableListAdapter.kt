@@ -24,7 +24,12 @@ class InventoryExpandableListAdapter(
     }
 
     override fun getChild(groupPosition: Int, childPosition: Int): Ownership {
-        return inventory.ownerships?.get(childPosition) ?: throw IllegalStateException("Ownership not found")
+        return if (groupPosition == 0) {
+            inventory.ownerships?.get(childPosition) ?: throw IllegalStateException("Ownership not found")
+        } else {
+            inventory.locations?.get(groupPosition - 1)?.ownerships?.get(childPosition)
+                ?: throw IllegalStateException("Ownership not found")
+        }
     }
 
     override fun getGroupCount(): Int {
