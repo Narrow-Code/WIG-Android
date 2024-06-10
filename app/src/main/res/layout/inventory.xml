@@ -28,8 +28,8 @@
             android:layout_gravity="center_horizontal"
             />
 
-        <ScrollView
-            android:id="@+id/search_table"
+        <ExpandableListView
+            android:id="@+id/search_table_layout"
             android:layout_width="match_parent"
             android:layout_height="400dp"
             android:layout_gravity="center"
@@ -37,14 +37,9 @@
             android:background="@drawable/textbox_background"
             android:padding="2dp"
             android:contentDescription="@string/table_description"
-            android:visibility="visible">
-
-            <TableLayout
-                android:id="@+id/search_table_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </TableLayout>
-        </ScrollView>
+            android:visibility="visible"
+            android:groupIndicator="@null">
+        </ExpandableListView>
 
     </LinearLayout>
 
