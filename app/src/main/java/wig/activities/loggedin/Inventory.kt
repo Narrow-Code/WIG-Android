@@ -1,16 +1,9 @@
 package wig.activities.loggedin
 
 import android.os.Bundle
-import android.view.Gravity
-import android.widget.LinearLayout
 import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import wig.activities.base.Settings
 import wig.models.responses.InventoryDTO
-import wig.models.entities.Ownership
 
 class Inventory : Settings() {
 
