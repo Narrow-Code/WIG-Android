@@ -91,6 +91,8 @@
     <string name="edit_ownership">Edit Ownership</string>
     <string name="disconnect">Disconnect</string>
     <string name="unpacked_items">Unpacked Items</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
 
     <string-array name="location_types">
         <item>Item</item>
