@@ -57,7 +57,7 @@ class InventoryExpandableListAdapter(
     }
 
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.location_list_group, parent, false)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.inventory_location_list_group, parent, false)
         val txtLocationName = view.findViewById<TextView>(R.id.txtBorrowerName)
 
         if (groupPosition == 0) {
@@ -71,7 +71,7 @@ class InventoryExpandableListAdapter(
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.ownership_list_item, parent, false)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.inventory_ownership_list_item, parent, false)
         val txtItemName = view.findViewById<TextView>(R.id.txtOwnershipDescription)
 
         val ownership = getChild(groupPosition, childPosition)
