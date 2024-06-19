@@ -58,8 +58,18 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>) :
     }
 
     fun addOwnership(ownership: Ownership) {
-        ownershipList.add(ownership)
-        notifyItemInserted(ownershipList.size - 1)
+        var exists = false
+
+        for (item in ownershipList) {
+            if (item.ownershipUID == ownership.ownershipUID) {
+                exists = true
+            }
+        }
+
+        if (!exists) {
+            ownershipList.add(ownership)
+            notifyItemInserted(ownershipList.size - 1)
+        }
     }
 
     fun removeOwnership(position: Int) {
