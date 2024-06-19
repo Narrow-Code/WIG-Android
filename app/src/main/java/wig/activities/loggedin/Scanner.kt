@@ -62,6 +62,7 @@ class Scanner : Camera() {
                 ownershipAdapter.addOwnership(ownership)
             }
             switchToItemsView()
+            codeScanner.startPreview()
         } else {
             val response = api.scannerCheckQR(code)
             when (response.message) {
