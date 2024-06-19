@@ -43,7 +43,7 @@ class Scanner : Camera() {
         scannerBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
         scannerBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
         scannerBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
-        //scannerBinding.clear.setOnClickListener { clearButton() }
+        scannerBinding.clear.setOnClickListener { ownershipAdapter.clearOwnerships() }
         //scannerBinding.place.setOnClickListener { placeQueueButton() }
         //scannerBinding.add.setOnClickListener { newEntry() }
         //scannerBinding.unpack.setOnClickListener { unpackButton() }
