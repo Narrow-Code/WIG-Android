@@ -58,7 +58,6 @@ class Scanner : Camera() {
             if (response.message == "429") {
                 Toast.makeText(this@Scanner, "LIMIT REACHED", Toast.LENGTH_SHORT).show()
             }
-            // TODO populateItems(response)
             for (ownership in response.ownership){
                 ownershipAdapter.addOwnership(ownership)
             }

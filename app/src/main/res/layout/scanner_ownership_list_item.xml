@@ -1,5 +1,6 @@
 <!-- res/layout/item_ownership.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -10,9 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.34"
         android:gravity="start|center_vertical"
-        android:textSize="14sp"
-        android:paddingEnd="3dp"
-        android:paddingStart="3dp"/>
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/txtLocationName"
@@ -33,9 +32,10 @@
 
         <Button
             android:id="@+id/btnMinus"
-            android:layout_width="30dp"
-            android:layout_height="35dp"
-            android:text="@string/minus" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="@string/minus"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:id="@+id/txtQuantity"
@@ -48,8 +48,9 @@
 
         <Button
             android:id="@+id/btnPlus"
-            android:layout_width="30dp"
-            android:layout_height="35dp"
-            android:text="@string/plus" />
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:text="@string/plus"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 </LinearLayout>
