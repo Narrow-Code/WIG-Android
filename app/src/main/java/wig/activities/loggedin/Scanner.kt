@@ -32,7 +32,7 @@ class Scanner : Camera() {
         setOnClickListeners()
 
         recyclerView = findViewById(R.id.items_table_recycler_view)
-        ownershipAdapter = OwnershipAdapter(ownershipList, this, API())
+        ownershipAdapter = OwnershipAdapter(ownershipList, this, API(), this)
         recyclerView.adapter = ownershipAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
