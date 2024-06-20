@@ -6,11 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.launch
 import wig.R
+import wig.api.API
 import wig.models.entities.Ownership
 
-class OwnershipAdapter(private val ownershipList: MutableList<Ownership>) :
+class OwnershipAdapter(private val ownershipList: MutableList<Ownership>,
+                       private val lifecycleOwner: LifecycleOwner,
+                       private val api: API) :
     RecyclerView.Adapter<OwnershipAdapter.OwnershipViewHolder>() {
 
     inner class OwnershipViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -21,15 +27,6 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>) :
         val minusButton: Button = itemView.findViewById(R.id.btnMinus)
 
         init {
-            itemView.setOnClickListener {
-                val position = adapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val ownership = ownershipList[position]
-                    // TODO Handle item click here
-
-                }
-            }
-
             itemView.setOnLongClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
@@ -39,6 +36,36 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>) :
                     return@setOnLongClickListener true
                 }
                 return@setOnLongClickListener false
+            }
+
+            plusButton.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val ownership = ownershipList[position]
+                    lifecycleOwner.lifecycleScope.launch {
+                        val response = api.ownershipQuantity("increment", 1, ownership.ownershipUID)
+                        if (response.success) {
+                            ownership.itemQuantity += 1
+                            notifyItemChanged(position)
+                        }
+                    }
+                }
+            }
+
+            minusButton.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val ownership = ownershipList[position]
+                    if (ownership.itemQuantity > 0) {
+                        lifecycleOwner.lifecycleScope.launch {
+                            val response = api.ownershipQuantity("decrement", 1, ownership.ownershipUID)
+                            if (response.success) {
+                                ownership.itemQuantity -= 1
+                                notifyItemChanged(position)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

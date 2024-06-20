@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.zxing.BarcodeFormat
 import wig.R
 import wig.activities.base.Camera
+import wig.api.API
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
 
@@ -31,7 +32,7 @@ class Scanner : Camera() {
         setOnClickListeners()
 
         recyclerView = findViewById(R.id.items_table_recycler_view)
-        ownershipAdapter = OwnershipAdapter(ownershipList)
+        ownershipAdapter = OwnershipAdapter(ownershipList, this, API())
         recyclerView.adapter = ownershipAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
