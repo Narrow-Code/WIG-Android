@@ -23,8 +23,8 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>,
         val nameTextView: TextView = itemView.findViewById(R.id.txtOwnershipName)
         val locationTextView: TextView = itemView.findViewById(R.id.txtLocationName)
         val quantityTextView: TextView = itemView.findViewById(R.id.txtQuantity)
-        val plusButton: Button = itemView.findViewById(R.id.btnPlus)
-        val minusButton: Button = itemView.findViewById(R.id.btnMinus)
+        private val plusButton: Button = itemView.findViewById(R.id.btnPlus)
+        private val minusButton: Button = itemView.findViewById(R.id.btnMinus)
 
         init {
             itemView.setOnLongClickListener {
