@@ -19,7 +19,8 @@ import wig.utils.Alerts
 class OwnershipAdapter(private val ownershipList: MutableList<Ownership>,
                        private val lifecycleOwner: LifecycleOwner,
                        private val api: API,
-                       private val context: Context
+                       private val context: Context,
+                       layoutInflater: LayoutInflater
 ) :
     RecyclerView.Adapter<OwnershipAdapter.OwnershipViewHolder>() {
 

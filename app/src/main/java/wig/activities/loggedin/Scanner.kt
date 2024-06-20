@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.StrictMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.os.StrictMode.ThreadPolicy
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -32,7 +33,7 @@ class Scanner : Camera() {
         setOnClickListeners()
 
         recyclerView = findViewById(R.id.items_table_recycler_view)
-        ownershipAdapter = OwnershipAdapter(ownershipList, this, API(), this)
+        ownershipAdapter = OwnershipAdapter(ownershipList, this, API(), this, LayoutInflater.from(this))
         recyclerView.adapter = ownershipAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
     }
