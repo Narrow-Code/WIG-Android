@@ -1,5 +1,7 @@
 package wig.activities.loggedin
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
 import android.os.StrictMode
@@ -8,6 +10,7 @@ import android.os.StrictMode.ThreadPolicy
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +22,11 @@ import wig.api.API
 import wig.databinding.CreateNewBinding
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
+import wig.models.entities.Borrower
+import wig.models.requests.CheckoutRequest
 import wig.models.requests.OwnershipCreateRequest
+import wig.models.responses.borrowerGetAllResponse
+import wig.utils.Alerts
 
 class Scanner : Camera() {
     private var pageView = "items"
@@ -55,7 +62,7 @@ class Scanner : Camera() {
         //scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
         //scannerBinding.unpack.setOnClickListener { unpackButton() }
-        //scannerBinding.checkOut.setOnClickListener { checkoutButton() }
+        scannerBinding.checkOut.setOnClickListener { checkoutButton() }
         //scannerBinding.search.setOnClickListener { searchButton() }
     }
 
@@ -152,6 +159,98 @@ class Scanner : Camera() {
                         switchToItemsView()
                     }
                 }
+            }
+        }
+    }
+
+    private fun checkoutButton() {
+        codeScanner.stopPreview()
+        lifecycleScope.launch {
+            val borrowers = api.borrowerGetAll()
+            checkoutPrompt(borrowers)
+        }
+    }
+
+    private fun checkoutPrompt(borrowers: borrowerGetAllResponse) {
+        val borrowerNames = arrayOf("Self") +
+                borrowers.borrowers.map { it.borrowerName }.toTypedArray() +
+                "New"
+
+        val dialogBuilder = AlertDialog.Builder(this@Scanner)
+        dialogBuilder.setTitle("Checkout to:")
+
+        dialogBuilder.setSingleChoiceItems(
+            ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, borrowerNames),
+            -1
+        ) { dialog, which ->
+            var borrowerUUID = "Default"
+            when (borrowerNames[which]) {
+                "New" -> {
+                    checkoutNew()
+                }
+
+                "Self" -> {
+                    borrowerUUID = "22222222-2222-2222-2222-222222222222"
+                }
+
+                else -> {
+                    val selectedBorrower = borrowers.borrowers[which - 1]
+                    borrowerUUID = selectedBorrower.borrowerUID
+                }
+            }
+            checkoutOwnerships(borrowerUUID, borrowerNames[which])
+            // Dismiss the dialog
+            dialog.dismiss()
+            codeScanner.startPreview()
+        }
+        // Create and show the AlertDialog
+        val dialog = dialogBuilder.create()
+        dialog.show()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun checkoutOwnerships(uuid: String, name: String) {
+        val ownerships: MutableList<String> = mutableListOf()
+        for (ownership in ownershipList) {
+            ownerships.add(ownership.ownershipUID)
+        }
+        val request = CheckoutRequest(ownerships)
+        lifecycleScope.launch {
+            val response = api.borrowerCheckout(uuid, request)
+            if (response.success) {
+                for (ownershipSuccess in response.ownerships) {
+                    ownershipList.forEach { (ownershipUID) ->
+                        if (ownershipUID == ownershipSuccess) {
+                            for (ownership in ownershipList) {
+                                if (ownership.ownershipUID == ownershipUID) {
+                                    ownership.borrower.borrowerName = name // TODO fix so it changes entire borrower
+                                }
+                            }
+                        }
+                    }
+                }
+                ownershipAdapter.notifyDataSetChanged()
+                Toast.makeText(
+                    this@Scanner,
+                    "Checked out",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun checkoutNew() {
+        Alerts().showNewBorrowerDialog(this@Scanner) { borrowerName ->
+            lifecycleScope.launch {
+                val response = api.borrowerCreate(borrowerName)
+                if (response.success) {
+                    Toast.makeText(
+                        this@Scanner,
+                        "Created: $borrowerName",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                checkoutButton()
             }
         }
     }

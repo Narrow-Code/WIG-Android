@@ -69,11 +69,13 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>,
         val ownership = ownershipList[position]
         if (ownership.customItemName.length >= 30){
             holder.nameTextView.text = ownership.customItemName.substring(0, 30)
-
         } else {
             holder.nameTextView.text = ownership.customItemName
         }
         holder.locationTextView.text = ownership.location.locationName
+        if (ownership.itemCheckedOut == "true") {
+            holder.locationTextView.text = ownership.borrower.borrowerName
+        }
         holder.quantityTextView.text = ownership.itemQuantity.toString()
     }
 
