@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import wig.R
@@ -16,6 +17,8 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>) :
         val nameTextView: TextView = itemView.findViewById(R.id.txtOwnershipName)
         val locationTextView: TextView = itemView.findViewById(R.id.txtLocationName)
         val quantityTextView: TextView = itemView.findViewById(R.id.txtQuantity)
+        val plusButton: Button = itemView.findViewById(R.id.btnPlus)
+        val minusButton: Button = itemView.findViewById(R.id.btnMinus)
 
         init {
             itemView.setOnClickListener {
