@@ -31,10 +31,14 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>,
         private val minusButton: Button = itemView.findViewById(R.id.btnMinus)
 
         init {
+            itemView.setOnClickListener {
+                    ownershipViewClick(adapterPosition)
+            }
+
             itemView.setOnLongClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    ownershipViewClick(position)
+                    ownershipViewLongClick(position)
                     return@setOnLongClickListener true
                 }
                 return@setOnLongClickListener false
@@ -126,11 +130,18 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>,
         }
     }
 
-    private fun ownershipViewClick(position: Int) {
+    private fun ownershipViewLongClick(position: Int) {
         val ownership = ownershipList[position]
         Alerts().removeConfirmation(ownership.customItemName, context) {
                 shouldDelete ->
             if (shouldDelete) removeOwnership(position)
+        }
+    }
+
+    private fun ownershipViewClick(position: Int) {
+        if (position != RecyclerView.NO_POSITION) {
+            val ownership = ownershipList[position]
+
         }
     }
 
