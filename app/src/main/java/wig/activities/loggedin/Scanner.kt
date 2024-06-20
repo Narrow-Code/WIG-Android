@@ -1,19 +1,25 @@
 package wig.activities.loggedin
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.StrictMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.os.StrictMode.ThreadPolicy
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.zxing.BarcodeFormat
+import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.base.Camera
 import wig.api.API
+import wig.databinding.CreateNewBinding
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
+import wig.models.requests.OwnershipCreateRequest
 
 class Scanner : Camera() {
     private var pageView = "items"
@@ -47,7 +53,7 @@ class Scanner : Camera() {
         scannerBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
         scannerBinding.clear.setOnClickListener { ownershipAdapter.clearOwnerships() }
         //scannerBinding.place.setOnClickListener { placeQueueButton() }
-        //scannerBinding.add.setOnClickListener { newEntry() }
+        scannerBinding.add.setOnClickListener { newEntry() }
         //scannerBinding.unpack.setOnClickListener { unpackButton() }
         //scannerBinding.checkOut.setOnClickListener { checkoutButton() }
         //scannerBinding.search.setOnClickListener { searchButton() }
@@ -83,6 +89,68 @@ class Scanner : Camera() {
                     // TODO populateItem(ownershipResponse.ownership)
                     switchToItemsView()
                     codeScanner.startPreview()
+                }
+            }
+        }
+    }
+
+    private fun newEntry(qr: String? = null) {
+        codeScanner.stopPreview()
+
+        val createNewBinding: CreateNewBinding = CreateNewBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(createNewBinding.root)
+        qr?.let { createNewBinding.qrCodeEditText.setText(it) }
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+        val layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+        createNewBinding.createButton.setOnClickListener {
+            createNewButton(
+                createNewBinding,
+                popupDialog
+            )
+        }
+        createNewBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
+
+        val spinnerPosition = if (pageView == "items") 0 else 1
+        createNewBinding.typeSpinner.setSelection(spinnerPosition)
+
+        popupDialog.show()
+    }
+
+    private fun createNewButton(createNewBinding: CreateNewBinding, popup: Dialog) {
+        val typeSpinner = createNewBinding.typeSpinner
+        val name = createNewBinding.nameEditText.text.toString()
+        val qr = createNewBinding.qrCodeEditText.text.toString()
+        if (name == "" || qr == "") {
+            return
+        }
+        lifecycleScope.launch {
+            when (typeSpinner.selectedItem?.toString() ?: "") {
+                "Location" -> {
+                    val response = api.locationCreate(name, qr)
+                    if (response.success) {
+                        Toast.makeText(this@Scanner, "Location created", Toast.LENGTH_SHORT).show()
+                        // TODO populateLocations(response.location)
+                        popup.dismiss()
+                        switchToLocationsView()
+                    }
+                }
+
+                "Item" -> {
+                    val request = OwnershipCreateRequest(qr, name)
+                    val response = api.ownershipCreate(request)
+                    if (response.success) {
+                        Toast.makeText(this@Scanner, "Ownership created", Toast.LENGTH_SHORT).show()
+                        ownershipAdapter.addOwnership(response.ownership)
+                        popup.dismiss()
+                        switchToItemsView()
+                    }
                 }
             }
         }
