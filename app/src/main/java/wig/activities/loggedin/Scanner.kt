@@ -20,6 +20,7 @@ import wig.R
 import wig.activities.base.Camera
 import wig.api.API
 import wig.databinding.CreateNewBinding
+import wig.managers.LocationAdapter
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
 import wig.models.entities.Borrower
@@ -33,6 +34,7 @@ class Scanner : Camera() {
     private var pageView = "items"
     private lateinit var recyclerView: RecyclerView
     private lateinit var ownershipAdapter: OwnershipAdapter
+    private lateinit var locationAdapter: LocationAdapter
     private val ownershipList = mutableListOf<Ownership>()
     private val locationList = mutableListOf<Location>()
 
