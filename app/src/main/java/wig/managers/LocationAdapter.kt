@@ -91,11 +91,6 @@ class LocationAdapter(private val locationList: MutableList<Location>,
         notifyItemRemoved(position)
     }
 
-    fun updateLocation(position: Int, location: Location) {
-        locationList[position] = location
-        notifyItemChanged(position)
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     fun clearLocations() {
         locationList.clear()

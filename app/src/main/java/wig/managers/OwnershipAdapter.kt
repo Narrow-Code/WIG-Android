@@ -103,11 +103,6 @@ class OwnershipAdapter(private val ownershipList: MutableList<Ownership>,
         notifyItemRemoved(position)
     }
 
-    fun updateOwnership(position: Int, ownership: Ownership) {
-        ownershipList[position] = ownership
-        notifyItemChanged(position)
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     fun clearOwnerships() {
         ownershipList.clear()
