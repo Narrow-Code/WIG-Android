@@ -23,9 +23,12 @@ import wig.databinding.SearchBinding
 import wig.managers.LocationAdapter
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
+import wig.managers.SearchLocationAdapter
+import wig.managers.SearchOwnershipAdapter
 import wig.models.entities.Location
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.OwnershipCreateRequest
+import wig.models.requests.SearchRequest
 import wig.models.responses.InventoryDTO
 import wig.models.responses.borrowerGetAllResponse
 import wig.utils.Alerts
@@ -34,10 +37,15 @@ class Scanner : Camera() {
     private var pageView = "items"
     private lateinit var ownershipRecyclerView: RecyclerView
     private lateinit var locationRecyclerView: RecyclerView
+    private lateinit var searchRecyclerView: RecyclerView
     private lateinit var ownershipAdapter: OwnershipAdapter
     private lateinit var locationAdapter: LocationAdapter
+    private lateinit var searchOwnershipAdapter: SearchOwnershipAdapter
+    private lateinit var searchLocationAdapter: SearchLocationAdapter
     private val ownershipList = mutableListOf<Ownership>()
     private val locationList = mutableListOf<Location>()
+    private val searchOwnershipList = mutableListOf<Ownership>()
+    private val searchLocationList = mutableListOf<Location>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +57,7 @@ class Scanner : Camera() {
         StrictMode.setThreadPolicy(policy)
         checkForUpdates()
         setOnClickListeners()
+        switchToItemsView()
 
         ownershipRecyclerView = findViewById(R.id.items_table_recycler_view)
         ownershipAdapter = OwnershipAdapter(ownershipList, this, API(), this)
@@ -369,14 +378,61 @@ class Scanner : Camera() {
         popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
 
         if (pageView == "items") {
-            //TODO searchBinding.searchButton.setOnClickListener { searchOwnershipButton(searchBinding) }
-        } else {
-            // TODO searchBinding.searchButton.setOnClickListener { searchLocationButton(searchBinding) }
+            searchRecyclerView = searchBinding.searchTableRecyclerView
+            searchOwnershipAdapter = SearchOwnershipAdapter(searchOwnershipList, this, ownershipAdapter)
+            searchRecyclerView.adapter = searchOwnershipAdapter
+            searchRecyclerView.layoutManager = LinearLayoutManager(this)
 
+            searchBinding.searchButton.setOnClickListener { searchOwnershipButton(searchBinding) }
+        } else {
+            searchRecyclerView = searchBinding.searchTableRecyclerView
+            searchLocationAdapter = SearchLocationAdapter(searchLocationList, this, locationAdapter)
+            searchRecyclerView.adapter = searchLocationAdapter
+            searchRecyclerView.layoutManager = LinearLayoutManager(this)
+
+            searchBinding.searchButton.setOnClickListener { searchLocationButton(searchBinding) }
         }
         searchBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
 
         popupDialog.show()
+    }
+
+    private fun searchOwnershipButton(searchBinding: SearchBinding) {
+        val name = searchBinding.nameSearchText.text.toString()
+        val tags = searchBinding.tagsSearchText.text.toString()
+        val tableLayout = searchBinding.searchTableRecyclerView
+        tableLayout.removeAllViews()
+        searchOwnershipList.clear()
+        if (name == "" && tags == "") {
+            return
+        }
+        lifecycleScope.launch {
+            val response = api.ownershipSearch(SearchRequest(name, tags))
+            if (response.success) {
+                for (ownership in response.ownership) {
+                    searchOwnershipAdapter.addOwnership(ownership)
+                }
+            }
+        }
+    }
+
+    private fun searchLocationButton(searchBinding: SearchBinding) {
+        val name = searchBinding.nameSearchText.text.toString()
+        val tags = searchBinding.tagsSearchText.text.toString()
+        val tableLayout = searchBinding.searchTableRecyclerView
+        tableLayout.removeAllViews()
+        searchOwnershipList.clear()
+        if (name == "" && tags == "") {
+            return
+        }
+        lifecycleScope.launch {
+            val response = api.locationSearch(SearchRequest(name, tags))
+            if (response.success) {
+                for (location in response.locations) {
+                    searchLocationAdapter.addLocation(location)
+                }
+            }
+        }
     }
 
     private fun switchToLocationsView() {
