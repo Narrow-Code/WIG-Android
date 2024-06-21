@@ -68,7 +68,7 @@ class Scanner : Camera() {
         scannerBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
         scannerBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
         scannerBinding.clear.setOnClickListener { clearButton() }
-        //scannerBinding.place.setOnClickListener { placeQueueButton() }
+        scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
         scannerBinding.unpack.setOnClickListener { unpackButton() }
         scannerBinding.checkOut.setOnClickListener { checkoutButton() }
@@ -297,6 +297,60 @@ class Scanner : Camera() {
                 }
             }
         }
+    }
+
+    private fun placeQueueButton() {
+        if (locationList.isNotEmpty() and ownershipList.isNotEmpty()) {
+            codeScanner.stopPreview()
+
+            val dialogBuilder = AlertDialog.Builder(this@Scanner)
+            dialogBuilder.setTitle("Place Queue in:")
+            val locations = locationAdapter.getAllLocationNames()
+
+            dialogBuilder.setSingleChoiceItems(
+                ArrayAdapter(this@Scanner, android.R.layout.select_dialog_singlechoice, locations),
+                -1
+            )
+            { dialog, which ->
+                when (locations[which]) {
+                    else -> {
+                        val selectedLocation = locationList[which]
+
+                        setLocation(selectedLocation)
+                    }
+                }
+                // Dismiss the dialog
+                dialog.dismiss()
+                codeScanner.startPreview()
+            }
+
+            // Create and show the AlertDialog
+            val dialog = dialogBuilder.create()
+            dialog.show()
+        }
+    }
+
+    private fun setLocation(selectedLocation: Location) {
+        val uid = selectedLocation.locationUID
+
+        for (ownership in ownershipList) {
+            lifecycleScope.launch {
+                val response = api.ownershipSetLocation(ownership.ownershipUID, uid)
+                if (response.success) {
+                    updateLocationForAllRows(selectedLocation)
+                } else {
+                    // TODO handle negative
+                }
+            }
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateLocationForAllRows(location: Location) {
+        for (ownership in ownershipList) {
+            ownership.location = location
+        }
+        ownershipAdapter.notifyDataSetChanged()
     }
 
     private fun switchToLocationsView() {

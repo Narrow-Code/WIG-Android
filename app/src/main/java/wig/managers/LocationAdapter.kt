@@ -149,4 +149,12 @@ class LocationAdapter(private val locationList: MutableList<Location>,
         }
     }
 
+    fun getAllLocationNames() : List<String>{
+        val names = mutableListOf<String>()
+        for (name in locationList.toList()) {
+            names.add(name.locationName)
+        }
+        return names
+    }
+
 }
