@@ -3,7 +3,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 fun updateVersion(major: Int, minor: Int) : String {
-    val organization = "WIGTeam"
+    val organization = "Narrow-Code"
     val repository = "WIG-Android"
     val apiUrl = "https://api.github.com/repos/$organization/$repository/releases/latest"
     println(apiUrl)
