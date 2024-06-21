@@ -25,6 +25,7 @@ import wig.managers.OwnershipAdapter
 import wig.models.entities.Location
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.OwnershipCreateRequest
+import wig.models.responses.InventoryDTO
 import wig.models.responses.borrowerGetAllResponse
 import wig.utils.Alerts
 
@@ -69,7 +70,7 @@ class Scanner : Camera() {
         scannerBinding.clear.setOnClickListener { clearButton() }
         //scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
-        //scannerBinding.unpack.setOnClickListener { unpackButton() }
+        scannerBinding.unpack.setOnClickListener { unpackButton() }
         scannerBinding.checkOut.setOnClickListener { checkoutButton() }
         //scannerBinding.search.setOnClickListener { searchButton() }
     }
@@ -268,6 +269,33 @@ class Scanner : Camera() {
             ownershipAdapter.clearOwnerships()
         } else if (pageView == "locations") {
             locationAdapter.clearLocations()
+        }
+    }
+
+    private fun unpackButton() {
+        for (location in locationList) {
+            lifecycleScope.launch {
+                val unpacked = api.locationUnpack(location.locationUID)
+                unpackInventory(unpacked.inventory)
+            }
+        }
+    }
+
+    private fun unpackInventory(inventoryDTO: InventoryDTO) {
+        inventoryDTO.ownerships?.let { ownerships ->
+            if (ownerships.isNotEmpty()) {
+                for (ownership in ownerships) {
+                    ownershipAdapter.addOwnership(ownership)
+                }
+            }
+        }
+        inventoryDTO.locations?.let { locations ->
+            if (locations.isNotEmpty()) {
+                for (location in locations) {
+                    locationAdapter.addLocation(location.parent)
+                    unpackInventory(location)
+                }
+            }
         }
     }
 
