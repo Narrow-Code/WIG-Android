@@ -6,8 +6,6 @@ import android.widget.AdapterView
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import wig.activities.base.Settings
-import wig.managers.LocationManager
-import wig.managers.OwnershipManager
 import wig.managers.SettingsManager
 import wig.utils.StoreSettings
 import wig.utils.StoreToken
@@ -79,8 +77,6 @@ class Settings : Settings() {
             val storeToken = StoreToken(this@Settings)
             storeToken.saveToken("")
         }
-        LocationManager.removeAllLocations()
-        OwnershipManager.removeAllOwnerships()
         startActivityLogin()
     }
 }
