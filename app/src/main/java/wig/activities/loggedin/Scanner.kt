@@ -23,6 +23,7 @@ import wig.databinding.CreateNewBinding
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
 import wig.models.entities.Borrower
+import wig.models.entities.Location
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.OwnershipCreateRequest
 import wig.models.responses.borrowerGetAllResponse
@@ -33,6 +34,7 @@ class Scanner : Camera() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var ownershipAdapter: OwnershipAdapter
     private val ownershipList = mutableListOf<Ownership>()
+    private val locationList = mutableListOf<Location>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
