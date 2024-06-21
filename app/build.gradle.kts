@@ -49,6 +49,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        //noinspection DataBindingWithoutKapt
         dataBinding = true
     }
 
@@ -103,11 +104,11 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.runtime:runtime:1.6.0-beta01")
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.compose.runtime:runtime:1.6.8")
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -125,5 +126,5 @@ dependencies {
     implementation ("io.ktor:ktor-client-logging:$ktorVersion")
     implementation ("ch.qos.logback:logback-classic:1.2.3")
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation ("androidx.datastore:datastore-preferences:1.1.1")
 }
