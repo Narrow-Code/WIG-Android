@@ -19,6 +19,7 @@ import wig.R
 import wig.activities.base.Camera
 import wig.api.API
 import wig.databinding.CreateNewBinding
+import wig.databinding.SearchBinding
 import wig.managers.LocationAdapter
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
@@ -72,7 +73,7 @@ class Scanner : Camera() {
         scannerBinding.add.setOnClickListener { newEntry() }
         scannerBinding.unpack.setOnClickListener { unpackButton() }
         scannerBinding.checkOut.setOnClickListener { checkoutButton() }
-        //scannerBinding.search.setOnClickListener { searchButton() }
+        scannerBinding.search.setOnClickListener { searchButton() }
     }
 
     override suspend fun scanSuccess(code: String, barcodeFormat: BarcodeFormat) {
@@ -351,6 +352,31 @@ class Scanner : Camera() {
             ownership.location = location
         }
         ownershipAdapter.notifyDataSetChanged()
+    }
+
+    private fun searchButton() {
+        codeScanner.stopPreview()
+
+        val searchBinding: SearchBinding = SearchBinding.inflate(layoutInflater)
+        val popupDialog = Dialog(this)
+        popupDialog.setContentView(searchBinding.root)
+        popupDialog.setOnDismissListener { codeScanner.startPreview() }
+
+        val layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        popupDialog.window?.setLayout(layoutParams.width, layoutParams.height)
+
+        if (pageView == "items") {
+            //TODO searchBinding.searchButton.setOnClickListener { searchOwnershipButton(searchBinding) }
+        } else {
+            // TODO searchBinding.searchButton.setOnClickListener { searchLocationButton(searchBinding) }
+
+        }
+        searchBinding.cancelButton.setOnClickListener { popupDialog.dismiss() }
+
+        popupDialog.show()
     }
 
     private fun switchToLocationsView() {
