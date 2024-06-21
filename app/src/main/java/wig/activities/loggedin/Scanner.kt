@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.StrictMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.os.StrictMode.ThreadPolicy
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -23,7 +22,6 @@ import wig.databinding.CreateNewBinding
 import wig.managers.LocationAdapter
 import wig.models.entities.Ownership
 import wig.managers.OwnershipAdapter
-import wig.models.entities.Borrower
 import wig.models.entities.Location
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.OwnershipCreateRequest
@@ -32,7 +30,8 @@ import wig.utils.Alerts
 
 class Scanner : Camera() {
     private var pageView = "items"
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var ownershipRecyclerView: RecyclerView
+    private lateinit var locationRecyclerView: RecyclerView
     private lateinit var ownershipAdapter: OwnershipAdapter
     private lateinit var locationAdapter: LocationAdapter
     private val ownershipList = mutableListOf<Ownership>()
@@ -49,10 +48,15 @@ class Scanner : Camera() {
         checkForUpdates()
         setOnClickListeners()
 
-        recyclerView = findViewById(R.id.items_table_recycler_view)
+        ownershipRecyclerView = findViewById(R.id.items_table_recycler_view)
         ownershipAdapter = OwnershipAdapter(ownershipList, this, API(), this)
-        recyclerView.adapter = ownershipAdapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        ownershipRecyclerView.adapter = ownershipAdapter
+        ownershipRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        locationRecyclerView = findViewById(R.id.location_table_recycler_view)
+        locationAdapter = LocationAdapter(locationList, this, API(), this)
+        locationRecyclerView.adapter = locationAdapter
+        locationRecyclerView.layoutManager = LinearLayoutManager(this)
     }
 
     private fun setOnClickListeners() {
@@ -62,7 +66,7 @@ class Scanner : Camera() {
         scannerBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
         scannerBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
         scannerBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
-        scannerBinding.clear.setOnClickListener { ownershipAdapter.clearOwnerships() }
+        scannerBinding.clear.setOnClickListener { clearButton() }
         //scannerBinding.place.setOnClickListener { placeQueueButton() }
         scannerBinding.add.setOnClickListener { newEntry() }
         //scannerBinding.unpack.setOnClickListener { unpackButton() }
@@ -86,18 +90,18 @@ class Scanner : Camera() {
             val response = api.scannerCheckQR(code)
             when (response.message) {
                 "NEW" -> {
-                    // TODO newEntry(code)
+                    newEntry(code)
                 }
 
                 "LOCATION" -> {
                     val locationResponse = api.scannerQRLocation(code)
-                    // TODO populateLocations(locationResponse.location)
+                    locationAdapter.addLocation(locationResponse.location)
                     switchToLocationsView()
                 }
 
                 "OWNERSHIP" -> {
                     val ownershipResponse = api.scanQROwnership(code)
-                    // TODO populateItem(ownershipResponse.ownership)
+                    ownershipAdapter.addOwnership(ownershipResponse.ownership)
                     switchToItemsView()
                     codeScanner.startPreview()
                 }
@@ -147,7 +151,7 @@ class Scanner : Camera() {
                     val response = api.locationCreate(name, qr)
                     if (response.success) {
                         Toast.makeText(this@Scanner, "Location created", Toast.LENGTH_SHORT).show()
-                        // TODO populateLocations(response.location)
+                        locationAdapter.addLocation(response.location)
                         popup.dismiss()
                         switchToLocationsView()
                     }
@@ -256,6 +260,14 @@ class Scanner : Camera() {
                 }
                 checkoutButton()
             }
+        }
+    }
+
+    private fun clearButton() {
+        if (pageView == "items") {
+            ownershipAdapter.clearOwnerships()
+        } else if (pageView == "locations") {
+            locationAdapter.clearLocations()
         }
     }
 
