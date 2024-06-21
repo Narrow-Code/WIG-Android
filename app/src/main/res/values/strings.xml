@@ -93,6 +93,7 @@
     <string name="unpacked_items">Unpacked Items</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+    <string name="default_location">Default Location</string>
 
     <string-array name="location_types">
         <item>Item</item>
