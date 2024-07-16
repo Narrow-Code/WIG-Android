@@ -69,7 +69,7 @@
       - Select **Item** from the dropdown menu
       - Click **Create*
       - The item will then be added to your inventory and can be scanned for later use
-
+ 
 ---
 
 ## Appendix <a name="appendix"></a>
