@@ -54,8 +54,7 @@
 ## Ownership Features <a name="ownership-features"></a>
 
 ### Adding New Ownership <a name="adding-new-ownership"></a>
-- **Description**: There are two ways to add an Ownership to the inventory.
-- **Options to Use**:
+- There are two ways to add an Ownership to the inventory.
    1. **Scan Barcode**
       - In Scanner View, use the camera and aim it at items barcode
       - The Scanner will auto detect and send to the server
