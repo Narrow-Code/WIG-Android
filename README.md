@@ -11,7 +11,10 @@
    - [Add New Ownership](#add-new-ownership)
    - [Edit Ownership](#edit-ownership)
    - [Remove Ownership](#remove-ownership)
-   - [Clear Ownerships](#clear-ownerships)
+   - [Clear Ownership](#clear-ownerships)
+   - [Search Ownerships](#search-ownerships)
+   - [Place Ownerships](#place-ownerships)
+   - [Checkout Ownership](#checkout-ownerships)
 4. [Appendix](#appendix)
 
 ---
@@ -55,8 +58,9 @@
 ---
 
 ## Ownership Features <a name="ownership-features"></a>
-- Ownerships are the direct connection between an Item and an Owner.
-- Each Ownership has Location and Quantity for inventory tracking.
+Ownerships are the direct connection between an Item and an Owner.
+
+Each Ownership has Location and Quantity for inventory tracking.
 
 ### Add New Ownership <a name="add-new-ownership"></a>
 There are two ways to add an Ownership to the inventory.
@@ -103,7 +107,16 @@ Clearing Ownerships removes all Ownerships from the Ownership table. It does not
 **How to Clear Ownerships**
 - In Scanner View have Ownership table selected
 - Click the **CLEAR** button toward the bottom left of the table
- 
+
+### Search Ownerships <a name="search-ownerships"></a>
+- In Scanner View have Ownership table selected
+- Click on magnifying glass icon toward upper right hand side of Ownership table
+- Enter search criteria and select Search
+- Click on the Ownership you would like to add to the table
+- Click the Add button in the prompt
+- Click Cancel button at the bottom of the search popup
+- Ownership will be added to the table
+
 ---
 
 ## Appendix <a name="appendix"></a>
