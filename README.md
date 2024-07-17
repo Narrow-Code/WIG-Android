@@ -10,6 +10,8 @@
 3. [Ownership Features](#ownership-features)
    - [Add New Ownership](#add-new-ownership)
    - [Edit Ownership](#edit-ownership)
+   - [Remove Ownership](#remove-ownership)
+   - [Clear Ownerships](#clear-ownerships)
 4. [Appendix](#appendix)
 
 ---
@@ -86,6 +88,21 @@ An Ownership can be edited to change to following fields:
 - Click on the Ownership you wish to edit
 - Fill out the fields to edit
 - Click Save
+
+### Remove Ownership <a name="remove-ownership"></a>
+Removing an Ownership only removes it from the Ownership table. It does not Delete it from inventory.
+
+**How to Remove Single Ownership**
+- In Scanner View have Ownership table selected
+- Long hold click on the Ownership to remove
+- Confirm the Ownershipi
+
+### Clear Ownerships <a name="clear-ownerships"></a>
+Clearing Ownerships removes all Ownerships from the Ownership table. It does not Delete any from the inventory.
+
+**How to Clear Ownerships**
+- In Scanner View have Ownership table selected
+- Click the **CLEAR** button toward the bottom left of the table
  
 ---
 
