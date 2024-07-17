@@ -1,4 +1,4 @@
-# WIG
+# WIG - Android
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -8,7 +8,8 @@
    - [Sign-Up](#sign-up)
    - [Login](#login)
 3. [Ownership Features](#ownership-features)
-   - [Adding New Ownership](#adding-new-ownership)
+   - [Add New Ownership](#add-new-ownership)
+   - [Edit Ownership](#edit-ownership)
 4. [Appendix](#appendix)
 
 ---
@@ -52,9 +53,11 @@
 ---
 
 ## Ownership Features <a name="ownership-features"></a>
+- Ownerships are the direct connection between an Item and an Owner.
+- Each Ownership has Location and Quantity for inventory tracking.
 
-### Adding New Ownership <a name="adding-new-ownership"></a>
-- There are two ways to add an Ownership to the inventory.
+### Add New Ownership <a name="add-new-ownership"></a>
+There are two ways to add an Ownership to the inventory.
    1. **Scan Barcode**
       - In Scanner View, use the camera and aim it at items barcode
       - The Scanner will auto detect and send to the server
@@ -69,6 +72,20 @@
       - Select **Item** from the dropdown menu
       - Click **Create*
       - The item will then be added to your inventory and can be scanned for later use
+   
+### Edit Ownership <a name="edit-ownership"></a>
+An Ownership can be edited to change to following fields:
+- Name: This is the display name to appear on any table
+- QR: This is the customized code that can be scanned to retrieve the Ownership
+- Tags: A keyword or term assigned for search criteria
+- Notes/Description: Customized notes as self reminders about the Ownership
+
+**How to Edit**
+- In Scanner View have Ownership table selected
+- Have Ownership added to table
+- Click on the Ownership you wish to edit
+- Fill out the fields to edit
+- Click Save
  
 ---
 
