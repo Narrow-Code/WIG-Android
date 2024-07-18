@@ -7,7 +7,7 @@
    - [Self-Hosting Setup](#self-host-setup)
    - [Sign-Up](#sign-up)
    - [Login](#login)
-3. [Ownership Features](#ownership-features)
+3. [Ownership Table Features](#ownership-table-features)
    - [Add New Ownership](#add-new-ownership)
    - [Edit Ownership](#edit-ownership)
    - [Remove Ownership](#remove-ownership)
@@ -15,6 +15,7 @@
    - [Search Ownerships](#search-ownerships)
    - [Place Ownerships](#place-ownerships)
    - [Checkout Ownership](#checkout-ownerships)
+   - [Change Quantity](#change-quantity)
 4. [Appendix](#appendix)
 
 ---
@@ -57,10 +58,8 @@
 - Click **Login**
 ---
 
-## Ownership Features <a name="ownership-features"></a>
-Ownerships are the direct connection between an Item and an Owner.
-
-Each Ownership has Location and Quantity for inventory tracking.
+## Ownership Table Features <a name="ownership-table-features"></a>
+Ownership Table is able to be accessed via the Scanner View page, by clicking on the QR code icon, located in the top right hand corner of the app.
 
 ### Add New Ownership <a name="add-new-ownership"></a>
 There are two ways to add an Ownership to the inventory.
@@ -117,11 +116,46 @@ Clearing Ownerships removes all Ownerships from the Ownership table. It does not
 - Click Cancel button at the bottom of the search popup
 - Ownership will be added to the table
 
+### Place Ownerships <a name="place-ownerships"></a>
+To place an Ownership is the action of setting a direct connection between a Location and an Ownership. 
+This would be used to store items inside of a location. 
+For example, if Luke stored a roll of paper towels in a grey bin, Luke would "place" the paper towels in the grey bin location.
+
+**How to Place Ownerships**
+- At least one Ownership must be present in the Ownerships Table
+- A Location must be present in the Locations Table
+- In Scanner View have Ownership table selected
+- Click on the Place button
+- Select the Location from the prompt
+- All Ownerships in the table will be associated with the Location placement
+
+### Checkout Ownerships <a name="checkout-ownerships"></a>
+To Checkout an Ownership is the action of setting a direct connection between a Borrower and an Ownership.
+This would be used to allow another person to borrow or "check out" an item.
+For example, if John would like to borrow a hand drill from Mark, Mark would "check out" the Ownership paper towels to borrower "John".
+
+**How to Checkout Ownerships**
+- At least one Ownership must be present in the Ownerships Table
+- Click on the Checkout button
+- If a new Borrower is needed to be created select New
+- Enter new Borrower's name and click Create button
+- Select Borrower or Self (to checkout item for self use)
+- All Ownerships in the table will be associated with the Borrower placement
+
+### Change Quantity <a name="change-quantity"></a>
+Changing the quantity of an Ownership helps keep track of inventory and the amount of each item that you have in each Location.
+
+**How to change quantity**
+- The Ownership to change must be present in the Ownerships table
+- In Scanner View have Ownership table selected
+- To increment or decrement the amount value, press the plus or minus button
+- As the buttons are pressed the amount will change in real time
+
 ---
 
 ## Appendix <a name="appendix"></a>
 - **Item**: Define item
-- **Ownership**: Define ownership
+- **Ownership**: Ownerships are the direct connection between an Item and an Owner.
 - **Location**: Define location
 - **Borrower**: Define borrower
 
