@@ -154,8 +154,9 @@ Changing the quantity of an Ownership helps keep track of inventory and the amou
 ---
 
 ## Appendix <a name="appendix"></a>
-- **Item**: Define item
-- **Ownership**: Ownerships are the direct connection between an Item and an Owner.
-- **Location**: Define location
-- **Borrower**: Define borrower
+- **Owner**: The Owner represents the user of the application.
+- **Item**: An Item represents a physical item that is owned by the Owner.
+- **Ownership**: Ownerships are the direct connection between an Item, Owner and Location.
+- **Location**: A Location represents a physical location which can store Items inside of. Examples, bins, boxes, containers, closets, rooms, etc.
+- **Borrower**: A Borrower represents a person that may check out or "borrower" items.
 
