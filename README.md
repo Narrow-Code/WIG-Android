@@ -16,7 +16,14 @@
    - [Place Ownerships](#place-ownerships)
    - [Checkout Ownership](#checkout-ownerships)
    - [Change Quantity](#change-quantity)
-4. [Appendix](#appendix)
+4. [Location Table Features](#locations-table-features)
+   - [Add New Location](#add-new-location)
+   - [Edit Location](#edit-location)
+   - [Remove Location](#remove-location)
+   - [Clear Location](#clear-locations)
+   - [Search Locations](#search-locations)
+   - [Unpack Location](#unpack-locations)
+5. [Appendix](#appendix)
 
 ---
 
@@ -98,7 +105,7 @@ Removing an Ownership only removes it from the Ownership table. It does not Dele
 **How to Remove Single Ownership**
 - In Scanner View have Ownership table selected
 - Long hold click on the Ownership to remove
-- Confirm the Ownershipi
+- Confirm the Ownership removal
 
 ### Clear Ownerships <a name="clear-ownerships"></a>
 Clearing Ownerships removes all Ownerships from the Ownership table. It does not Delete any from the inventory.
@@ -152,6 +159,76 @@ Changing the quantity of an Ownership helps keep track of inventory and the amou
 - As the buttons are pressed the amount will change in real time
 
 ---
+
+## Location Table Features
+Location Table is able to be accessed via the Scanner View page, then selecting the Locations button above the table.
+
+### Add New Location <a name="add-new-location"></a>
+There are two ways to add a Location to the inventory.
+   1. **Scan Unused QR Code**
+      - In Scanner View, use the camera and aim it at a QR code
+      - The Scanner will auto detect and send to the server
+      - If the QR exists as a Location or Ownership it will return existing Location or Ownership
+      - If the QR does not exist in database it will prompt open the Manually Add option
+
+   2. **Manually Add**
+      - In Scanner View, click on the Plus + icon on the top right of the Location table
+      - Enter the Locations's Name and a QR-Code to associate with it
+      - Select **Location** from the dropdown menu
+      - Click **Create*
+      - The Location will then be added to your inventory and can be scanned for later use
+ 
+### Edit Location <a name="edit-location"></a>
+An Location can be edited to change to following fields:
+- Name: This is the display name to appear on any table
+- QR: This is the customized code that can be scanned to retrieve the Location
+- Tags: A keyword or term assigned for search criteria
+- Notes/Description: Customized notes as self reminders about the Location
+
+**How to Edit**
+- In Scanner View have Locations table selected
+- Have Location added to table
+- Click on the Location you wish to edit
+- Fill out the fields to edit
+- Click Save
+
+### Remove Location <a name="remove-location"></a>
+Removing a Location only removes it from the Location table. It does not Delete it from inventory.
+
+**How to Remove Single Location**
+- In Scanner View have Locations table selected
+- Long hold click on the Location to remove
+- Confirm the Location removal
+
+### Clear Location <a name="clear-locations"></a>
+Clearing Locations removes all Locations from the Locations table. It does not Delete any from the inventory.
+
+**How to Clear Locations**
+- In Scanner View have Locations table selected
+- Click the **CLEAR** button toward the bottom left of the table
+
+### Search Locations <a name="search-locations"></a>
+- In Scanner View have Locations table selected
+- Click on magnifying glass icon toward upper right hand side of Locations table
+- Enter search criteria and select Search
+- Click on the Location you would like to add to the table
+- Click the Add button in the prompt
+- Click Cancel button at the bottom of the search popup
+- Locations will be added to the table
+
+### Unpack Locations <a name="unpack-locations"></a>
+Unpacking Locations is the action to populate the Ownerships table with all Ownerships that are associated with any Location inside of the Locations table.
+
+For example, John has 2 rolls of paper towels and a wrench in his grey bin, he also has a screw driver in his purple box.
+John has his purple box and his grey bin both populated in his Locations Table.
+When John clicks on **Unpack* his Ownership table populates with his paper towels, wrench and screw driver.
+
+**How to Unpack Locations**
+- In Scanner View have Locations Table selected
+- Must have at least one Location populated in the table
+- Click on the Unpack button
+- Ownership Table will then be populated
+- Navigate to Ownerships Table to view all Ownerships
 
 ## Appendix <a name="appendix"></a>
 - **Owner**: The Owner represents the user of the application.
