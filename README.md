@@ -7,23 +7,36 @@
    - [Self-Hosting Setup](#self-host-setup)
    - [Sign-Up](#sign-up)
    - [Login](#login)
-3. [Ownership Table Features](#ownership-table-features)
-   - [Add New Ownership](#add-new-ownership)
-   - [Edit Ownership](#edit-ownership)
-   - [Remove Ownership](#remove-ownership)
-   - [Clear Ownership](#clear-ownerships)
-   - [Search Ownerships](#search-ownerships)
-   - [Place Ownerships](#place-ownerships)
-   - [Checkout Ownership](#checkout-ownerships)
-   - [Change Quantity](#change-quantity)
-4. [Location Table Features](#locations-table-features)
-   - [Add New Location](#add-new-location)
-   - [Edit Location](#edit-location)
-   - [Remove Location](#remove-location)
-   - [Clear Location](#clear-locations)
-   - [Search Locations](#search-locations)
-   - [Unpack Location](#unpack-locations)
-5. [Appendix](#appendix)
+3. [Scanner View](#scanner-view)
+   1. [Ownership Table Features](#ownership-table-features)
+      - [Add New Ownership](#add-new-ownership)
+      - [Edit Ownership](#edit-ownership)
+      - [Remove Ownership](#remove-ownership)
+      - [Clear Ownership](#clear-ownerships)
+      - [Search Ownerships](#search-ownerships)
+      - [Place Ownerships](#place-ownerships)
+      - [Checkout Ownership](#checkout-ownerships)
+      - [Change Quantity](#change-quantity)
+   2. [Location Table Features](#locations-table-features)
+      - [Add New Location](#add-new-location)
+      - [Edit Location](#edit-location)
+      - [Remove Location](#remove-location)
+      - [Clear Location](#clear-locations)
+      - [Search Locations](#search-locations)
+      - [Unpack Location](#unpack-locations)
+4. [Checked-Out View](#checked-out-view)
+   - [Expand/Collapse a Borrower](#expand-collapse-a-borrower)
+   - [Return Single Ownership](#return-single-ownership)
+   - [Return All From Single Borrower](#return-all-from-single-borrower)
+   - [Return All](#return-all)
+5. [Inventory View](#inventory-view)
+   - [Expand/Collapse a Location](#expand-collapse-a-location)
+6. [Settings](#settings)
+   - [Vibrate On Scan](#vibrate-on-scan)
+   - [Sound On Scan](#sound-on-scan)
+   - [App Opens To](#app-opens-to)
+   - [Logout](#logout)
+7. [Appendix](#appendix)
 
 ---
 
@@ -33,8 +46,6 @@
 - Utilizing barcode and QR scanning, its UI/UX enables easy access to ownership items and locations.
 - WIG gives the ability to store items into locations, to find items easily via the mobile app.
 - Item inventory tracking makes checking supply stock flawless from a distance.
-
----
 
 ## Getting Started <a name="getting-started"></a>
 
@@ -63,7 +74,11 @@
 ### Login<a name="login"></a>
 - On the **Login** page, fill out **Username** and **Password**
 - Click **Login**
----
+
+## Scanner View
+Scanner view can be accessed by clicking on the QR icon in the top right hand navigation bar.
+
+The Scanner View is where most of the inventory management will happen, it allows scanning QR and barcodes to manage inventory.
 
 ## Ownership Table Features <a name="ownership-table-features"></a>
 Ownership Table is able to be accessed via the Scanner View page, by clicking on the QR code icon, located in the top right hand corner of the app.
@@ -158,9 +173,7 @@ Changing the quantity of an Ownership helps keep track of inventory and the amou
 - To increment or decrement the amount value, press the plus or minus button
 - As the buttons are pressed the amount will change in real time
 
----
-
-## Location Table Features
+## Location Table Features <a name="location-table-features"></a>
 Location Table is able to be accessed via the Scanner View page, then selecting the Locations button above the table.
 
 ### Add New Location <a name="add-new-location"></a>
@@ -230,10 +243,69 @@ When John clicks on **Unpack* his Ownership table populates with his paper towel
 - Ownership Table will then be populated
 - Navigate to Ownerships Table to view all Ownerships
 
+## Checked Out View <a name="checked-out-view"></a>
+The Checked Out View can be accessed by clicking on the giving hand icon in the top right navigation bar.
+
+The Checked Out View is a table to help easily manage and see all Checked Out items.
+
+### Expand/Collapse a Borrower <a name="expand-collapse-a-borrower"></a>
+You may Expand or Collapse a borrower to view what has been borrowed by the individual borrower.
+
+- Click on collapsed borrower to expand
+- Click on expanded borrower to collapse
+
+### Return Single Ownership <a name="return-single-ownership"></a>
+Returning a single ownership removes the Chcked Out status and returns it to it's original location.
+
+- Long hold click on an Ownership
+- Click Return button
+
+### Return All From Single Borrower <a name="return-all-from-single-borrower"></a>
+Returning all from a single Borrower removes the Checked Out status from all Ownerships checked out to an individual borrower and returns them to their original Locations.
+
+- Long hold click on a single Borrower
+- Click Return button
+
+### Return All <a name="return-all"></a>
+Return All removes the Checked Out status from all Ownerships checked out to all borrowers and returns them to their original Locations.
+
+- Click on the Return All button at the bottom of the table
+- Click Return button
+
+## Inventory View <a name="inventory-view"></a>
+Inventory View can be accessed by clicking on the filing cabinet icon in the navigation bar located on the top right hand corner of the app.
+
+Inventory View shows an expandable list of the users entire inventory
+
+### Expand/Collapse a Location<a name="expand-collapse-a-location"></a>
+You may Expand or Collapse a location to view what has been placed inside of the location.
+
+- Click on the collapsed Location to expand
+- Click on the epxanded Location to collapse
+
+## Settings <a name="settings"></a>
+The Settings View may be accessed by clicking on the gear icon in the navigation bar located at the top right hand corner of the app.
+
+There are a few settings to change the way the app functions.
+
+### Vibrate On Scan <a name="vibrate-on-scan"></a>
+If vibrate on Scan is selected, everytime a barcode or QR is scanned, the users phone will vibrate indicating the scan.
+
+### Sound On Scan <a name="sound-on-scan"></a>
+If sound on scan is selected, every time a barcode or QR is scanned, the users phone will make a notification sound indicating the scan.
+
+### App Opens To <a name="app-opens-to"></a>
+There are two options for the app to open to. Which ever one is selected, the app will always start up on the selected page.
+
+- [Scanner View](#scanner-view)
+- [Inventory View](#inventory-view)
+
+### Logout <a name="logout"></a>
+The user may select the Logout button to successfully log out of the application.
+
 ## Appendix <a name="appendix"></a>
 - **Owner**: The Owner represents the user of the application.
 - **Item**: An Item represents a physical item that is owned by the Owner.
 - **Ownership**: Ownerships are the direct connection between an Item, Owner and Location.
 - **Location**: A Location represents a physical location which can store Items inside of. Examples, bins, boxes, containers, closets, rooms, etc.
 - **Borrower**: A Borrower represents a person that may check out or "borrower" items.
-
