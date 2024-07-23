@@ -5,6 +5,7 @@ import io.ktor.client.call.receive
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
 import io.ktor.client.features.ServerResponseException
+import io.ktor.client.request.delete
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -24,6 +25,7 @@ import wig.models.entities.Ownership
 import wig.models.entities.User
 import wig.utils.JsonParse
 import wig.managers.TokenManager
+import wig.models.requests.DeleteOwnershipRequest
 import wig.models.requests.SetLocationRequest
 
 class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
@@ -163,5 +165,31 @@ class OwnershipServiceImpl(private val client: HttpClient ) : OwnershipService {
         }
     }
 
+    override suspend fun ownershipDelete(ownershipUID: String): CommonResponse {
+        return try {
+            val deleteOwnershipRequest = DeleteOwnershipRequest(ownershipUID)
+            client.delete {
+                url(HttpRoutes.OWNERSHIP)
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+                body = deleteOwnershipRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: Exception) {
+            CommonResponse(e.message.toString(), false)
+        }
+    }
 
 }
