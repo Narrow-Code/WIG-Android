@@ -26,7 +26,7 @@ interface OwnershipService {
 
     suspend fun ownershipEdit(editOwnershipRequest: OwnershipEditRequest): CommonResponse
 
-    suspend fun ownershipDelete(deleteOwnershipRequest: DeleteOwnershipRequest): CommonResponse
+    suspend fun ownershipDelete(ownershipUID: String): CommonResponse
 
 
     companion object {
