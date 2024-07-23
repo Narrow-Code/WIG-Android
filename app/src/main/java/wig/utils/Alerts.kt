@@ -128,4 +128,23 @@ class Alerts {
         alertDialog.show()
     }
 
+    fun deleteConfirmation(name: String, context: Context, callback: (Boolean) -> Unit) {
+        val alertDialogBuilder = AlertDialog.Builder(context)
+        alertDialogBuilder.setTitle("Permanently Delete Ownership")
+        alertDialogBuilder.setMessage("Are you sure you want to delete $name from database?")
+
+        alertDialogBuilder.setPositiveButton("DELETE") { dialog, _ ->
+            dialog.dismiss()
+            callback(true)
+        }
+
+        alertDialogBuilder.setNegativeButton("CANCEL") { dialog, _ ->
+            dialog.dismiss()
+            callback(false)
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.show()
+    }
+
 }
