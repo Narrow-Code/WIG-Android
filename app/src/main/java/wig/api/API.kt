@@ -187,4 +187,9 @@ open class API {
             posts
         }
 
+    suspend fun deleteOwnership(ownershipUID: String): CommonResponse = withContext(Dispatchers.IO) {
+        val posts = ownershipService.ownershipDelete(ownershipUID)
+        posts
+    }
+
 }
