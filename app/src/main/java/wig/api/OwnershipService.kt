@@ -6,7 +6,6 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
-import wig.models.requests.DeleteOwnershipRequest
 import wig.models.responses.CommonResponse
 import wig.models.requests.OwnershipEditRequest
 import wig.models.requests.OwnershipCreateRequest
