@@ -83,4 +83,9 @@ class InventoryExpandableListAdapter(
     override fun isChildSelectable(groupPosition: Int, childPosition: Int): Boolean {
         return true
     }
+
+    fun removeChild(groupPosition: Int, childPosition: Int) {
+        getGroup(groupPosition).ownerships?.removeAt(childPosition)
+        notifyDataSetChanged()
+    }
 }
