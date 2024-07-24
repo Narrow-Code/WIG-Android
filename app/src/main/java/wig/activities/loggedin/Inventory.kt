@@ -50,9 +50,9 @@ class Inventory : Settings() {
             val packedPosition = expandableListView.getExpandableListPosition(position)
             val itemType = ExpandableListView.getPackedPositionType(packedPosition)
             val groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition)
-            if (groupPosition != 0){
-                if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-                    val location = adapter.getGroup(groupPosition).parent
+            if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                val location = adapter.getGroup(groupPosition).parent
+                if(groupPosition != 0) {
                     Alerts().deleteConfirmation(location.locationName, this) { shouldDelete ->
                         if (shouldDelete) {
                             lifecycleScope.launch {
@@ -63,16 +63,16 @@ class Inventory : Settings() {
                             }
                         }
                     }
-                } else {
-                    val childPosition = ExpandableListView.getPackedPositionChild(packedPosition)
-                    val ownership = adapter.getChild(groupPosition, childPosition)
-                    Alerts().deleteConfirmation(ownership.customItemName, this) { shouldDelete ->
-                        if (shouldDelete) {
-                            lifecycleScope.launch {
-                                val result = api.deleteOwnership(ownership.ownershipUID)
-                                if (result.success) {
-                                    adapter.removeChild(groupPosition, childPosition)
-                                }
+                }
+            } else {
+                val childPosition = ExpandableListView.getPackedPositionChild(packedPosition)
+                val ownership = adapter.getChild(groupPosition, childPosition)
+                Alerts().deleteConfirmation(ownership.customItemName, this) { shouldDelete ->
+                    if (shouldDelete) {
+                        lifecycleScope.launch {
+                            val result = api.deleteOwnership(ownership.ownershipUID)
+                            if (result.success) {
+                                adapter.removeChild(groupPosition, childPosition)
                             }
                         }
                     }
