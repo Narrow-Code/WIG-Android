@@ -32,6 +32,7 @@
 5. [Inventory View](#inventory-view)
    - [Expand/Collapse a Location](#expand-collapse-a-location)
    - [Delete Ownership](#delete-ownership)
+   - [Delete Location](#delete-location)
 6. [Settings](#settings)
    - [Vibrate On Scan](#vibrate-on-scan)
    - [Sound On Scan](#sound-on-scan)
@@ -289,6 +290,12 @@ Deleting an Ownership removes it completely fom the database.
 
 - Expand the Location that is holding the Ownership
 - Long hold click on the Ownership
+- Click on the Delete button
+
+### Delete Location <a name="delete-location"></a>
+Deleting a Location removes it completely from the database and returns all Ownerships to the Default Location.
+
+- Long hold click on the Location
 - Click on the Delete button
 
 ## Settings <a name="settings"></a>
