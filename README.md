@@ -31,6 +31,7 @@
    - [Return All](#return-all)
 5. [Inventory View](#inventory-view)
    - [Expand/Collapse a Location](#expand-collapse-a-location)
+   - [Delete Ownership](#delete-ownership)
 6. [Settings](#settings)
    - [Vibrate On Scan](#vibrate-on-scan)
    - [Sound On Scan](#sound-on-scan)
@@ -234,7 +235,7 @@ Unpacking Locations is the action to populate the Ownerships table with all Owne
 
 For example, John has 2 rolls of paper towels and a wrench in his grey bin, he also has a screw driver in his purple box.
 John has his purple box and his grey bin both populated in his Locations Table.
-When John clicks on **Unpack* his Ownership table populates with his paper towels, wrench and screw driver.
+When John clicks on **Unpack** his Ownership table populates with his paper towels, wrench and screw driver.
 
 **How to Unpack Locations**
 - In Scanner View have Locations Table selected
@@ -282,6 +283,13 @@ You may Expand or Collapse a location to view what has been placed inside of the
 
 - Click on the collapsed Location to expand
 - Click on the epxanded Location to collapse
+
+### Delete Ownership <a name="delete-ownership"></a>
+Deleting an Ownership removes it completely fom the database.
+
+- Expand the Location that is holding the Ownership
+- Long hold click on the Ownership
+- Click on the Delete button
 
 ## Settings <a name="settings"></a>
 The Settings View may be accessed by clicking on the gear icon in the navigation bar located at the top right hand corner of the app.
