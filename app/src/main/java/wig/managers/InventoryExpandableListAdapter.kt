@@ -19,7 +19,7 @@ class InventoryExpandableListAdapter(
         return if (groupPosition == 0){
             inventory
         } else {
-            return inventory.locations?.get(groupPosition) ?: inventory
+            return inventory.locations?.get(groupPosition - 1) ?: inventory
         }
     }
 
@@ -33,7 +33,7 @@ class InventoryExpandableListAdapter(
     }
 
     override fun getGroupCount(): Int {
-        return inventory.locations?.size ?: 1
+        return (inventory.locations?.size?.plus(1))?: 1
     }
 
     override fun getChildrenCount(groupPosition: Int): Int {
