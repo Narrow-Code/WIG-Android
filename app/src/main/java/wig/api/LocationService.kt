@@ -6,6 +6,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
+import wig.models.requests.DeleteLocationRequest
 import wig.models.requests.LocationCreateRequest
 import wig.models.responses.CommonResponse
 import wig.models.requests.LocationEditRequest
@@ -26,6 +27,7 @@ interface LocationService {
 
     suspend fun locationEdit(editLocationRequest: LocationEditRequest): CommonResponse
 
+    suspend fun locationDelete(deleteLocationRequest: DeleteLocationRequest): CommonResponse
 
     companion object {
         fun create(): LocationService {
