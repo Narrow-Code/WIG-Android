@@ -5,6 +5,7 @@ import io.ktor.client.call.receive
 import io.ktor.client.features.ClientRequestException
 import io.ktor.client.features.RedirectResponseException
 import io.ktor.client.features.ServerResponseException
+import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
@@ -23,6 +24,7 @@ import wig.models.entities.Location
 import wig.models.entities.User
 import wig.utils.JsonParse
 import wig.managers.TokenManager
+import wig.models.requests.DeleteLocationRequest
 import wig.models.requests.LocationCreateRequest
 
 class LocationServiceImpl(private val client: HttpClient ) : LocationService {
@@ -140,6 +142,32 @@ class LocationServiceImpl(private val client: HttpClient ) : LocationService {
                 header("AppAuth", "what-i-got")
                 header("Authorization", TokenManager.getToken())
                 body = editLocationRequest
+            }
+        } catch(e: RedirectResponseException) {
+            // 3xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ClientRequestException) {
+            // 4xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: ServerResponseException) {
+            // 5xx - responses
+            val errorMessage = JsonParse().parseErrorMessage(e.response.receive<String>())
+            CommonResponse(errorMessage, false)
+        } catch(e: Exception) {
+            CommonResponse(e.message.toString(), false)
+        }
+    }
+
+    override suspend fun locationDelete(deleteLocationRequest: DeleteLocationRequest): CommonResponse {
+        return try {
+            client.delete {
+                url(HttpRoutes.LOCATION)
+                contentType(ContentType.Application.Json)
+                header("AppAuth", "what-i-got")
+                header("Authorization", TokenManager.getToken())
+                body = deleteLocationRequest
             }
         } catch(e: RedirectResponseException) {
             // 3xx - responses
