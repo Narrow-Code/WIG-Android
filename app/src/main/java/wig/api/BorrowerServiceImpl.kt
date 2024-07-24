@@ -23,7 +23,6 @@ import wig.utils.JsonParse
 import wig.managers.TokenManager
 import wig.models.requests.BorrowerCreateRequest
 import wig.models.requests.DeleteBorrowerRequest
-import wig.models.requests.DeleteLocationRequest
 import wig.models.responses.CommonResponse
 
 class BorrowerServiceImpl(private val client: HttpClient ) : BorrowerService {
