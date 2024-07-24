@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import wig.models.requests.BorrowerCreateRequest
 import wig.models.requests.CheckoutRequest
+import wig.models.requests.DeleteBorrowerRequest
 import wig.models.requests.DeleteLocationRequest
 import wig.models.requests.LocationCreateRequest
 import wig.models.requests.LocationEditRequest
@@ -195,6 +196,11 @@ open class API {
 
     suspend fun deleteLocation(locationUID: String): CommonResponse = withContext(Dispatchers.IO) {
         val posts = locationService.locationDelete(DeleteLocationRequest(locationUID))
+        posts
+    }
+
+    suspend fun deleteBorrower(borrowerUID: String): CommonResponse = withContext(Dispatchers.IO) {
+        val posts = borrowerService.borrowerDelete((DeleteBorrowerRequest(borrowerUID)))
         posts
     }
 
