@@ -9,9 +9,11 @@ import io.ktor.client.features.logging.Logging
 import wig.models.requests.BorrowerCreateRequest
 import wig.models.responses.borrowerCheckedOutResponse
 import wig.models.requests.CheckoutRequest
+import wig.models.requests.DeleteBorrowerRequest
 import wig.models.responses.borrowerCreateResponse
 import wig.models.responses.borrowerGetAllResponse
 import wig.models.responses.BorrowerGetInventoryResponse
+import wig.models.responses.CommonResponse
 
 interface BorrowerService {
 
@@ -24,6 +26,8 @@ interface BorrowerService {
     suspend fun borrowerCheckIn(ownerships: CheckoutRequest): borrowerCheckedOutResponse
 
     suspend fun borrowerGetInventory(): BorrowerGetInventoryResponse
+
+    suspend fun borrowerDelete(deleteBorrowerRequest: DeleteBorrowerRequest): CommonResponse
 
     companion object {
         fun create(): BorrowerService {
