@@ -14,7 +14,7 @@ data class Ownership(
     val itemQR: String,
     val itemTags: String,
     var itemQuantity: Int,
-    val itemCheckedOut: String,
+    var itemCheckedOut: String,
     var itemBorrower: String,
     val user: User,
     var location: Location,

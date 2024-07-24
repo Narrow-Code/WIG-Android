@@ -243,6 +243,7 @@ class Scanner : Camera() {
                             for (ownership in ownershipList) {
                                 if (ownership.ownershipUID == ownershipUID) {
                                     ownership.borrower.borrowerName = name // TODO fix so it changes entire borrower
+                                    ownership.itemCheckedOut = "true"
                                 }
                             }
                         }
