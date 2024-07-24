@@ -50,23 +50,33 @@ class Inventory : Settings() {
             val packedPosition = expandableListView.getExpandableListPosition(position)
             val itemType = ExpandableListView.getPackedPositionType(packedPosition)
             val groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition)
-            if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-                val ownership = adapter.getGroup(groupPosition)
-                // TODO handle long click on Location
-            } else {
-                val childPosition = ExpandableListView.getPackedPositionChild(packedPosition)
-                val ownership = adapter.getChild(groupPosition, childPosition)
-                Alerts().deleteConfirmation(ownership.customItemName, this) { shouldDelete ->
-                    if (shouldDelete) {
-                        lifecycleScope.launch {
-                            val result = api.deleteOwnership(ownership.ownershipUID)
-                            if(result.success){
-                                adapter.removeChild(groupPosition, childPosition)
+            if (groupPosition != 0){
+                if (itemType == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+                    val location = adapter.getGroup(groupPosition).parent
+                    Alerts().deleteConfirmation(location.locationName, this) { shouldDelete ->
+                        if (shouldDelete) {
+                            lifecycleScope.launch {
+                                val result = api.deleteLocation(location.locationUID)
+                                if (result.success) {
+                                    adapter.removeGroup(groupPosition)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    val childPosition = ExpandableListView.getPackedPositionChild(packedPosition)
+                    val ownership = adapter.getChild(groupPosition, childPosition)
+                    Alerts().deleteConfirmation(ownership.customItemName, this) { shouldDelete ->
+                        if (shouldDelete) {
+                            lifecycleScope.launch {
+                                val result = api.deleteOwnership(ownership.ownershipUID)
+                                if (result.success) {
+                                    adapter.removeChild(groupPosition, childPosition)
+                                }
                             }
                         }
                     }
                 }
-
             }
             true
         }
