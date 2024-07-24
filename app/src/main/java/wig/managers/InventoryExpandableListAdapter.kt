@@ -88,4 +88,12 @@ class InventoryExpandableListAdapter(
         getGroup(groupPosition).ownerships?.removeAt(childPosition)
         notifyDataSetChanged()
     }
+
+    fun removeGroup(groupPosition: Int) {
+        for (ownership in getGroup(groupPosition).ownerships!!) {
+            inventory.ownerships?.add(ownership)
+        }
+        inventory.locations?.removeAt(groupPosition - 1)
+        notifyDataSetChanged()
+    }
 }
