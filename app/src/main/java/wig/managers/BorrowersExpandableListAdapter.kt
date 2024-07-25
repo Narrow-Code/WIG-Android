@@ -62,7 +62,7 @@ class BorrowersExpandableListAdapter(
             Alerts().deleteConfirmation(borrower.borrowerName, context) { shouldDelete ->
                 if (shouldDelete) {
                     lifecycleOwner.lifecycleScope.launch {
-                        val result = api.deleteLocation(borrower.borrowerUID)
+                        val result = api.deleteBorrower(borrower.borrowerUID)
                         if (result.success) {
                             removeGroup(groupPosition)
                         }
@@ -76,7 +76,7 @@ class BorrowersExpandableListAdapter(
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup?): View {
-        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.inventory_ownership_list_item, parent, false)
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.borrower_ownership_list_item, parent, false)
         val txtOwnershipDescription = view.findViewById<TextView>(R.id.txtOwnershipDescription)
         val ownership = getChild(groupPosition, childPosition)
         txtOwnershipDescription.text = ownership.customItemName
