@@ -2,12 +2,14 @@ package wig.activities.loggedin
 
 import android.os.Bundle
 import android.widget.ExpandableListView
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import wig.activities.base.Settings
 import wig.managers.BorrowersExpandableListAdapter
+import wig.models.entities.Ownership
 import wig.models.requests.CheckoutRequest
 import wig.models.responses.Borrowers
 import wig.utils.Alerts
@@ -40,7 +42,7 @@ class CheckedOut : Settings() {
             val response = api.borrowerGetInventory()
             if (response.success) {
                 borrowers = response.borrowers.toMutableList()
-                adapter = BorrowersExpandableListAdapter(this@CheckedOut, borrowers)
+                adapter = BorrowersExpandableListAdapter(this@CheckedOut, this@CheckedOut, borrowers, api)
                 expandableListView.setAdapter(adapter)
 
                 setOnItemLongClickListener()
@@ -58,20 +60,8 @@ class CheckedOut : Settings() {
                 checkInBorrower(borrower, groupPosition)
             } else {
                 val childPosition = ExpandableListView.getPackedPositionChild(packedPosition)
-                val ownerships: MutableList<String> = mutableListOf()
                 val ownership = adapter.getChild(groupPosition, childPosition)
-                Alerts().returnSingleConfirmation(ownership, this) { shouldDelete ->
-                    if (shouldDelete) {
-                        ownerships.add(ownership.ownershipUID)
-                        lifecycleScope.launch {
-                            val result = checkInOwnerships(ownerships)
-                            if(result){
-                                adapter.removeChild(groupPosition, childPosition)
-                            }
-                        }
-                    }
-                }
-
+                checkInInSingleOwnership(ownership, groupPosition, childPosition)
             }
             true
         }
@@ -112,6 +102,21 @@ class CheckedOut : Settings() {
                 lifecycleScope.launch {
                     if (checkInOwnerships(ownerships)){
                         adapter.removeGroup(groupPosition)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkInInSingleOwnership(ownership: Ownership, groupPosition: Int, childPosition: Int) {
+        Alerts().returnSingleConfirmation(ownership, this) { shouldDelete ->
+            if (shouldDelete) {
+                val ownerships: MutableList<String> = mutableListOf()
+                ownerships.add(ownership.ownershipUID)
+                lifecycleScope.launch {
+                    val result = checkInOwnerships(ownerships)
+                    if(result){
+                        adapter.removeChild(groupPosition, childPosition)
                     }
                 }
             }

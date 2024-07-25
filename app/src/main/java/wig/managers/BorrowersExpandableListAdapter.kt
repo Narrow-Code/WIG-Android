@@ -5,14 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 import wig.R
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import wig.models.entities.Ownership
 import wig.models.responses.Borrowers
+import wig.utils.Alerts
 
 class BorrowersExpandableListAdapter(
     private val context: Context,
-    private val borrowersList: MutableList<Borrowers>
+    private val lifecycleOwner: LifecycleOwner,
+    private val borrowersList: MutableList<Borrowers>,
+    private val api: wig.api.API
 ) : BaseExpandableListAdapter() {
 
     override fun getGroup(groupPosition: Int): Borrowers {
@@ -46,8 +53,25 @@ class BorrowersExpandableListAdapter(
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup?): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.inventory_location_list_group, parent, false)
         val txtBorrowerName = view.findViewById<TextView>(R.id.txtBorrowerName)
-        val borrower = getGroup(groupPosition)
-        txtBorrowerName.text = borrower.borrower.borrowerName
+        val btnDelete = view.findViewById<ImageView>(R.id.delete)
+        val borrower = getGroup(groupPosition).borrower
+        txtBorrowerName.text = borrower.borrowerName
+
+        btnDelete.setOnLongClickListener {
+            // Handle delete action on long click
+            Alerts().deleteConfirmation(borrower.borrowerName, context) { shouldDelete ->
+                if (shouldDelete) {
+                    lifecycleOwner.lifecycleScope.launch {
+                        val result = api.deleteLocation(borrower.borrowerUID)
+                        if (result.success) {
+                            removeGroup(groupPosition)
+                        }
+                    }
+                }
+            }
+            true
+        }
+
         return view
     }
 
