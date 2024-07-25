@@ -29,6 +29,7 @@
    - [Return Single Ownership](#return-single-ownership)
    - [Return All From Single Borrower](#return-all-from-single-borrower)
    - [Return All](#return-all)
+   - [Delete Borrower](#delete-borrower)
 5. [Inventory View](#inventory-view)
    - [Expand/Collapse a Location](#expand-collapse-a-location)
    - [Delete Ownership](#delete-ownership)
@@ -274,6 +275,12 @@ Return All removes the Checked Out status from all Ownerships checked out to all
 - Click on the Return All button at the bottom of the table
 - Click Return button
 
+### Delete Borrower <a name="delete-borrower"></a>
+Delete Borrower removes it comepletely from the database and returns all checked out Ownerships to their original locations
+
+- Long hold click on the Borrowers trash icon
+- Click on delete
+
 ## Inventory View <a name="inventory-view"></a>
 Inventory View can be accessed by clicking on the filing cabinet icon in the navigation bar located on the top right hand corner of the app.
 
@@ -289,13 +296,13 @@ You may Expand or Collapse a location to view what has been placed inside of the
 Deleting an Ownership removes it completely fom the database.
 
 - Expand the Location that is holding the Ownership
-- Long hold click on the Ownership
+- Long hold click on the Ownerships trash icon
 - Click on the Delete button
 
 ### Delete Location <a name="delete-location"></a>
 Deleting a Location removes it completely from the database and returns all Ownerships to the Default Location.
 
-- Long hold click on the Location
+- Long hold click on the Locations trash icon
 - Click on the Delete button
 
 ## Settings <a name="settings"></a>
