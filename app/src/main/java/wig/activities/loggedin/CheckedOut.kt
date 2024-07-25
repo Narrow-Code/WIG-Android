@@ -2,7 +2,6 @@ package wig.activities.loggedin
 
 import android.os.Bundle
 import android.widget.ExpandableListView
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,10 +29,18 @@ class CheckedOut : Settings() {
     }
 
     private fun setOnClickListeners() {
-        checkedOutBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
-        checkedOutBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
-        checkedOutBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
-        checkedOutBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
+        checkedOutBinding.topMenu.icScanner.setOnClickListener {
+            startActivityScanner()
+            finish()
+        }
+        checkedOutBinding.topMenu.icSettings.setOnClickListener {
+            startActivitySettings()
+            finish()
+        }
+        checkedOutBinding.topMenu.icInventory.setOnClickListener {
+            startActivityInventory()
+            finish()
+        }
         checkedOutBinding.returnAllButton.setOnClickListener { returnAllButton() }
     }
 

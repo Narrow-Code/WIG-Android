@@ -24,10 +24,18 @@ class Inventory : Settings() {
     }
 
     private fun setOnClickListeners() {
-        inventoryBinding.topMenu.icScanner.setOnClickListener { startActivityScanner() }
-        inventoryBinding.topMenu.icSettings.setOnClickListener { startActivitySettings() }
-        inventoryBinding.topMenu.icCheckedOut.setOnClickListener { startActivityCheckedOut() }
-        inventoryBinding.topMenu.icInventory.setOnClickListener { startActivityInventory() }
+        inventoryBinding.topMenu.icScanner.setOnClickListener {
+            startActivityScanner()
+            finish()
+        }
+        inventoryBinding.topMenu.icSettings.setOnClickListener {
+            startActivitySettings()
+            finish()
+        }
+        inventoryBinding.topMenu.icCheckedOut.setOnClickListener {
+            startActivityCheckedOut()
+            finish()
+        }
     }
 
     private fun getInventory() {
