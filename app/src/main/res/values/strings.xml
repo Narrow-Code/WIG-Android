@@ -95,6 +95,7 @@
     <string name="plus">+</string>
     <string name="default_location">Default Location</string>
     <string name="delete">delete</string>
+    <string name="there_was_an_error_making_request">There was an error making request</string>
 
     <string-array name="location_types">
         <item>Item</item>
