@@ -56,6 +56,8 @@ interface UserService {
 
     suspend fun resendVerification(emailRequest: EmailRequest): CommonResponse
 
+    suspend fun forgotPassword(emailRequest: EmailRequest): CommonResponse
+
     /**
      * Companion object for creating instances of [UserService].
      */
