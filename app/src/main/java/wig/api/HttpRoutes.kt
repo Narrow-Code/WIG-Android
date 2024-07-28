@@ -14,6 +14,7 @@ object HttpRoutes {
     val SIGNUP = "$BASE_URL/user/signup"
     val LOGIN = "$BASE_URL/user/login"
     val LOGIN_CHECK = "$BASE_URL/app/validate"
+    val RESEND_EMAIL = "$BASE_URL/app/verification"
 
     val SCAN_BARCODE = "${BASE_URL}/app/scan"
     val CHECK_QR = "${BASE_URL}/app/scan"
