@@ -210,4 +210,9 @@ open class API {
         posts
     }
 
+    suspend fun forgotPassword(email: String): CommonResponse = withContext(Dispatchers.IO) {
+        val posts = userService.forgotPassword(EmailRequest(email))
+        posts
+    }
+
 }
