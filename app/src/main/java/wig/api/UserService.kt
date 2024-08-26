@@ -12,6 +12,7 @@ import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logging
+import wig.models.requests.EmailRequest
 
 
 /**
@@ -52,6 +53,10 @@ interface UserService {
     suspend fun signup(signupRequest: SignupRequest): CommonResponse
 
     suspend fun ping(hostname: String, port: String): CommonResponse
+
+    suspend fun resendVerification(emailRequest: EmailRequest): CommonResponse
+
+    suspend fun forgotPassword(emailRequest: EmailRequest): CommonResponse
 
     /**
      * Companion object for creating instances of [UserService].

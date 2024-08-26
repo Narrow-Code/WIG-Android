@@ -51,10 +51,12 @@ class Signup : Settings() {
 
     private suspend fun signup(username: String, email: String, hash: String, salt: ByteArray) = withContext(Dispatchers.IO){
         val posts = service.signup(SignupRequest(username, email, hash, salt.toHexString()))
-        if (posts.success) {
+        if (posts.success && posts.message.contains("true")) {
+            startActivityLogin()
+        } else if (posts.success) {
             EmailManager.setEmail(email)
             startActivityEmailVerification()
-        } else {
+        } else{
             runOnUiThread {
                 signupBinding.error.text = posts.message
                 enableButtons()

@@ -1,6 +1,8 @@
 package wig.activities.loggedout
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import wig.R
 import wig.activities.base.Settings
 import wig.managers.EmailManager
@@ -19,13 +21,21 @@ class ForgotPassword : Settings() {
     }
 
     private fun sendClick() {
-        // TODO add backend call functionality
         val email = forgotPasswordBinding.email.text.toString()
-        if(email != "") {
-            EmailManager.setEmail(email)
-            startActivityResetPassword()
-        } else {
+
+        if(email == ""){
             forgotPasswordBinding.error.text = getString(R.string.required_fields)
+
+        }
+
+        lifecycleScope.launch {
+            val posts = api.forgotPassword(email)
+            if (posts.success){
+                EmailManager.setEmail(email)
+                startActivityResetPassword()
+            } else {
+                forgotPasswordBinding.error.text = getString(R.string.there_was_an_error_making_request)
+            }
         }
     }
 

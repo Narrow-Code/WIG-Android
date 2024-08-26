@@ -1,6 +1,8 @@
 package wig.activities.loggedout
 
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import wig.activities.base.Settings
 import wig.managers.EmailManager
 
@@ -9,13 +11,20 @@ class EmailVerification : Settings() {
         super.onCreate(savedInstanceState)
         setScreenOrientation()
         setEmailVerificationBindings()
-        //disableBackPress()
+        disableBackPress()
         appendEmailToPage()
         setOnClickListeners()
     }
 
     private fun setOnClickListeners() {
         emailVerificationBinding.icExit.setOnClickListener { startActivityLogin() }
+        emailVerificationBinding.resendEmail.setOnClickListener{ resendEmail() }
+    }
+
+    private fun resendEmail() {
+        lifecycleScope.launch {
+            api.resendVerification(EmailManager.getEmail())
+        }
     }
 
     private fun appendEmailToPage() {

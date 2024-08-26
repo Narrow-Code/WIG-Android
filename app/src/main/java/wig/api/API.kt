@@ -6,6 +6,7 @@ import wig.models.requests.BorrowerCreateRequest
 import wig.models.requests.CheckoutRequest
 import wig.models.requests.DeleteBorrowerRequest
 import wig.models.requests.DeleteLocationRequest
+import wig.models.requests.EmailRequest
 import wig.models.requests.LocationCreateRequest
 import wig.models.requests.LocationEditRequest
 import wig.models.requests.LoginRequest
@@ -201,6 +202,16 @@ open class API {
 
     suspend fun deleteBorrower(borrowerUID: String): CommonResponse = withContext(Dispatchers.IO) {
         val posts = borrowerService.borrowerDelete((DeleteBorrowerRequest(borrowerUID)))
+        posts
+    }
+
+    suspend fun resendVerification(email: String): CommonResponse = withContext(Dispatchers.IO) {
+        val posts = userService.resendVerification(EmailRequest(email))
+        posts
+    }
+
+    suspend fun forgotPassword(email: String): CommonResponse = withContext(Dispatchers.IO) {
+        val posts = userService.forgotPassword(EmailRequest(email))
         posts
     }
 
